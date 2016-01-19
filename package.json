@@ -1,0 +1,32 @@
+{
+  "name": "dnx-angular2",
+  "version": "0.1.0",
+  "description": "dnx-angular2-iwnow",
+  "main": "index.js",
+  "scripts": {
+    "tsc": "tsc",
+    "tsc:w": "tsc -w",
+    "lite": "lite-server --baseDir ./app",
+    "jy": "browserify src/js/bar.js > app/js/bar.js -d",
+    "wy": "watchify src/js/bar.js -o app/js/bar.js -d",
+    "start": "concurrent \"npm run tsc:w\" \"npm run wy\" \"npm run lite\" "
+  },
+  "author": "iwnow",
+  "license": "ISC",
+  "devDependencies": {
+    "browserify": "^13.0.0",
+    "concurrently": "^1.0.0",
+    "gulp": "^3.9.0",
+    "lite-server": "^1.3.1",
+    "vinyl-source-stream": "^1.1.0",
+    "watchify": "^3.7.0"
+  },
+  "dependencies": {
+    "angular2": "^2.0.0-beta.1",
+    "es6-promise": "^3.0.2",
+    "es6-shim": "^0.33.3",
+    "reflect-metadata": "0.1.2",
+    "rxjs": "5.0.0-beta.0",
+    "zone.js": "0.5.10"
+  }
+}
