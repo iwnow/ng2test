@@ -6,7 +6,8 @@
   "scripts": {
     "tsc": "tsc",
     "tsc:w": "tsc -w",
-    "lite": "lite-server --baseDir ./app",
+    "lite-src": "lite-server --baseDir ./src",
+    "lite": "lite-server",
     "jy": "browserify src/js/app.js > app/js/app.js -d",
     "wy": "watchify src/js/app.js -o app/js/app.js -d",
     "start": "concurrent \"npm run tsc:w\" \"npm run wy\" \"npm run lite\" "
@@ -22,11 +23,12 @@
     "watchify": "^3.7.0"
   },
   "dependencies": {
-    "angular2": "^2.0.0-beta.1",
+    "angular2": "2.0.0-beta.0",
     "es6-promise": "^3.0.2",
     "es6-shim": "^0.33.3",
     "reflect-metadata": "0.1.2",
     "rxjs": "5.0.0-beta.0",
-    "zone.js": "0.5.10"
+    "zone.js": "0.5.10",
+    "systemjs": "latest"
   }
 }

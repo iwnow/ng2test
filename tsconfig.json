@@ -2,10 +2,11 @@
     "compilerOptions": {
         "module": "commonjs",
         "target": "es5",
+        "moduleResolution": "node",
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
         "sourceMap": true,
-        "outDir": "src/js"
+        "outDir": "app/js"
     },
     "exclude": [
         "node_modules",

@@ -10,17 +10,23 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var user_1 = require('./user');
 var core_1 = require('angular2/core');
 var browser_1 = require('angular2/platform/browser');
-document.addEventListener("DOMContentLoaded", function (e) {
-    var man = new user_1.User(25, "Jon");
-    console.log("DOMContentLoaded! " + man.info());
+var man = new user_1.User(25, "Jon");
+console.log("DOMContentLoaded! " + man.info());
+var p = new Promise(function (res, rej) {
+    setTimeout(function () {
+        res("timeout finished :)");
+    }, 5000);
+}).then(function (r) {
+    console.log("from promis r: " + r);
 });
 var MyApp = (function () {
     function MyApp() {
+        this.name = "prop from class";
     }
     MyApp = __decorate([
         core_1.Component({
             selector: 'my-app',
-            template: '<h1>My First Angular 2 App</h1>'
+            template: '<h1>{{name}}</h1>'
         }), 
         __metadata('design:paramtypes', [])
     ], MyApp);
