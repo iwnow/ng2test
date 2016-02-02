@@ -10,25 +10,33 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var user_1 = require('./user');
 var core_1 = require('angular2/core');
 var browser_1 = require('angular2/platform/browser');
-var man = new user_1.User(25, "Jon");
-console.log("DOMContentLoaded! " + man.info());
-var p = new Promise(function (res, rej) {
-    setTimeout(function () {
-        res("timeout finished :)");
-    }, 5000);
-}).then(function (r) {
-    console.log("from promis r: " + r);
-});
-var MyApp = (function () {
-    function MyApp() {
-        this.name = "prop from class";
+var UserProvider = (function () {
+    function UserProvider() {
+        this._i = 23;
+        this._usr = new user_1.User(++this._i, "Chad");
     }
+    UserProvider.prototype.getUser = function () {
+        return this._usr;
+    };
+    return UserProvider;
+})();
+var MyApp = (function () {
+    function MyApp(userProvider) {
+        document.getElementById('startScreen').style.display = 'none';
+        this.person = userProvider.getUser();
+        this.name = this.person.info();
+        this.images = ['1.jpg', '2.jpg', '3.jpg'];
+    }
+    MyApp.prototype.changedPage = function (pageName) {
+        this.selectedPage = pageName;
+    };
     MyApp = __decorate([
         core_1.Component({
             selector: 'my-app',
-            template: '<h1>{{name}}</h1>'
+            templateUrl: 'app/views/home.html',
+            providers: [UserProvider]
         }), 
-        __metadata('design:paramtypes', [])
+        __metadata('design:paramtypes', [UserProvider])
     ], MyApp);
     return MyApp;
 })();

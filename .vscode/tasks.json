@@ -21,7 +21,9 @@
 	"showOutput": "silent",
 
 	// args is the HelloWorld program to compile.
-	"args": []
+	"args": [],
+    
+    "problemMatcher": "$tsc"
 }
 
 // A task runner that calls the Typescript compiler (tsc) and

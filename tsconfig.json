@@ -6,7 +6,8 @@
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
         "sourceMap": true,
-        "outDir": "app/js"
+        "outDir": "app/js",
+        "rootDir": "src/ts"
     },
     "exclude": [
         "node_modules",
