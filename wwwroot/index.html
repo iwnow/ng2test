@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="demo">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    
+    <link rel="stylesheet" href="app/css/bootstrap.css">
+    <link rel="stylesheet" href="app/css/main.css">
+    <title>demo ng2</title>
+</head>
+<body>
+    <div class="jumbotron vertical-center" id="startScreen">
+        <i class="fa fa-refresh fa-spin fa-4x"></i>
+    </div>
+    <my-app></my-app>
+    
+    <script src="app/lib/es6-shim.js"></script>
+    <script src="app/lib/system.js"></script>
+    <script src="app/lib/angular2-polyfills.js"></script>
+    <script src="app/lib/Rx.js"></script>
+    <script src="app/lib/angular2.dev.js"></script>
+    <script src="app/lib/ng2-bootstrap.min.js"></script>
+    
+    <script>        
+        System.config({
+            packages: {        
+                "app/js": {
+                    format: 'cjs',
+                    defaultExtension: 'js'
+                }
+            }
+        });
+        System.import('./app/js/app').then(null, console.error.bind(console));
+    </script>
+</body>
+</html>

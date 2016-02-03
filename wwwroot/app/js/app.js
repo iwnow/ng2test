@@ -7,36 +7,25 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var user_1 = require('./user');
 var core_1 = require('angular2/core');
 var browser_1 = require('angular2/platform/browser');
-var UserProvider = (function () {
-    function UserProvider() {
-        this._i = 23;
-        this._usr = new user_1.User(++this._i, "Chad");
-    }
-    UserProvider.prototype.getUser = function () {
-        return this._usr;
-    };
-    return UserProvider;
-})();
 var MyApp = (function () {
-    function MyApp(userProvider) {
-        document.getElementById('startScreen').style.display = 'none';
-        this.person = userProvider.getUser();
-        this.name = this.person.info();
+    function MyApp() {
         this.images = ['1.jpg', '2.jpg', '3.jpg'];
     }
+    MyApp.prototype.ngOnInit = function () {
+        document.getElementById('startScreen').style.display = 'none';
+    };
     MyApp.prototype.changedPage = function (pageName) {
         this.selectedPage = pageName;
     };
     MyApp = __decorate([
         core_1.Component({
             selector: 'my-app',
-            templateUrl: 'app/views/home.html',
-            providers: [UserProvider]
+            templateUrl: 'app/view/home.html',
+            providers: []
         }), 
-        __metadata('design:paramtypes', [UserProvider])
+        __metadata('design:paramtypes', [])
     ], MyApp);
     return MyApp;
 })();
