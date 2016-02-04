@@ -9,25 +9,25 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require('angular2/core');
 var browser_1 = require('angular2/platform/browser');
-var MyApp = (function () {
-    function MyApp() {
-        this.images = ['1.jpg', '2.jpg', '3.jpg'];
+var menu_1 = require('./components/menu');
+var CtocApp = (function () {
+    function CtocApp() {
     }
-    MyApp.prototype.ngOnInit = function () {
+    CtocApp.prototype.ngOnInit = function () {
         document.getElementById('startScreen').style.display = 'none';
+        document.getElementsByTagName('html')[0].classList.remove('startBody');
+        document.body.classList.remove('startBody');
     };
-    MyApp.prototype.changedPage = function (pageName) {
-        this.selectedPage = pageName;
-    };
-    MyApp = __decorate([
+    CtocApp = __decorate([
         core_1.Component({
-            selector: 'my-app',
-            templateUrl: 'app/view/home.html',
+            selector: 'ctoc-app',
+            templateUrl: 'app/view/ctoc.html',
+            directives: [menu_1.C2cMenu],
             providers: []
         }), 
         __metadata('design:paramtypes', [])
-    ], MyApp);
-    return MyApp;
+    ], CtocApp);
+    return CtocApp;
 })();
-browser_1.bootstrap(MyApp);
-//# sourceMappingURL=app.js.map
+browser_1.bootstrap(CtocApp);
+//# sourceMappingURL=app.boot.js.map

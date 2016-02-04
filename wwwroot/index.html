@@ -1,40 +1,31 @@
 <!DOCTYPE html>
-<html lang="en">
+<html class="startBody">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="description" content="demo">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-    
     <link rel="stylesheet" href="app/css/bootstrap.css">
     <link rel="stylesheet" href="app/css/main.css">
     <title>demo ng2</title>
 </head>
-<body>
-    <div class="jumbotron vertical-center" id="startScreen">
-        <i class="fa fa-refresh fa-spin fa-4x"></i>
-    </div>
-    <my-app></my-app>
-    
-    <script src="app/lib/es6-shim.js"></script>
-    <script src="app/lib/system.js"></script>
-    <script src="app/lib/angular2-polyfills.js"></script>
-    <script src="app/lib/Rx.js"></script>
-    <script src="app/lib/angular2.dev.js"></script>
-    <script src="app/lib/ng2-bootstrap.min.js"></script>
-    
-    <script>        
-        System.config({
-            packages: {        
-                "app/js": {
-                    format: 'cjs',
-                    defaultExtension: 'js'
-                }
-            }
-        });
-        System.import('./app/js/app').then(null, console.error.bind(console));
-    </script>
+<body class="startBody">
+    <!-- boot screen -->
+    <div class="startScreen" id="startScreen"><div>Loading...</div></div>
+    <!-- app -->
+    <ctoc-app></ctoc-app>
+    <!-- scripts -->
+    <script>
+        if (window.navigator.userAgent.indexOf("MSIE ") > 0 ||
+            window.navigator.userAgent.indexOf("rv:11.0") > 0) {
+            document.write('<script defer src="app/lib/es6-shim.js"><\/script><script defer src="https://cdnjs.cloudflare.com/ajax/libs/systemjs/0.19.16/system-polyfills.js"><\/script>');
+        }
+    </script>    
+    <script defer src="app/lib/system.js"></script>
+    <script defer src="app/lib/angular2-polyfills.js"></script>
+    <script defer src="app/lib/Rx.js"></script>
+    <script defer src="app/lib/angular2.dev.js"></script>    
+    <script defer src="app/js/boot.js"></script>
 </body>
 </html>
