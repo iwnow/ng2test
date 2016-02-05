@@ -15,6 +15,6 @@ export class C2cMenu implements OnInit {
 
 export class C2cMenuItem {
     id: string;
-    parentItem: C2cMenuItem;
+    children: C2cMenuItem;
     textContent: string;
 }
