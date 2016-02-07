@@ -17,17 +17,27 @@ import * as Menu from '../utils/menu';
 export class C2cWorkspace implements OnInit {
     
     currentUser: IUserInfo;    
-    workspaceMenu: Menu.SidebarMenu;
-    workspacePanName: string;
+    workspaceMenu: Menu.SidebarMenu; //menu navigation bar on left
+    workspacePanName: string // panel bottom on header
+    workspacePageName: string; //right on sidebar space
     
     
-    ngOnInit(){ }
+    ngOnInit(){         
+    }
     
     constructor(private _srvLocator: ServiceLocator) {
         this.currentUser = _srvLocator.getService<IUserService>('IUserService').getUserInfo();
         
-    }
+    }   
     
+    
+    //from sidebar
+    selectPage(pageId:string){
+        if (this.workspacePageName == pageId)
+            return;
+        this.workspacePageName = pageId;
+        console.log(pageId);
+    }
 }
 
 //todo: fix with enum for select!

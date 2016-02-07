@@ -9,26 +9,41 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 //--external modules
 var core_1 = require('angular2/core');
+//--app modules
+var Menu = require('../utils/menu');
 var C2cSidebar = (function () {
     function C2cSidebar() {
+        this.selectedPage = new core_1.EventEmitter();
     }
     C2cSidebar.prototype.ngOnInit = function () {
-        this.menu.Items[0].IsActive = true;
+        if (!this.menu.Items.find(function (i) { return i.IsActive == true; }))
+            this.choose(this.menu.Items[0].Id);
     };
     C2cSidebar.prototype.choose = function (Id) {
+        var _this = this;
         this.menu.Items.forEach(function (i) {
             if (i.Id == Id) {
                 i.IsActive = true;
+                _this.selectedPage.emit(i.Id);
                 return;
             }
             i.IsActive = false;
         });
     };
+    __decorate([
+        core_1.Input(), 
+        __metadata('design:type', Menu.SidebarMenu)
+    ], C2cSidebar.prototype, "menu", void 0);
+    __decorate([
+        core_1.Output(), 
+        __metadata('design:type', Object)
+    ], C2cSidebar.prototype, "selectedPage", void 0);
     C2cSidebar = __decorate([
         core_1.Component({
             selector: 'ctoc-sidebar',
             templateUrl: 'app/view/ctoc-sidebar.html',
-            inputs: ['menu']
+            inputs: ['menu'],
+            outputs: ['selectedPage']
         }), 
         __metadata('design:paramtypes', [])
     ], C2cSidebar);

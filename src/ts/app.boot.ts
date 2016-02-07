@@ -23,12 +23,12 @@ class CtocApp implements OnInit{
         this.projectName = "C2C";
         this.toggleNav = false;        
         window.addEventListener('resize', () => { this.docWidth = window.innerWidth; });  
-        this.selectedWorkspace = 'no';    
+        this.profileMenu.Items[0].IsActive = true;   
     }
        
     ngOnInit(){
         this.screenLoadingOff();
-        this.selectWorkspace('');
+        this.selectWorkspace('controlPan');
     }
     
     get currentUser(): IUserInfo {

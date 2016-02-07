@@ -17,7 +17,15 @@ var C2cWorkspace = (function () {
         this._srvLocator = _srvLocator;
         this.currentUser = _srvLocator.getService('IUserService').getUserInfo();
     }
-    C2cWorkspace.prototype.ngOnInit = function () { };
+    C2cWorkspace.prototype.ngOnInit = function () {
+    };
+    //from sidebar
+    C2cWorkspace.prototype.selectPage = function (pageId) {
+        if (this.workspacePageName == pageId)
+            return;
+        this.workspacePageName = pageId;
+        console.log(pageId);
+    };
     C2cWorkspace = __decorate([
         core_1.Component({
             selector: 'ctoc-workspace',

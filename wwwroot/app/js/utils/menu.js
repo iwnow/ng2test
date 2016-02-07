@@ -1,4 +1,5 @@
 var SidebarMenu = (function () {
+    //fix with set!
     function SidebarMenu(Items) {
         this.Items = Items;
     }

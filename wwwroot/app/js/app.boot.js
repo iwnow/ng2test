@@ -28,11 +28,11 @@ var CtocApp = (function () {
         this.projectName = "C2C";
         this.toggleNav = false;
         window.addEventListener('resize', function () { _this.docWidth = window.innerWidth; });
-        this.selectedWorkspace = 'no';
+        this.profileMenu.Items[0].IsActive = true;
     }
     CtocApp.prototype.ngOnInit = function () {
         this.screenLoadingOff();
-        this.selectWorkspace('');
+        this.selectWorkspace('controlPan');
     };
     Object.defineProperty(CtocApp.prototype, "currentUser", {
         get: function () {

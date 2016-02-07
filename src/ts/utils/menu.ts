@@ -1,4 +1,5 @@
 export class SidebarMenu {
+    //fix with set!
     constructor(
         public Items:MenuItem[]
     ){}
