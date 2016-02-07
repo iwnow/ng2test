@@ -1,11 +1,11 @@
 var user_mock_1 = require('../mocks/user.mock');
-var UserInfoService = (function () {
-    function UserInfoService() {
+var UserService = (function () {
+    function UserService() {
     }
-    UserInfoService.prototype.getUserInfo = function () {
+    UserService.prototype.getUserInfo = function () {
         return user_mock_1.UserMock.Create();
     };
-    return UserInfoService;
+    return UserService;
 })();
-exports.UserInfoService = UserInfoService;
+exports.UserService = UserService;
 //# sourceMappingURL=user.service.js.map

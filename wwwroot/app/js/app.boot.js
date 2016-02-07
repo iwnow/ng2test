@@ -9,7 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require('angular2/core');
 var browser_1 = require('angular2/platform/browser');
-var menu_1 = require('./components/menu');
+var workspace_1 = require('./components/workspace');
 var locator_service_1 = require('./services/locator.service');
 var CtocApp = (function () {
     function CtocApp(_srvLocator) {
@@ -18,21 +18,22 @@ var CtocApp = (function () {
         this.projectName = "C2C";
         this.toggleNav = false;
         window.addEventListener('resize', function () { _this.docWidth = window.innerWidth; });
+        this.selectedWorkspace = 'no';
     }
     CtocApp.prototype.ngOnInit = function () {
         this.screenLoadingOff();
     };
     Object.defineProperty(CtocApp.prototype, "currentUser", {
         get: function () {
-            return this.userInfoService.getUserInfo();
+            return this.userService.getUserInfo();
         },
         enumerable: true,
         configurable: true
     });
-    Object.defineProperty(CtocApp.prototype, "userInfoService", {
+    Object.defineProperty(CtocApp.prototype, "userService", {
         /** Сервис для получения информации о текущем пользователе */
         get: function () {
-            return this._srvLocator.getService('IUserInfoService');
+            return this._srvLocator.getService('IUserService');
         },
         enumerable: true,
         configurable: true
@@ -65,16 +66,26 @@ var CtocApp = (function () {
         enumerable: true,
         configurable: true
     });
+    //
+    CtocApp.prototype.selectWorkspace = function (wrkSpace) {
+        //ev.preventDefault();
+        this.selectedWorkspace = wrkSpace;
+        console.log(wrkSpace);
+    };
     CtocApp = __decorate([
         core_1.Component({
             selector: 'ctoc-app',
             templateUrl: 'app/view/ctoc.html',
-            directives: [menu_1.C2cMenu],
+            directives: [workspace_1.C2cWorkspace],
             providers: [locator_service_1.ServiceLocator]
         }), 
         __metadata('design:paramtypes', [locator_service_1.ServiceLocator])
     ], CtocApp);
     return CtocApp;
 })();
-browser_1.bootstrap(CtocApp);
+browser_1.bootstrap(CtocApp).catch(function (err) {
+    document.body.removeChild(document.getElementsByTagName('ctoc-app')[0]);
+    document.getElementById('startScreen').childNodes[0].textContent = ':( oops ' + err;
+});
+;
 //# sourceMappingURL=app.boot.js.map

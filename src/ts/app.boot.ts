@@ -1,26 +1,27 @@
 import {Component, OnInit} from 'angular2/core';
 import {bootstrap} from 'angular2/platform/browser';
 
-import {C2cMenu, C2cMenuItem} from './components/menu';
+import {C2cWorkspace} from './components/workspace';
 import {ServiceLocator} from './services/locator.service';
-import {IUserInfoService} from './contracts/iservices';
+import {IUserService} from './contracts/iservices';
 import {IUserInfo} from './contracts/iuserinfo';
 
 @Component({
     selector: 'ctoc-app',
     templateUrl: 'app/view/ctoc.html',
-    directives: [C2cMenu],
+    directives: [C2cWorkspace],
     providers: [ServiceLocator]
 })
 class CtocApp implements OnInit{    
     projectName: string;
     toggleNav: boolean;
+    selectedWorkspace: string;
     
     constructor(private _srvLocator: ServiceLocator){        
         this.projectName = "C2C";
         this.toggleNav = false;        
         window.addEventListener('resize', () => { this.docWidth = window.innerWidth; });  
-            
+        this.selectedWorkspace = 'no';    
     }
        
     ngOnInit(){
@@ -28,12 +29,12 @@ class CtocApp implements OnInit{
     }
     
     get currentUser(): IUserInfo {
-        return  this.userInfoService.getUserInfo();
+        return  this.userService.getUserInfo();
     }
     
     /** Сервис для получения информации о текущем пользователе */
-    get userInfoService(): IUserInfoService {
-        return <IUserInfoService>this._srvLocator.getService('IUserInfoService');
+    get userService(): IUserService {
+        return this._srvLocator.getService<IUserService>('IUserService');
     }
     
     /** отключение экрана загрузки */
@@ -61,8 +62,17 @@ class CtocApp implements OnInit{
         this.toggleNav = false;        
     }
     //
+    
+    selectWorkspace(wrkSpace: string) {
+        //ev.preventDefault();
+        this.selectedWorkspace = wrkSpace;
+        console.log(wrkSpace);
+    }
 }
 
-bootstrap(CtocApp);
+bootstrap(CtocApp).catch(err => {
+    document.body.removeChild(document.getElementsByTagName('ctoc-app')[0]);
+    document.getElementById('startScreen').childNodes[0].textContent = ':( oops ' + err;
+});;
 
 

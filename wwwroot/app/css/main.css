@@ -18,6 +18,15 @@ body {
     font-size: 20pt;
 }
 
+
+.dropdown-menu {
+    background-color: #f5f5f5;
+    padding: 0;
+}
+.dropdown-menu > li > a:hover {
+  color: #fff;
+  background-color: #428bca;
+}
 /*
  * Global add-ons
  */

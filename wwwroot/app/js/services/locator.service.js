@@ -16,9 +16,13 @@ var DefaultServiceLocator = (function () {
     function DefaultServiceLocator() {
     }
     DefaultServiceLocator.prototype.getService = function (typeName) {
+        var srv;
+        if (!typeName)
+            throw "Parameter [typeName] must not be empty!";
         switch (typeName) {
-            case 'IUserInfoService':
-                return new user_service_1.UserInfoService();
+            case 'IUserService':
+                srv = new user_service_1.UserService();
+                return srv;
                 break;
             default:
                 throw "class [" + typeName + "] is not implemented!";

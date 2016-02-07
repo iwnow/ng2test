@@ -1,5 +1,5 @@
 
-setTimeout(function(){
+setTimeout(function() {
     System.config({
         packages: {        
             "app/js": {
@@ -10,4 +10,3 @@ setTimeout(function(){
     });
     System.import('./app/js/app.boot').then(null, console.error.bind(console));
 }, 0);
-

@@ -1,5 +1,5 @@
-import {IServiceLocator, IUserInfoService, IService} from '../contracts/iservices';
-import {UserInfoService} from './user.service';
+import {IServiceLocator, IUserService, IService} from '../contracts/iservices';
+import {UserService} from './user.service';
 
 /**
  * Сервис провайдер приложения
@@ -11,16 +11,21 @@ export class ServiceLocator {
         this._locator = new DefaultServiceLocator();
     }
     
-    getService(srvName: string): IService {
-        return this._locator.getService(srvName);
+    getService<T>(srvName: string): T {
+        return this._locator.getService<T>(srvName);
     }
 }
 
 class DefaultServiceLocator implements IServiceLocator {
-    getService(typeName: string): IService {
+    getService<T extends IService>(typeName: string): T {
+        var srv: any;     
+        if (!typeName)
+            throw "Parameter [typeName] must not be empty!";
+               
         switch (typeName) {
-            case 'IUserInfoService':
-                return new UserInfoService();
+            case 'IUserService':
+                srv = new UserService();
+                return srv;
                 break;
         
             default:
@@ -28,4 +33,6 @@ class DefaultServiceLocator implements IServiceLocator {
                 
         }
     }
+    
+    
 }
