@@ -5,6 +5,7 @@ import {C2cWorkspace} from './components/workspace';
 import {ServiceLocator} from './services/locator.service';
 import {IUserService} from './contracts/iservices';
 import {IUserInfo} from './contracts/iuserinfo';
+import * as Menu from './utils/menu';
 
 @Component({
     selector: 'ctoc-app',
@@ -16,6 +17,7 @@ class CtocApp implements OnInit{
     projectName: string;
     toggleNav: boolean;
     selectedWorkspace: string;
+    selectedWorkspaceMenu: Menu.SidebarMenu;
     
     constructor(private _srvLocator: ServiceLocator){        
         this.projectName = "C2C";
@@ -26,6 +28,7 @@ class CtocApp implements OnInit{
        
     ngOnInit(){
         this.screenLoadingOff();
+        this.selectWorkspace('');
     }
     
     get currentUser(): IUserInfo {
@@ -66,8 +69,30 @@ class CtocApp implements OnInit{
     selectWorkspace(wrkSpace: string) {
         //ev.preventDefault();
         this.selectedWorkspace = wrkSpace;
-        console.log(wrkSpace);
+        switch (wrkSpace) {
+            case 'controlPan':
+                this.selectedWorkspaceMenu = this.controlMenu;
+                break;
+            case 'profilePan':
+                this.selectedWorkspaceMenu = this.profileMenu;
+                break;
+            default:
+                break;
+        }
     }
+    
+    
+    //fix with resources
+    profileMenu: Menu.SidebarMenu = new Menu.SidebarMenu([
+        new Menu.MenuItem('profile', 'Profile'),
+        new Menu.MenuItem('password', 'Change Password')
+    ]);
+    controlMenu: Menu.SidebarMenu = new Menu.SidebarMenu([
+        new Menu.MenuItem('contacts', 'Contacts'),
+        new Menu.MenuItem('pay', 'Payment Info')
+    ]);
+    
+    
 }
 
 bootstrap(CtocApp).catch(err => {

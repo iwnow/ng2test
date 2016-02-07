@@ -1,0 +1,7 @@
+<div class="col-sm-3 col-md-2 sidebar">
+    <ul class="nav nav-sidebar">
+        <li *ngFor="#mitem of menu.Items" [ngClass]="mitem.IsActive ? 'active' : ''">
+            <a href="#" (mousedown)="choose(mitem.Id)">{{mitem.TextItem}}</a>
+        </li>
+    </ul>         
+</div>

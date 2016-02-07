@@ -7,21 +7,32 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-//external modules
+//--external modules
 var core_1 = require('angular2/core');
-//mock objects for tests
-var user_mock_1 = require('../mocks/user.mock');
-var UserService = (function () {
-    function UserService() {
+var C2cSidebar = (function () {
+    function C2cSidebar() {
     }
-    UserService.prototype.getUserInfo = function () {
-        return user_mock_1.UserMock.Create();
+    C2cSidebar.prototype.ngOnInit = function () {
+        this.menu.Items[0].IsActive = true;
     };
-    UserService = __decorate([
-        core_1.Injectable(), 
+    C2cSidebar.prototype.choose = function (Id) {
+        this.menu.Items.forEach(function (i) {
+            if (i.Id == Id) {
+                i.IsActive = true;
+                return;
+            }
+            i.IsActive = false;
+        });
+    };
+    C2cSidebar = __decorate([
+        core_1.Component({
+            selector: 'ctoc-sidebar',
+            templateUrl: 'app/view/ctoc-sidebar.html',
+            inputs: ['menu']
+        }), 
         __metadata('design:paramtypes', [])
-    ], UserService);
-    return UserService;
+    ], C2cSidebar);
+    return C2cSidebar;
 })();
-exports.UserService = UserService;
-//# sourceMappingURL=user.service.js.map
+exports.C2cSidebar = C2cSidebar;
+//# sourceMappingURL=sidebar.js.map

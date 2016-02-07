@@ -26,8 +26,8 @@
                 </a>
                 <div [ngClass]="loginMenu.dropped ? 'dropdown open' : 'dropdown'">
                     <ul class="dropdown-menu">
-                        <li><a href="#" (mousedown)="selectedWorkspace='controlPan'"><span class="glyphicon glyphicon-list-alt"></span>&nbsp;&nbsp;Control Panel</a></li>
-                        <li><a href="#" (mousedown)="selectedWorkspace='profilePan'"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;Profile</a></li>
+                        <li><a href="#" (mousedown)="selectWorkspace('controlPan')"><span class="glyphicon glyphicon-list-alt"></span>&nbsp;&nbsp;Control Panel</a></li>
+                        <li><a href="#" (mousedown)="selectWorkspace('profilePan')"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;Profile</a></li>
                         <!--<li class="divider"></li>-->
                         <li><a href="#"><span class="glyphicon glyphicon-log-out"></span>&nbsp;&nbsp;Log out</a></li>
                     </ul>
@@ -42,5 +42,7 @@
 </nav>
 
 <div class="container-fluid">
-    <ctoc-workspace [workspacePanName]="selectedWorkspace"></ctoc-workspace>
+    <ctoc-workspace 
+        [workspacePanName]="selectedWorkspace"
+        [workspaceMenu]="selectedWorkspaceMenu"></ctoc-workspace>
 </div>

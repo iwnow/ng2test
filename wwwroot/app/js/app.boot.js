@@ -11,10 +11,20 @@ var core_1 = require('angular2/core');
 var browser_1 = require('angular2/platform/browser');
 var workspace_1 = require('./components/workspace');
 var locator_service_1 = require('./services/locator.service');
+var Menu = require('./utils/menu');
 var CtocApp = (function () {
     function CtocApp(_srvLocator) {
         var _this = this;
         this._srvLocator = _srvLocator;
+        //fix with resources
+        this.profileMenu = new Menu.SidebarMenu([
+            new Menu.MenuItem('profile', 'Profile'),
+            new Menu.MenuItem('password', 'Change Password')
+        ]);
+        this.controlMenu = new Menu.SidebarMenu([
+            new Menu.MenuItem('contacts', 'Contacts'),
+            new Menu.MenuItem('pay', 'Payment Info')
+        ]);
         this.projectName = "C2C";
         this.toggleNav = false;
         window.addEventListener('resize', function () { _this.docWidth = window.innerWidth; });
@@ -22,6 +32,7 @@ var CtocApp = (function () {
     }
     CtocApp.prototype.ngOnInit = function () {
         this.screenLoadingOff();
+        this.selectWorkspace('');
     };
     Object.defineProperty(CtocApp.prototype, "currentUser", {
         get: function () {
@@ -70,7 +81,16 @@ var CtocApp = (function () {
     CtocApp.prototype.selectWorkspace = function (wrkSpace) {
         //ev.preventDefault();
         this.selectedWorkspace = wrkSpace;
-        console.log(wrkSpace);
+        switch (wrkSpace) {
+            case 'controlPan':
+                this.selectedWorkspaceMenu = this.controlMenu;
+                break;
+            case 'profilePan':
+                this.selectedWorkspaceMenu = this.profileMenu;
+                break;
+            default:
+                break;
+        }
     };
     CtocApp = __decorate([
         core_1.Component({
