@@ -42,6 +42,10 @@ class CtocApp implements OnInit{
         return this._srvLocator.getService<IUserService>('IUserService');
     }
     
+    logOut(){
+        this.userService.logOut();
+    }
+    
     /** отключение экрана загрузки */
     screenLoadingOff(){
         if (!CtocApp.IsExceptionRised) {
@@ -51,7 +55,7 @@ class CtocApp implements OnInit{
         }
     }
     
-    // панель навигации    
+    // UI панель навигации    
     get navClass(): string {
         return this.toggleNav ? '' : 'navbar-collapse collapse';
     }   
@@ -70,6 +74,7 @@ class CtocApp implements OnInit{
     }
     //
     
+    /**Выбор текущего воркспейса */
     selectWorkspace(wrkSpace: string) {
         //ev.preventDefault();
         this.selectedWorkspace = wrkSpace;

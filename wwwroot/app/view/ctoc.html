@@ -29,7 +29,7 @@
                         <li><a href="#" (mousedown)="selectWorkspace('controlPan')"><span class="glyphicon glyphicon-list-alt"></span>&nbsp;&nbsp;Control Panel</a></li>
                         <li><a href="#" (mousedown)="selectWorkspace('profilePan')"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;Profile</a></li>
                         <!--<li class="divider"></li>-->
-                        <li><a href="#"><span class="glyphicon glyphicon-log-out"></span>&nbsp;&nbsp;Log out</a></li>
+                        <li><a href="#" (mousedown)="logOut()"><span class="glyphicon glyphicon-log-out"></span>&nbsp;&nbsp;Log out</a></li>
                     </ul>
                 </div>
             </li>
@@ -42,7 +42,7 @@
 </nav>
 
 <div class="container-fluid">
-    <ctoc-workspace 
+    <ctoc-workspace *ngIf = "currentUser.IsAuthorized"
         [workspacePanName]="selectedWorkspace"
         [workspaceMenu]="selectedWorkspaceMenu"></ctoc-workspace>
 </div>

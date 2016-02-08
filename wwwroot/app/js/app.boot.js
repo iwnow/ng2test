@@ -49,6 +49,9 @@ var CtocApp = (function () {
         enumerable: true,
         configurable: true
     });
+    CtocApp.prototype.logOut = function () {
+        this.userService.logOut();
+    };
     /** отключение экрана загрузки */
     CtocApp.prototype.screenLoadingOff = function () {
         if (!CtocApp.IsExceptionRised) {
@@ -58,7 +61,7 @@ var CtocApp = (function () {
         }
     };
     Object.defineProperty(CtocApp.prototype, "navClass", {
-        // панель навигации    
+        // UI панель навигации    
         get: function () {
             return this.toggleNav ? '' : 'navbar-collapse collapse';
         },
@@ -80,6 +83,7 @@ var CtocApp = (function () {
         configurable: true
     });
     //
+    /**Выбор текущего воркспейса */
     CtocApp.prototype.selectWorkspace = function (wrkSpace) {
         //ev.preventDefault();
         this.selectedWorkspace = wrkSpace;

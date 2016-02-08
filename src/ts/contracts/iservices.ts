@@ -2,6 +2,7 @@ import * as userCore from './iuserinfo';
 
 export interface IUserService extends IService {
     getUserInfo():userCore.IUserInfo;
+    logOut();
 }
 
 export interface IServiceLocator extends IService {

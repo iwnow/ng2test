@@ -15,6 +15,16 @@ var UserService = (function () {
     function UserService() {
     }
     UserService.prototype.getUserInfo = function () {
+        if (!this._currentUser)
+            this._currentUser = this.loadUserInfo();
+        return this._currentUser;
+    };
+    UserService.prototype.logOut = function () {
+        console.log("before: " + this._currentUser.IsAuthorized);
+        this._currentUser.IsAuthorized = false;
+        console.log("after: " + this._currentUser.IsAuthorized);
+    };
+    UserService.prototype.loadUserInfo = function () {
         return user_mock_1.UserMock.Create();
     };
     UserService = __decorate([
