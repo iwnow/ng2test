@@ -51,9 +51,11 @@ var CtocApp = (function () {
     });
     /** отключение экрана загрузки */
     CtocApp.prototype.screenLoadingOff = function () {
-        document.getElementById('startScreen').style.display = 'none';
-        document.getElementsByTagName('html')[0].classList.remove('startBody');
-        document.body.classList.remove('startBody');
+        if (!CtocApp.IsExceptionRised) {
+            document.getElementById('startScreen').style.display = 'none';
+            document.getElementsByTagName('html')[0].classList.remove('startBody');
+            document.body.classList.remove('startBody');
+        }
     };
     Object.defineProperty(CtocApp.prototype, "navClass", {
         // панель навигации    
@@ -92,6 +94,7 @@ var CtocApp = (function () {
                 break;
         }
     };
+    CtocApp.IsExceptionRised = false;
     CtocApp = __decorate([
         core_1.Component({
             selector: 'ctoc-app',
@@ -104,8 +107,9 @@ var CtocApp = (function () {
     return CtocApp;
 })();
 browser_1.bootstrap(CtocApp).catch(function (err) {
+    CtocApp.IsExceptionRised = true;
+    document.getElementById('startScreen').style.display = 'table';
     document.body.removeChild(document.getElementsByTagName('ctoc-app')[0]);
-    document.getElementById('startScreen').childNodes[0].textContent = ':( oops ' + err;
+    document.getElementById('startScreen').childNodes[0].textContent = err;
 });
-;
 //# sourceMappingURL=app.boot.js.map

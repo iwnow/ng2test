@@ -12,26 +12,34 @@ var core_1 = require('angular2/core');
 //--app modules
 var locator_service_1 = require('../services/locator.service');
 var sidebar_1 = require('./sidebar');
+var content_1 = require('./content');
 var C2cWorkspace = (function () {
     function C2cWorkspace(_srvLocator) {
         this._srvLocator = _srvLocator;
         this.currentUser = _srvLocator.getService('IUserService').getUserInfo();
     }
     C2cWorkspace.prototype.ngOnInit = function () {
+        if (!this.sidebarSelectedMenuItem)
+            this.selectMenuItem(this.workspaceMenu.Items[0]);
+    };
+    /**
+     * Проверяет является ли страница активной в данный момент
+     */
+    C2cWorkspace.prototype.isActiveWorkspacePan = function (panName) {
+        return this.workspacePanName == panName;
     };
     //from sidebar
-    C2cWorkspace.prototype.selectPage = function (pageId) {
-        if (this.workspacePageName == pageId)
+    C2cWorkspace.prototype.selectMenuItem = function (selMenuItem) {
+        if (this.sidebarSelectedMenuItem === selMenuItem)
             return;
-        this.workspacePageName = pageId;
-        console.log(pageId);
+        this.sidebarSelectedMenuItem = selMenuItem;
     };
     C2cWorkspace = __decorate([
         core_1.Component({
             selector: 'ctoc-workspace',
             templateUrl: 'app/view/ctoc-workspace.html',
             inputs: ['workspacePanName', 'workspaceMenu'],
-            directives: [sidebar_1.C2cSidebar]
+            directives: [sidebar_1.C2cSidebar, content_1.C2cContent]
         }), 
         __metadata('design:paramtypes', [locator_service_1.ServiceLocator])
     ], C2cWorkspace);

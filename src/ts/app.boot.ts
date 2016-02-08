@@ -19,6 +19,8 @@ class CtocApp implements OnInit{
     selectedWorkspace: string;
     selectedWorkspaceMenu: Menu.SidebarMenu;
     
+    static IsExceptionRised: boolean = false;
+    
     constructor(private _srvLocator: ServiceLocator){        
         this.projectName = "C2C";
         this.toggleNav = false;        
@@ -26,9 +28,9 @@ class CtocApp implements OnInit{
         this.profileMenu.Items[0].IsActive = true;   
     }
        
-    ngOnInit(){
-        this.screenLoadingOff();
-        this.selectWorkspace('controlPan');
+    ngOnInit(){    
+        this.screenLoadingOff();    
+        this.selectWorkspace('controlPan');        
     }
     
     get currentUser(): IUserInfo {
@@ -42,9 +44,11 @@ class CtocApp implements OnInit{
     
     /** отключение экрана загрузки */
     screenLoadingOff(){
-        document.getElementById('startScreen').style.display = 'none';
-        document.getElementsByTagName('html')[0].classList.remove('startBody');
-        document.body.classList.remove('startBody');
+        if (!CtocApp.IsExceptionRised) {
+            document.getElementById('startScreen').style.display = 'none';        
+            document.getElementsByTagName('html')[0].classList.remove('startBody');
+            document.body.classList.remove('startBody');
+        }
     }
     
     // панель навигации    
@@ -96,8 +100,10 @@ class CtocApp implements OnInit{
 }
 
 bootstrap(CtocApp).catch(err => {
+    CtocApp.IsExceptionRised = true;
+    document.getElementById('startScreen').style.display = 'table';
     document.body.removeChild(document.getElementsByTagName('ctoc-app')[0]);
-    document.getElementById('startScreen').childNodes[0].textContent = ':( oops ' + err;
-});;
+    document.getElementById('startScreen').childNodes[0].textContent = err;
+});
 
 

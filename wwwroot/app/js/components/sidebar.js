@@ -13,18 +13,21 @@ var core_1 = require('angular2/core');
 var Menu = require('../utils/menu');
 var C2cSidebar = (function () {
     function C2cSidebar() {
-        this.selectedPage = new core_1.EventEmitter();
+        this.selectedPage = new core_1.EventEmitter(true);
     }
     C2cSidebar.prototype.ngOnInit = function () {
-        if (!this.menu.Items.find(function (i) { return i.IsActive == true; }))
+        if (!this.menu.Items.find(function (i) { return i.IsActive == true; })) {
             this.choose(this.menu.Items[0].Id);
+            return;
+        }
+        this.selectedPage.emit(this.menu.Items.find(function (i) { return i.IsActive == true; }));
     };
     C2cSidebar.prototype.choose = function (Id) {
         var _this = this;
         this.menu.Items.forEach(function (i) {
             if (i.Id == Id) {
                 i.IsActive = true;
-                _this.selectedPage.emit(i.Id);
+                _this.selectedPage.emit(i);
                 return;
             }
             i.IsActive = false;
