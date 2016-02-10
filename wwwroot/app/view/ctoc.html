@@ -11,17 +11,17 @@
         </div>
             
         <div [ngClass]="navClass"> 
-        <ul *ngIf = "!currentUser.IsAuthorized" class="nav navbar-nav navbar-right">
+        <ul *ngIf = "!currentUser.isAuthorized" class="nav navbar-nav navbar-right">
             <li><a href="#">Log In</a></li>
             <li><a href="#">Register</a></li>
         </ul>
-        <ul *ngIf = "currentUser.IsAuthorized" class="nav navbar-nav navbar-right">
+        <ul *ngIf = "currentUser.isAuthorized" class="nav navbar-nav navbar-right">
             <li>                
                 <a href="#"
                     #loginMenu 
                     (click)="loginMenu.dropped = !loginMenu.dropped;"
                     (blur)="loginMenu.dropped = false;">
-                    {{currentUser.Login }}
+                    {{currentUser.email }}
                     <span class="caret"></span>
                 </a>
                 <div [ngClass]="loginMenu.dropped ? 'dropdown open' : 'dropdown'">
@@ -42,7 +42,8 @@
 </nav>
 
 <div class="container-fluid">
-    <ctoc-workspace *ngIf = "currentUser.IsAuthorized"
+    <ctoc-workspace *ngIf = "currentUser.isAuthorized"
         [workspacePanName]="selectedWorkspace"
         [workspaceMenu]="selectedWorkspaceMenu"></ctoc-workspace>
+    <ctoc-login *ngIf = "!currentUser.isAuthorized"></ctoc-login>
 </div>

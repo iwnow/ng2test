@@ -1,7 +1,7 @@
 import {Component, OnInit} from 'angular2/core';
 import {bootstrap} from 'angular2/platform/browser';
 
-import {C2cWorkspace} from './components/workspace';
+import {C2cWorkspace,C2cLogin} from './components/all';
 import {ServiceLocator} from './services/locator.service';
 import {IUserService} from './contracts/iservices';
 import {IUserInfo} from './contracts/iuserinfo';
@@ -10,7 +10,7 @@ import * as Menu from './utils/menu';
 @Component({
     selector: 'ctoc-app',
     templateUrl: 'app/view/ctoc.html',
-    directives: [C2cWorkspace],
+    directives: [C2cWorkspace, C2cLogin],
     providers: [ServiceLocator]
 })
 class CtocApp implements OnInit{    
@@ -24,7 +24,9 @@ class CtocApp implements OnInit{
     constructor(private _srvLocator: ServiceLocator){        
         this.projectName = "C2C";
         this.toggleNav = false;        
-        window.addEventListener('resize', () => { this.docWidth = window.innerWidth; });  
+        window.addEventListener('resize', () => { 
+            this.docWidth = window.innerWidth;
+        });  
         this.profileMenu.Items[0].IsActive = true;   
     }
        

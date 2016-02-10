@@ -17,9 +17,11 @@ export class UserService implements IUserService {
     }
     
     logOut(){
-        console.log(`before: ${this._currentUser.IsAuthorized}`);
-        this._currentUser.IsAuthorized = false;
-        console.log(`after: ${this._currentUser.IsAuthorized}`);
+        this._currentUser.isAuthorized = false;
+    }
+    
+    isAuthorized(user: IUserInfo): boolean {
+        return user.isAuthorized;
     }
     
     private loadUserInfo(): IUserInfo {

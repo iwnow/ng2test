@@ -9,7 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require('angular2/core');
 var browser_1 = require('angular2/platform/browser');
-var workspace_1 = require('./components/workspace');
+var all_1 = require('./components/all');
 var locator_service_1 = require('./services/locator.service');
 var Menu = require('./utils/menu');
 var CtocApp = (function () {
@@ -27,7 +27,9 @@ var CtocApp = (function () {
         ]);
         this.projectName = "C2C";
         this.toggleNav = false;
-        window.addEventListener('resize', function () { _this.docWidth = window.innerWidth; });
+        window.addEventListener('resize', function () {
+            _this.docWidth = window.innerWidth;
+        });
         this.profileMenu.Items[0].IsActive = true;
     }
     CtocApp.prototype.ngOnInit = function () {
@@ -103,7 +105,7 @@ var CtocApp = (function () {
         core_1.Component({
             selector: 'ctoc-app',
             templateUrl: 'app/view/ctoc.html',
-            directives: [workspace_1.C2cWorkspace],
+            directives: [all_1.C2cWorkspace, all_1.C2cLogin],
             providers: [locator_service_1.ServiceLocator]
         }), 
         __metadata('design:paramtypes', [locator_service_1.ServiceLocator])

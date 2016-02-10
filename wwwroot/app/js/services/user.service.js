@@ -20,9 +20,10 @@ var UserService = (function () {
         return this._currentUser;
     };
     UserService.prototype.logOut = function () {
-        console.log("before: " + this._currentUser.IsAuthorized);
-        this._currentUser.IsAuthorized = false;
-        console.log("after: " + this._currentUser.IsAuthorized);
+        this._currentUser.isAuthorized = false;
+    };
+    UserService.prototype.isAuthorized = function (user) {
+        return user.isAuthorized;
     };
     UserService.prototype.loadUserInfo = function () {
         return user_mock_1.UserMock.Create();

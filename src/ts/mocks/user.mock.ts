@@ -1,12 +1,19 @@
 import {IUserInfo} from '../contracts/iuserinfo';
+import {User} from '../models/user'
 
 export class UserMock {
     static Create(): IUserInfo {
-        return {
-          Name: 'MockName',
-          Login: 'mock@mock.com',
-          IsAuthorized: true,
-          Roles: ['mock']  
-        };
+        return new User(
+            'mock@mock.com',
+            'q',
+            'mockLogin',
+            'mock',
+            'mock mock',
+            'q',
+            '',
+            null,
+            true,
+            ['mock']            
+        );
     }
 }
