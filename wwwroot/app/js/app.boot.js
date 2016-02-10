@@ -10,7 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var core_1 = require('angular2/core');
 var browser_1 = require('angular2/platform/browser');
 var all_1 = require('./components/all');
-var locator_service_1 = require('./services/locator.service');
+var all_2 = require('./services/all');
 var Menu = require('./utils/menu');
 var CtocApp = (function () {
     function CtocApp(_srvLocator) {
@@ -29,6 +29,13 @@ var CtocApp = (function () {
         this.toggleNav = false;
         window.addEventListener('resize', function () {
             _this.docWidth = window.innerWidth;
+            _srvLocator.getService('IEventService').emit({
+                key: 'resize',
+                data: {
+                    width: _this.docWidth,
+                    height: window.innerHeight
+                }
+            });
         });
         this.profileMenu.Items[0].IsActive = true;
     }
@@ -106,9 +113,9 @@ var CtocApp = (function () {
             selector: 'ctoc-app',
             templateUrl: 'app/view/ctoc.html',
             directives: [all_1.C2cWorkspace, all_1.C2cLogin],
-            providers: [locator_service_1.ServiceLocator]
+            providers: [all_2.ServiceLocator]
         }), 
-        __metadata('design:paramtypes', [locator_service_1.ServiceLocator])
+        __metadata('design:paramtypes', [all_2.ServiceLocator])
     ], CtocApp);
     return CtocApp;
 })();

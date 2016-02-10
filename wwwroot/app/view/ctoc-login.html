@@ -4,22 +4,27 @@
     <td style="width: 350px;">
         <div class="panel panel-info">
             <div class="panel-heading">
-                <h3 class="panel-title text-center">LOgin form</h3>
+                <h3 class="panel-title text-center">{{loginFormCaption}}</h3>
             </div>
             <div class="panel-body">
                 <form>       
                                  
                     <div class="input-group">
                         <span class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span></span>
-                        <input type="text" class="form-control" placeholder="email" required>
+                        <input type="text" class="form-control" placeholder="email" >
                     </div>                 
                     <div class="input-group">
                         <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
                         <input type="text" class="form-control" placeholder="password">
                     </div>                  
                 
-                    <input type="submit" value="Send" class="btn-success btn form-control" style="width: 320px; max-width: 400px;" />
-                
+                    <button (click)="send()" type="submit"
+                            class="btn-success btn form-control" 
+                            style="width: 320px; max-width: 400px;">
+                            <span id="spinBtnLogin"><i class="fa fa fa-spinner fa-spin"></i></span>
+                            {{btnSendTxt}}
+                    </button>
+                    
                 </form>
             </div>
         </div>

@@ -2,9 +2,8 @@ import {Component, OnInit} from 'angular2/core';
 import {bootstrap} from 'angular2/platform/browser';
 
 import {C2cWorkspace,C2cLogin} from './components/all';
-import {ServiceLocator} from './services/locator.service';
-import {IUserService} from './contracts/iservices';
-import {IUserInfo} from './contracts/iuserinfo';
+import {ServiceLocator} from './services/all';
+import {IUserService, IUserInfo, IEmitData,IEventService} from './contracts/all';
 import * as Menu from './utils/menu';
 
 @Component({
@@ -26,6 +25,13 @@ class CtocApp implements OnInit{
         this.toggleNav = false;        
         window.addEventListener('resize', () => { 
             this.docWidth = window.innerWidth;
+            _srvLocator.getService<IEventService>('IEventService').emit({
+                key:'resize', 
+                data: {
+                    width: this.docWidth,
+                    height: window.innerHeight
+                }
+            });
         });  
         this.profileMenu.Items[0].IsActive = true;   
     }

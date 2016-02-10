@@ -3,4 +3,6 @@ function __export(m) {
 }
 __export(require('./iservices'));
 __export(require('./iuserinfo'));
+__export(require('./iemitdata'));
+__export(require('./ieventservice'));
 //# sourceMappingURL=all.js.map

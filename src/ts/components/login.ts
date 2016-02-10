@@ -2,7 +2,7 @@ import {Component, OnInit} from 'angular2/core';
 import {NgForm}    from 'angular2/common';
 
 import {ServiceLocator} from '../services/all';
-import {IUserInfo, IUserService} from '../contracts/all';
+import {IUserInfo, IUserService, IEmitData, IEventService} from '../contracts/all';
 
 
 @Component({
@@ -10,25 +10,67 @@ import {IUserInfo, IUserService} from '../contracts/all';
   templateUrl: 'app/view/ctoc-login.html'
 })
 export class C2cLogin implements OnInit {
+    btnSendTxt: string;
+    loginFormCaption = "Login Form";
+    
+    resourceName = "Send";
+    
     constructor(private _locator: ServiceLocator){
         this._model = this.userService.getUserInfo();
+        this.eventService.subscribe('login', (data) => {
+           console.log(data); 
+        });   
+        this.btnSendTxt = this.resourceName;     
     }
     
     ngOnInit(){
         var t = document.getElementById('loginTable');
         t.style.height = (window.innerHeight - 70).toString() + 'px';
-        window.addEventListener('resize', (e) => {
-            t.style.height = window.innerHeight > 400 ? (window.innerHeight - window.innerHeight/3).toFixed(0).toString() + 'px' : '400px';
+        this.eventService.subscribe('resize', (data) => {
+           t.style.height = data.height > 400 ? (data.height - data.height/3).toFixed(0).toString() + 'px' : '400px';
         });
+        
+        this.showSpinner(false);
     }
     
     get userService(): IUserService {
         return this._locator.getService<IUserService>('IUserService');
+    }
+    get eventService(): IEventService {
+        return this._locator.getService<IEventService>('IEventService');
     }
     
     private _model: IUserInfo;
     get model():IUserInfo { return this._model;}
     set model(val: IUserInfo){
         this._model = val;
+    }
+    
+    private _isSending = false;
+    send() {
+        
+        this.eventService.emit({key: "login", data: "sended from login"});
+        
+        if (!this._isSending) {
+            this._isSending = true;
+            this.showSpinner();
+            setTimeout(() => {
+                this.showSpinner(false);
+                this._isSending = false;
+            }, 3000);
+        }
+        
+    }
+    
+    showSpinner(show: boolean = true){
+        var spin = document.getElementById('spinBtnLogin');
+        if (!show) {
+            spin.innerHTML = '';
+            this.btnSendTxt = this.resourceName;
+        }
+        else {
+            this.btnSendTxt = '';
+            spin.innerHTML = '<i class="fa fa fa-spinner fa-spin"></i>';    
+        }            
     }
 }

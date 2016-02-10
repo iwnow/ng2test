@@ -18,6 +18,10 @@ body {
     font-size: 20pt;
 }
 
+.hideElement {
+    display: none;
+}
+
 .input-group {
     margin-bottom: 5px;
 }
