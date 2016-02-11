@@ -13,6 +13,8 @@ var C2cLogin = (function () {
     function C2cLogin(_locator) {
         this._locator = _locator;
         this.loginFormCaption = "Login Form";
+        this.emailLabelText = "from class email";
+        this.passLabelText = "from class pass";
         this.resourceName = "Send";
         this._isSending = false;
         this._model = this.userService.getUserInfo();
@@ -20,13 +22,14 @@ var C2cLogin = (function () {
             console.log(data);
         });
         this.btnSendTxt = this.resourceName;
-    }
-    C2cLogin.prototype.ngOnInit = function () {
+        //set event on resize
         var t = document.getElementById('loginTable');
         t.style.height = (window.innerHeight - 70).toString() + 'px';
         this.eventService.subscribe('resize', function (data) {
             t.style.height = data.height > 400 ? (data.height - data.height / 3).toFixed(0).toString() + 'px' : '400px';
         });
+    }
+    C2cLogin.prototype.ngOnInit = function () {
         this.showSpinner(false);
     };
     Object.defineProperty(C2cLogin.prototype, "userService", {
@@ -57,9 +60,12 @@ var C2cLogin = (function () {
         if (!this._isSending) {
             this._isSending = true;
             this.showSpinner();
+            var t = this.emailLabelText;
+            this.emailLabelText = "sending...";
             setTimeout(function () {
                 _this.showSpinner(false);
                 _this._isSending = false;
+                _this.emailLabelText = t;
             }, 3000);
         }
     };

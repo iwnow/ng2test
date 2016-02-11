@@ -12,24 +12,26 @@ import {IUserInfo, IUserService, IEmitData, IEventService} from '../contracts/al
 export class C2cLogin implements OnInit {
     btnSendTxt: string;
     loginFormCaption = "Login Form";
-    
+    emailLabelText = "from class email";
+    passLabelText = "from class pass";
     resourceName = "Send";
     
     constructor(private _locator: ServiceLocator){
-        this._model = this.userService.getUserInfo();
-        this.eventService.subscribe('login', (data) => {
-           console.log(data); 
-        });   
+        this._model = this.userService.getUserInfo(); 
         this.btnSendTxt = this.resourceName;     
+        //set event on resize
+        this.registerResizeListening();
     }
     
-    ngOnInit(){
+    private registerResizeListening(){
         var t = document.getElementById('loginTable');
         t.style.height = (window.innerHeight - 70).toString() + 'px';
         this.eventService.subscribe('resize', (data) => {
            t.style.height = data.height > 400 ? (data.height - data.height/3).toFixed(0).toString() + 'px' : '400px';
         });
-        
+    }
+    
+    ngOnInit(){      
         this.showSpinner(false);
     }
     

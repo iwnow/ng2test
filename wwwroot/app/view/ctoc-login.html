@@ -2,7 +2,7 @@
 <tr>
     <td style="width: auto;"></td>
     <td style="width: 350px;">
-        <div class="panel panel-info">
+        <div class="panel panel-primary">
             <div class="panel-heading">
                 <h3 class="panel-title text-center">{{loginFormCaption}}</h3>
             </div>
@@ -11,11 +11,11 @@
                                  
                     <div class="input-group">
                         <span class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span></span>
-                        <input type="text" class="form-control" placeholder="email" >
+                        <input type="text" class="form-control" [placeholder]="emailLabelText" >
                     </div>                 
                     <div class="input-group">
                         <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
-                        <input type="text" class="form-control" placeholder="password">
+                        <input type="text" class="form-control" [placeholder]="passLabelText">
                     </div>                  
                 
                     <button (click)="send()" type="submit"

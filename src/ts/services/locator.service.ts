@@ -31,7 +31,7 @@ class DefaultServiceLocator implements IServiceLocator {
         private _eventService: IEventService
     ) { }
     
-    getService<T extends IService>(typeName: string): T {
+    getService<T>(typeName: string): T {
         if (!typeName)
             throw "Parameter [typeName] must not be empty!";
                

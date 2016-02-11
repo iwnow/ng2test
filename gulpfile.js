@@ -1,6 +1,6 @@
 var gulp = require('gulp');
 
-gulp.task('copy-js', function() {
+gulp.task('copy-lib', function() {
    gulp.src([
     "node_modules/es6-shim/es6-shim.js",
     "node_modules/systemjs/dist/system.js",
@@ -23,4 +23,17 @@ gulp.task('copy-css', function() {
 });
 
 
-gulp.task('setup',['copy-js', 'copy-css']);
+gulp.task('copy-js', function() {
+   gulp.src([
+    "src/js/*.js"
+   ]).pipe(gulp.dest('./wwwroot/app/js'));
+});
+
+gulp.task('copy-resx', function() {
+   gulp.src([
+    "src/resources/*.json"
+   ]).pipe(gulp.dest('./wwwroot/app/resources'));
+});
+
+
+gulp.task('setup',['copy-lib', 'copy-css', 'copy-js', 'copy-resx']);

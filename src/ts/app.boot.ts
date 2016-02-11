@@ -1,5 +1,6 @@
 import {Component, OnInit} from 'angular2/core';
 import {bootstrap} from 'angular2/platform/browser';
+import {HTTP_PROVIDERS} from 'angular2/http';
 
 import {C2cWorkspace,C2cLogin} from './components/all';
 import {ServiceLocator} from './services/all';
