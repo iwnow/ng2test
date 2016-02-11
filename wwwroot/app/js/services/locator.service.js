@@ -11,12 +11,13 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var core_1 = require('angular2/core');
 var user_service_1 = require('./user.service');
 var event_service_1 = require('./event.service');
+var resource_service_1 = require('./resource.service');
 /**
  * Сервис провайдер приложения
  */
 var ServiceLocator = (function () {
     function ServiceLocator() {
-        this._locator = new DefaultServiceLocator(new user_service_1.UserService(), new event_service_1.EventService());
+        this._locator = new DefaultServiceLocator(new user_service_1.UserService(), new event_service_1.EventService(), new resource_service_1.ResourceService());
     }
     ServiceLocator.prototype.getService = function (srvName) {
         return this._locator.getService(srvName);
@@ -29,9 +30,10 @@ var ServiceLocator = (function () {
 })();
 exports.ServiceLocator = ServiceLocator;
 var DefaultServiceLocator = (function () {
-    function DefaultServiceLocator(_userService, _eventService) {
+    function DefaultServiceLocator(_userService, _eventService, _resxService) {
         this._userService = _userService;
         this._eventService = _eventService;
+        this._resxService = _resxService;
     }
     DefaultServiceLocator.prototype.getService = function (typeName) {
         if (!typeName)
@@ -42,6 +44,9 @@ var DefaultServiceLocator = (function () {
                 break;
             case 'IEventService':
                 return this._eventService;
+                break;
+            case 'IResourceService':
+                return this._resxService;
                 break;
             default:
                 throw "class [" + typeName + "] is not implemented!";

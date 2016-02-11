@@ -1,9 +1,12 @@
 //external modules
 import {Injectable, Inject} from 'angular2/core';
 //app modules
-import {IServiceLocator, IUserService, IService, IEmitData, IEventService} from '../contracts/all';
+import {IServiceLocator, IUserService, 
+        IService, IEmitData, IEventService,
+        IResourceService} from '../contracts/all';
 import {UserService} from './user.service';
 import {EventService} from './event.service';
+import {ResourceService} from './resource.service';
 
 /**
  * Сервис провайдер приложения
@@ -15,7 +18,8 @@ export class ServiceLocator {
     constructor() {
         this._locator = new DefaultServiceLocator(
             new UserService(),
-            new EventService()
+            new EventService(),
+            new ResourceService()
         );
     }
     
@@ -28,7 +32,8 @@ class DefaultServiceLocator implements IServiceLocator {
     
     constructor(
         private _userService: IUserService,
-        private _eventService: IEventService
+        private _eventService: IEventService,
+        private _resxService: IResourceService
     ) { }
     
     getService<T>(typeName: string): T {
@@ -42,7 +47,9 @@ class DefaultServiceLocator implements IServiceLocator {
             case 'IEventService':
                 return <any>this._eventService;
                 break;
-                
+            case 'IResourceService':
+                return <any>this._resxService;
+                break;
             default:
                 throw `class [${typeName}] is not implemented!`;
                 

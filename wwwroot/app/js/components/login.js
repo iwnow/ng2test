@@ -18,17 +18,24 @@ var C2cLogin = (function () {
         this.resourceName = "Send";
         this._isSending = false;
         this._model = this.userService.getUserInfo();
-        this.eventService.subscribe('login', function (data) {
-            console.log(data);
-        });
         this.btnSendTxt = this.resourceName;
         //set event on resize
+        this.registerResizeListening();
+        //set event on lang changed
+        this.registerLangChanged();
+    }
+    C2cLogin.prototype.registerResizeListening = function () {
         var t = document.getElementById('loginTable');
         t.style.height = (window.innerHeight - 70).toString() + 'px';
         this.eventService.subscribe('resize', function (data) {
             t.style.height = data.height > 400 ? (data.height - data.height / 3).toFixed(0).toString() + 'px' : '400px';
         });
-    }
+    };
+    C2cLogin.prototype.registerLangChanged = function () {
+        this.eventService.subscribe('lang:changed', function (data) {
+            console.log('lang changed!!!!! ' + data);
+        });
+    };
     C2cLogin.prototype.ngOnInit = function () {
         this.showSpinner(false);
     };
@@ -60,12 +67,9 @@ var C2cLogin = (function () {
         if (!this._isSending) {
             this._isSending = true;
             this.showSpinner();
-            var t = this.emailLabelText;
-            this.emailLabelText = "sending...";
             setTimeout(function () {
                 _this.showSpinner(false);
                 _this._isSending = false;
-                _this.emailLabelText = t;
             }, 3000);
         }
     };

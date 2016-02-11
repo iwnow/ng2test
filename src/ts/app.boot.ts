@@ -4,7 +4,9 @@ import {HTTP_PROVIDERS} from 'angular2/http';
 
 import {C2cWorkspace,C2cLogin} from './components/all';
 import {ServiceLocator} from './services/all';
-import {IUserService, IUserInfo, IEmitData,IEventService} from './contracts/all';
+import {IUserService, IUserInfo, 
+        IEmitData,IEventService,
+        Cultures, IResourceService} from './contracts/all';
 import * as Menu from './utils/menu';
 
 @Component({
@@ -18,15 +20,23 @@ class CtocApp implements OnInit{
     toggleNav: boolean;
     selectedWorkspace: string;
     selectedWorkspaceMenu: Menu.SidebarMenu;
+    languages: string[];
+    selectedLang: string;
     
     static IsExceptionRised: boolean = false;
     
     constructor(private _srvLocator: ServiceLocator){        
         this.projectName = "C2C";
         this.toggleNav = false;        
+        this.addResizeEvent();
+        this.profileMenu.Items[0].IsActive = true;   
+        this.addLangs();
+    }
+    
+    addResizeEvent() {
         window.addEventListener('resize', () => { 
             this.docWidth = window.innerWidth;
-            _srvLocator.getService<IEventService>('IEventService').emit({
+            this.eventService.emit({
                 key:'resize', 
                 data: {
                     width: this.docWidth,
@@ -34,9 +44,13 @@ class CtocApp implements OnInit{
                 }
             });
         });  
-        this.profileMenu.Items[0].IsActive = true;   
     }
-       
+    
+    addLangs() {
+        this.languages = this.resxService.supportedCultures().map((e) => this.resxService.getNameByEnum(e));
+        this.langChoose('Ru');
+    }
+    
     ngOnInit(){    
         this.screenLoadingOff();    
         this.selectWorkspace('controlPan');        
@@ -49,6 +63,14 @@ class CtocApp implements OnInit{
     /** Сервис для получения информации о текущем пользователе */
     get userService(): IUserService {
         return this._srvLocator.getService<IUserService>('IUserService');
+    }
+    /** Сервис работы с ресурсами приложения */
+    get resxService(): IResourceService {
+        return this._srvLocator.getService<IResourceService>('IResourceService');
+    }
+    
+    get eventService(): IEventService {
+        return this._srvLocator.getService<IEventService>('IEventService');
     }
     
     logOut(){
@@ -110,7 +132,17 @@ class CtocApp implements OnInit{
         new Menu.MenuItem('pay', 'Payment Info')
     ]);
     
-    
+    langChoose(lang: string){
+        if (this.selectedLang == lang)
+            return;
+        this.selectedLang = lang;
+        let culture = this.resxService.getCultureByName(lang);
+        this.resxService.setResource(culture);
+        this.eventService.emit({
+           key: 'lang:changed',
+           data: culture
+        });        
+    }
 }
 
 bootstrap(CtocApp).catch(err => {

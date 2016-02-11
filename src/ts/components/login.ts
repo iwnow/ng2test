@@ -21,6 +21,8 @@ export class C2cLogin implements OnInit {
         this.btnSendTxt = this.resourceName;     
         //set event on resize
         this.registerResizeListening();
+        //set event on lang changed
+        this.registerLangChanged();
     }
     
     private registerResizeListening(){
@@ -28,6 +30,12 @@ export class C2cLogin implements OnInit {
         t.style.height = (window.innerHeight - 70).toString() + 'px';
         this.eventService.subscribe('resize', (data) => {
            t.style.height = data.height > 400 ? (data.height - data.height/3).toFixed(0).toString() + 'px' : '400px';
+        });
+    }
+    
+    private registerLangChanged(){
+        this.eventService.subscribe('lang:changed', (data) => {
+           console.log('lang changed!!!!! ' + data); 
         });
     }
     

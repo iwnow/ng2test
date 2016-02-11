@@ -14,7 +14,6 @@ var all_2 = require('./services/all');
 var Menu = require('./utils/menu');
 var CtocApp = (function () {
     function CtocApp(_srvLocator) {
-        var _this = this;
         this._srvLocator = _srvLocator;
         //fix with resources
         this.profileMenu = new Menu.SidebarMenu([
@@ -27,9 +26,15 @@ var CtocApp = (function () {
         ]);
         this.projectName = "C2C";
         this.toggleNav = false;
+        this.addResizeEvent();
+        this.profileMenu.Items[0].IsActive = true;
+        this.addLangs();
+    }
+    CtocApp.prototype.addResizeEvent = function () {
+        var _this = this;
         window.addEventListener('resize', function () {
             _this.docWidth = window.innerWidth;
-            _srvLocator.getService('IEventService').emit({
+            _this.eventService.emit({
                 key: 'resize',
                 data: {
                     width: _this.docWidth,
@@ -37,8 +42,12 @@ var CtocApp = (function () {
                 }
             });
         });
-        this.profileMenu.Items[0].IsActive = true;
-    }
+    };
+    CtocApp.prototype.addLangs = function () {
+        var _this = this;
+        this.languages = this.resxService.supportedCultures().map(function (e) { return _this.resxService.getNameByEnum(e); });
+        this.langChoose('Ru');
+    };
     CtocApp.prototype.ngOnInit = function () {
         this.screenLoadingOff();
         this.selectWorkspace('controlPan');
@@ -54,6 +63,21 @@ var CtocApp = (function () {
         /** Сервис для получения информации о текущем пользователе */
         get: function () {
             return this._srvLocator.getService('IUserService');
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(CtocApp.prototype, "resxService", {
+        /** Сервис работы с ресурсами приложения */
+        get: function () {
+            return this._srvLocator.getService('IResourceService');
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(CtocApp.prototype, "eventService", {
+        get: function () {
+            return this._srvLocator.getService('IEventService');
         },
         enumerable: true,
         configurable: true
@@ -106,6 +130,17 @@ var CtocApp = (function () {
             default:
                 break;
         }
+    };
+    CtocApp.prototype.langChoose = function (lang) {
+        if (this.selectedLang == lang)
+            return;
+        this.selectedLang = lang;
+        var culture = this.resxService.getCultureByName(lang);
+        this.resxService.setResource(culture);
+        this.eventService.emit({
+            key: 'lang:changed',
+            data: culture
+        });
     };
     CtocApp.IsExceptionRised = false;
     CtocApp = __decorate([
