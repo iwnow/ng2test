@@ -16,7 +16,7 @@ var ExceptionService = (function () {
         this.register();
     }
     ExceptionService.prototype.register = function () {
-        console.log('ExceptionService registered');
+        //console.log('ExceptionService registered');
         this._events.subscribe(all_1.Descriptors.Exceptions, function (data) {
             console.log((all_1.Descriptors.Exceptions + ":") + data);
         });

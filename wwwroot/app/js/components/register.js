@@ -10,8 +10,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var core_1 = require('angular2/core');
 var all_1 = require('../services/all');
 var all_2 = require('../utils/all');
-var C2cLogin = (function () {
-    function C2cLogin(_locator) {
+var C2cRegister = (function () {
+    function C2cRegister(_locator) {
         this._locator = _locator;
         this._isSending = false;
         this._model = this.userService.getUserInfo();
@@ -20,61 +20,63 @@ var C2cLogin = (function () {
         //set event on lang changed
         this.registerLangChanged();
     }
-    C2cLogin.prototype.registerResizeListening = function () {
-        var t = document.getElementById('loginTable');
+    C2cRegister.prototype.registerResizeListening = function () {
+        var t = document.getElementById('registerTable');
         t.style.height = (window.innerHeight - 70).toString() + 'px';
         this.eventService.subscribe(all_2.Descriptors.WinResize, function (data) {
             t.style.height = data.height > 400 ? (data.height - data.height / 3).toFixed(0).toString() + 'px' : '400px';
         });
     };
-    C2cLogin.prototype.registerLangChanged = function () {
+    C2cRegister.prototype.registerLangChanged = function () {
         var _this = this;
         this.eventService.subscribe(all_2.Descriptors.LanguageChange, function (data) {
             _this.updateResource(data);
         });
     };
-    C2cLogin.prototype.updateCultureUI = function (resx) {
+    C2cRegister.prototype.updateCultureUI = function (resx) {
         if (!resx) {
-            this.eventService.emit({ key: all_2.Descriptors.Exceptions, data: '[login.ts:updateCultureUI(resx: any)]: при обовлении UI передан пустой ресурс!' });
+            this.eventService.emit({ key: all_2.Descriptors.Exceptions, data: '[register.ts:updateCultureUI(resx: any)]: при обовлении UI передан пустой ресурс!' });
             return;
         }
         this.btnSendTxt = resx.btnSend;
         this.loginFormCaption = resx.captionForm;
         this.emailLabelText = resx.emailLabelText;
         this.passLabelText = resx.passLabelText;
+        this.passConfirmLabelText = resx.passConfirmLabelText;
+        this.companyNameLabelText = resx.companyNameLabelText;
     };
-    C2cLogin.prototype.updateResource = function (culture) {
+    C2cRegister.prototype.updateResource = function (culture) {
         var _this = this;
         this._locator.getService('IResourceService')
             .getResourceByCulture(culture)
             .subscribe(function (data) {
-            _this.updateCultureUI(data.loginPage);
+            _this.updateCultureUI(data.registerPage);
         });
     };
-    C2cLogin.prototype.ngOnInit = function () {
+    C2cRegister.prototype.ngOnInit = function () {
         var _this = this;
         this.showSpinner(false);
         this._locator.getService('IResourceService')
             .getResource()
             .subscribe(function (data) {
-            _this.updateCultureUI(data.loginPage);
+            _this.updateCultureUI(data.registerPage);
         });
     };
-    Object.defineProperty(C2cLogin.prototype, "userService", {
+    Object.defineProperty(C2cRegister.prototype, "userService", {
         get: function () {
             return this._locator.getService('IUserService');
         },
         enumerable: true,
         configurable: true
     });
-    Object.defineProperty(C2cLogin.prototype, "eventService", {
+    Object.defineProperty(C2cRegister.prototype, "eventService", {
         get: function () {
             return this._locator.getService('IEventService');
         },
         enumerable: true,
         configurable: true
     });
-    Object.defineProperty(C2cLogin.prototype, "model", {
+    Object.defineProperty(C2cRegister.prototype, "model", {
         get: function () { return this._model; },
         set: function (val) {
             this._model = val;
@@ -82,9 +84,8 @@ var C2cLogin = (function () {
         enumerable: true,
         configurable: true
     });
-    C2cLogin.prototype.send = function () {
+    C2cRegister.prototype.send = function () {
         var _this = this;
-        this.eventService.emit({ key: "login", data: "sended from login" });
         var tmp = this.btnSendTxt;
         if (!this._isSending) {
             this._isSending = true;
@@ -97,19 +98,19 @@ var C2cLogin = (function () {
             }, 3000);
         }
     };
-    C2cLogin.prototype.showSpinner = function (show) {
+    C2cRegister.prototype.showSpinner = function (show) {
         if (show === void 0) { show = true; }
-        var spin = document.getElementById('spinBtnLogin');
+        var spin = document.getElementById('spinBtnRegister');
         spin.innerHTML = !show ? '' : '<i class="fa fa fa-spinner fa-spin"></i>';
     };
-    C2cLogin = __decorate([
+    C2cRegister = __decorate([
         core_1.Component({
-            selector: 'ctoc-login',
-            templateUrl: 'app/view/ctoc-login.html'
+            selector: 'ctoc-register',
+            templateUrl: 'app/view/ctoc-register.html'
         }), 
         __metadata('design:paramtypes', [all_1.ServiceLocator])
-    ], C2cLogin);
-    return C2cLogin;
+    ], C2cRegister);
+    return C2cRegister;
 })();
-exports.C2cLogin = C2cLogin;
-//# sourceMappingURL=login.js.map
+exports.C2cRegister = C2cRegister;
+//# sourceMappingURL=register.js.map

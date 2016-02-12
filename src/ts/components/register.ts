@@ -6,16 +6,17 @@ import {IUserInfo, IUserService, IEmitData, IEventService, Cultures, IResourceSe
 import {Descriptors} from '../utils/all';
 
 @Component({
-  selector: 'ctoc-login',
-  templateUrl: 'app/view/ctoc-login.html'
+  selector: 'ctoc-register',
+  templateUrl: 'app/view/ctoc-register.html'
 })
-export class C2cLogin implements OnInit {
+export class C2cRegister implements OnInit {
     btnSendTxt: string;
     loginFormCaption: string;
     emailLabelText: string;
     passLabelText: string;
+    passConfirmLabelText: string;
+    companyNameLabelText: string;
     
-    resource: any;
     
     constructor(private _locator: ServiceLocator){
         this._model = this.userService.getUserInfo();      
@@ -26,7 +27,7 @@ export class C2cLogin implements OnInit {
     }
     
     private registerResizeListening(){
-        var t = document.getElementById('loginTable');
+        var t = document.getElementById('registerTable');
         t.style.height = (window.innerHeight - 70).toString() + 'px';
         this.eventService.subscribe(Descriptors.WinResize, (data) => {
            t.style.height = data.height > 400 ? (data.height - data.height/3).toFixed(0).toString() + 'px' : '400px';
@@ -41,20 +42,22 @@ export class C2cLogin implements OnInit {
     
     updateCultureUI(resx: any){
         if (!resx) {
-            this.eventService.emit({key: Descriptors.Exceptions, data: '[login.ts:updateCultureUI(resx: any)]: при обовлении UI передан пустой ресурс!'});
+            this.eventService.emit({key: Descriptors.Exceptions, data: '[register.ts:updateCultureUI(resx: any)]: при обовлении UI передан пустой ресурс!'});
             return;
         }            
         this.btnSendTxt = resx.btnSend;
         this.loginFormCaption = resx.captionForm;
         this.emailLabelText = resx.emailLabelText;
         this.passLabelText = resx.passLabelText;
+        this.passConfirmLabelText = resx.passConfirmLabelText;
+        this.companyNameLabelText = resx.companyNameLabelText;
     }
     
     updateResource(culture: Cultures){
         this._locator.getService<IResourceService>('IResourceService')
             .getResourceByCulture(culture)
             .subscribe(data => {
-                this.updateCultureUI(data.loginPage);
+                this.updateCultureUI(data.registerPage);
             });
     }
     
@@ -63,7 +66,7 @@ export class C2cLogin implements OnInit {
         this._locator.getService<IResourceService>('IResourceService')
             .getResource()
             .subscribe(data => {
-                this.updateCultureUI(data.loginPage);
+                this.updateCultureUI(data.registerPage);
             });
     }
     
@@ -82,7 +85,6 @@ export class C2cLogin implements OnInit {
     
     private _isSending = false;
     send() {
-        this.eventService.emit({key: "login", data: "sended from login"});
         let tmp = this.btnSendTxt;
         if (!this._isSending) {
             this._isSending = true;
@@ -98,7 +100,7 @@ export class C2cLogin implements OnInit {
     }
     
     showSpinner(show: boolean = true){        
-        let spin = document.getElementById('spinBtnLogin');
+        let spin = document.getElementById('spinBtnRegister');
         spin.innerHTML = !show ? '' : '<i class="fa fa fa-spinner fa-spin"></i>';     
     }
 }

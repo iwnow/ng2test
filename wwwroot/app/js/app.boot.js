@@ -19,6 +19,7 @@ var CtocApp = (function () {
     function CtocApp(_srvLocator, _exceptionService) {
         this._srvLocator = _srvLocator;
         this._exceptionService = _exceptionService;
+        this.loginOrReg = true;
         //fix with resources
         this.profileMenu = new Menu.SidebarMenu([
             new Menu.MenuItem('profile', 'Profile'),
@@ -31,6 +32,7 @@ var CtocApp = (function () {
         this.projectName = "C2C";
         this.toggleNav = false;
         this.addResizeEvent();
+        this.registerLangChanged();
         this.profileMenu.Items[0].IsActive = true;
         this.addLangs();
     }
@@ -39,12 +41,34 @@ var CtocApp = (function () {
         window.addEventListener('resize', function () {
             _this.docWidth = window.innerWidth;
             _this.eventService.emit({
-                key: 'resize',
+                key: Utils.Descriptors.WinResize,
                 data: {
                     width: _this.docWidth,
                     height: window.innerHeight
                 }
             });
+        });
+    };
+    CtocApp.prototype.registerLangChanged = function () {
+        var _this = this;
+        this.eventService.subscribe(Utils.Descriptors.LanguageChange, function (data) {
+            _this.updateResource(data);
+        });
+    };
+    CtocApp.prototype.updateCultureUI = function (resx) {
+        if (!resx) {
+            this.eventService.emit({ key: Utils.Descriptors.Exceptions, data: '[app.boot.ts:updateCultureUI(resx: any)]: при обовлении UI передан пустой ресурс!' });
+            return;
+        }
+        this.loginLink = resx.login;
+        this.registerLink = resx.register;
+    };
+    CtocApp.prototype.updateResource = function (culture) {
+        var _this = this;
+        this._srvLocator.getService('IResourceService')
+            .getResourceByCulture(culture)
+            .subscribe(function (data) {
+            _this.updateCultureUI(data.navBar);
         });
     };
     CtocApp.prototype.addLangs = function () {
@@ -152,7 +176,7 @@ var CtocApp = (function () {
         core_1.Component({
             selector: 'ctoc-app',
             templateUrl: 'app/view/ctoc.html',
-            directives: [all_1.C2cWorkspace, all_1.C2cLogin],
+            directives: [all_1.C2cWorkspace, all_1.C2cLogin, all_1.C2cRegister],
             providers: [all_2.ResourceService, all_2.ServiceLocator, all_2.EventService, all_2.UserService, all_2.ExceptionService,
                 http_1.HTTP_PROVIDERS]
         }), 

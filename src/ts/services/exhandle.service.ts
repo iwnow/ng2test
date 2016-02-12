@@ -10,7 +10,7 @@ export class ExceptionService {
     }
     
     private register(){
-        console.log('ExceptionService registered');
+        //console.log('ExceptionService registered');
         this._events.subscribe(Descriptors.Exceptions, (data) => {
            console.log(`${Descriptors.Exceptions}:` + data); 
         });

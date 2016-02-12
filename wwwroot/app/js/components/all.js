@@ -5,4 +5,5 @@ __export(require('./content'));
 __export(require('./login'));
 __export(require('./sidebar'));
 __export(require('./workspace'));
+__export(require('./register'));
 //# sourceMappingURL=all.js.map

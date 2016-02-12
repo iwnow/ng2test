@@ -3,7 +3,7 @@ import {bootstrap} from 'angular2/platform/browser';
 import {HTTP_PROVIDERS} from 'angular2/http';
 import 'rxjs/Rx';
 
-import {C2cWorkspace,C2cLogin} from './components/all';
+import {C2cWorkspace,C2cLogin, C2cRegister} from './components/all';
 import {ServiceLocator, ResourceService, EventService, UserService,ExceptionService} from './services/all';
 import {IUserService, IUserInfo, 
         IEmitData,IEventService,
@@ -15,7 +15,7 @@ import * as Utils from './utils/all';
 @Component({
     selector: 'ctoc-app',
     templateUrl: 'app/view/ctoc.html',
-    directives: [C2cWorkspace, C2cLogin],
+    directives: [C2cWorkspace, C2cLogin, C2cRegister],
     providers: [ResourceService, ServiceLocator,EventService,UserService,ExceptionService,
                 HTTP_PROVIDERS]
 })
@@ -26,6 +26,10 @@ class CtocApp implements OnInit{
     selectedWorkspaceMenu: Menu.SidebarMenu;
     languages: string[];
     selectedLang: string;
+    loginOrReg = true;
+    //ui vars
+    loginLink: string;
+    registerLink: string;
     
     static IsExceptionRised: boolean = false;
     
@@ -33,6 +37,7 @@ class CtocApp implements OnInit{
         this.projectName = "C2C";
         this.toggleNav = false;        
         this.addResizeEvent();
+        this.registerLangChanged();
         this.profileMenu.Items[0].IsActive = true;   
         this.addLangs();
     }
@@ -41,13 +46,36 @@ class CtocApp implements OnInit{
         window.addEventListener('resize', () => { 
             this.docWidth = window.innerWidth;
             this.eventService.emit({
-                key:'resize', 
+                key:Utils.Descriptors.WinResize, 
                 data: {
                     width: this.docWidth,
                     height: window.innerHeight
                 }
             });
         });  
+    }
+    
+    private registerLangChanged(){
+        this.eventService.subscribe(Utils.Descriptors.LanguageChange, (data) => {
+            this.updateResource(data);
+        });
+    }
+    
+    updateCultureUI(resx: any){
+        if (!resx) {
+            this.eventService.emit({key: Utils.Descriptors.Exceptions, data: '[app.boot.ts:updateCultureUI(resx: any)]: при обовлении UI передан пустой ресурс!'});
+            return;
+        }
+        this.loginLink = resx.login;
+        this.registerLink = resx.register;
+    }
+    
+    updateResource(culture: Cultures){
+        this._srvLocator.getService<IResourceService>('IResourceService')
+            .getResourceByCulture(culture)
+            .subscribe(data => {
+                this.updateCultureUI(data.navBar);
+            });
     }
     
     addLangs() {

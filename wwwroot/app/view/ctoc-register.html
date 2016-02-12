@@ -1,4 +1,4 @@
-<table id="loginTable" style="width: 100%;">
+<table id="registerTable" style="width: 100%;">
 <tr>
     <td style="width: auto;"></td>
     <td style="width: 350px;">
@@ -12,16 +12,24 @@
                     <div class="input-group">
                         <span class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span></span>
                         <input type="text" class="form-control" [placeholder]="emailLabelText" >
-                    </div>                 
+                    </div>       
+                    <div class="input-group">
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-phone"></span></span>
+                        <input type="text" class="form-control" [placeholder]="companyNameLabelText" >
+                    </div>           
                     <div class="input-group">
                         <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
                         <input type="password" class="form-control" [placeholder]="passLabelText">
-                    </div>                  
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
+                        <input type="password" class="form-control" [placeholder]="passConfirmLabelText">
+                    </div>                    
                 
                     <button (click)="send()" type="submit"
                             class="btn-success btn form-control" 
                             style="width: 320px; max-width: 400px;">
-                            <span id="spinBtnLogin"><i class="fa fa fa-spinner fa-spin"></i></span>
+                            <span id="spinBtnRegister"><i class="fa fa fa-spinner fa-spin"></i></span>
                             {{btnSendTxt}}
                     </button>
                     

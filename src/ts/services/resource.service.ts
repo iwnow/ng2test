@@ -69,7 +69,7 @@ export class ResourceService implements IResourceService {
     
     private resxFromServer(culture: Cultures): Observable<any>{        
         let resxName = this.getNameByEnum(culture).toLowerCase();
-        console.log(`get resource from server: ${culture}`);
+        //console.log(`get resource from server: ${culture}`);
         return this._http        
                     .get(`${this._urlResx}${resxName}.json`)
                     .map((res) => {

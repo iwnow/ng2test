@@ -1,6 +1,20 @@
 {
+    "navBar": {
+        "login": "Log in",
+        "register": "Register"
+    },
     "loginPage": {
         "btnSend": "Sign in",
-        "captionForm": "Sign in"
+        "captionForm": "Sign in",
+        "emailLabelText": "Your email",
+        "passLabelText": "Your password"
+    },
+    "registerPage": {
+        "btnSend": "Register",
+        "captionForm": "Registration",
+        "emailLabelText": "Your email",
+        "passLabelText": "Your password",
+        "passConfirmLabelText": "Confirm your password",
+        "companyNameLabelText": "Company name"
     }
 }

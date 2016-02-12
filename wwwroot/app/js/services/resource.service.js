@@ -65,7 +65,7 @@ var ResourceService = (function () {
     ResourceService.prototype.resxFromServer = function (culture) {
         var _this = this;
         var resxName = this.getNameByEnum(culture).toLowerCase();
-        console.log("get resource from server: " + culture);
+        //console.log(`get resource from server: ${culture}`);
         return this._http
             .get("" + this._urlResx + resxName + ".json")
             .map(function (res) {
