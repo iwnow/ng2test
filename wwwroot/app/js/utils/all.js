@@ -3,4 +3,5 @@ function __export(m) {
 }
 __export(require('./cookie'));
 __export(require('./menu'));
+__export(require('./descriptors'));
 //# sourceMappingURL=all.js.map

@@ -16,15 +16,18 @@ var resource_service_1 = require('./resource.service');
  * Сервис провайдер приложения
  */
 var ServiceLocator = (function () {
-    function ServiceLocator() {
-        this._locator = new DefaultServiceLocator(new user_service_1.UserService(), new event_service_1.EventService(), new resource_service_1.ResourceService());
+    function ServiceLocator(_resx, _events, _users) {
+        this._resx = _resx;
+        this._events = _events;
+        this._users = _users;
+        this._locator = new DefaultServiceLocator(_users, _events, _resx);
     }
     ServiceLocator.prototype.getService = function (srvName) {
         return this._locator.getService(srvName);
     };
     ServiceLocator = __decorate([
         core_1.Injectable(), 
-        __metadata('design:paramtypes', [])
+        __metadata('design:paramtypes', [resource_service_1.ResourceService, event_service_1.EventService, user_service_1.UserService])
     ], ServiceLocator);
     return ServiceLocator;
 })();

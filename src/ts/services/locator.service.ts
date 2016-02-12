@@ -15,12 +15,10 @@ import {ResourceService} from './resource.service';
 export class ServiceLocator {
     private _locator: IServiceLocator;
     
-    constructor() {
-        this._locator = new DefaultServiceLocator(
-            new UserService(),
-            new EventService(),
-            new ResourceService()
-        );
+    constructor(private _resx:ResourceService,
+                private _events:EventService,
+                private _users:UserService) {                    
+        this._locator = new DefaultServiceLocator(_users, _events, _resx);
     }
     
     getService<T>(srvName: string): T {

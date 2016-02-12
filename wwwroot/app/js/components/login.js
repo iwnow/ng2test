@@ -9,16 +9,15 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require('angular2/core');
 var all_1 = require('../services/all');
+var all_2 = require('../utils/all');
 var C2cLogin = (function () {
     function C2cLogin(_locator) {
         this._locator = _locator;
         this.loginFormCaption = "Login Form";
         this.emailLabelText = "from class email";
         this.passLabelText = "from class pass";
-        this.resourceName = "Send";
         this._isSending = false;
         this._model = this.userService.getUserInfo();
-        this.btnSendTxt = this.resourceName;
         //set event on resize
         this.registerResizeListening();
         //set event on lang changed
@@ -32,12 +31,30 @@ var C2cLogin = (function () {
         });
     };
     C2cLogin.prototype.registerLangChanged = function () {
-        this.eventService.subscribe('lang:changed', function (data) {
-            console.log('lang changed!!!!! ' + data);
+        var _this = this;
+        this.eventService.subscribe(all_2.Descriptors.LanguageChange, function (data) {
+            _this.updateResource(data);
+        });
+    };
+    C2cLogin.prototype.updateCultureUI = function (resx) {
+        this.btnSendTxt = resx.btnSend;
+    };
+    C2cLogin.prototype.updateResource = function (culture) {
+        var _this = this;
+        this._locator.getService('IResourceService')
+            .getResourceByCulture(culture)
+            .subscribe(function (data) {
+            _this.updateCultureUI(data.loginPage);
         });
     };
     C2cLogin.prototype.ngOnInit = function () {
+        var _this = this;
         this.showSpinner(false);
+        this._locator.getService('IResourceService')
+            .getResource()
+            .subscribe(function (data) {
+            _this.updateCultureUI(data.loginPage);
+        });
     };
     Object.defineProperty(C2cLogin.prototype, "userService", {
         get: function () {
@@ -64,11 +81,14 @@ var C2cLogin = (function () {
     C2cLogin.prototype.send = function () {
         var _this = this;
         this.eventService.emit({ key: "login", data: "sended from login" });
+        var tmp = this.btnSendTxt;
         if (!this._isSending) {
             this._isSending = true;
+            this.btnSendTxt = '';
             this.showSpinner();
             setTimeout(function () {
                 _this.showSpinner(false);
+                _this.btnSendTxt = tmp;
                 _this._isSending = false;
             }, 3000);
         }
@@ -76,14 +96,7 @@ var C2cLogin = (function () {
     C2cLogin.prototype.showSpinner = function (show) {
         if (show === void 0) { show = true; }
         var spin = document.getElementById('spinBtnLogin');
-        if (!show) {
-            spin.innerHTML = '';
-            this.btnSendTxt = this.resourceName;
-        }
-        else {
-            this.btnSendTxt = '';
-            spin.innerHTML = '<i class="fa fa fa-spinner fa-spin"></i>';
-        }
+        spin.innerHTML = !show ? '' : '<i class="fa fa fa-spinner fa-spin"></i>';
     };
     C2cLogin = __decorate([
         core_1.Component({

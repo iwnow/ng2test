@@ -4,4 +4,6 @@ function __export(m) {
 __export(require('./locator.service'));
 __export(require('./user.service'));
 __export(require('./event.service'));
+__export(require('./resource.service'));
+__export(require('./exhandle.service'));
 //# sourceMappingURL=all.js.map

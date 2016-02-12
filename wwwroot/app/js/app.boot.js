@@ -9,12 +9,16 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require('angular2/core');
 var browser_1 = require('angular2/platform/browser');
+var http_1 = require('angular2/http');
+require('rxjs/Rx');
 var all_1 = require('./components/all');
 var all_2 = require('./services/all');
 var Menu = require('./utils/menu');
+var Utils = require('./utils/all');
 var CtocApp = (function () {
-    function CtocApp(_srvLocator) {
+    function CtocApp(_srvLocator, _exceptionService) {
         this._srvLocator = _srvLocator;
+        this._exceptionService = _exceptionService;
         //fix with resources
         this.profileMenu = new Menu.SidebarMenu([
             new Menu.MenuItem('profile', 'Profile'),
@@ -76,6 +80,7 @@ var CtocApp = (function () {
         configurable: true
     });
     Object.defineProperty(CtocApp.prototype, "eventService", {
+        /** Сервис асинхронных сообщений */
         get: function () {
             return this._srvLocator.getService('IEventService');
         },
@@ -138,7 +143,7 @@ var CtocApp = (function () {
         var culture = this.resxService.getCultureByName(lang);
         this.resxService.setResource(culture);
         this.eventService.emit({
-            key: 'lang:changed',
+            key: Utils.Descriptors.LanguageChange,
             data: culture
         });
     };
@@ -148,9 +153,10 @@ var CtocApp = (function () {
             selector: 'ctoc-app',
             templateUrl: 'app/view/ctoc.html',
             directives: [all_1.C2cWorkspace, all_1.C2cLogin],
-            providers: [all_2.ServiceLocator]
+            providers: [all_2.ResourceService, all_2.ServiceLocator, all_2.EventService, all_2.UserService, all_2.ExceptionService,
+                http_1.HTTP_PROVIDERS]
         }), 
-        __metadata('design:paramtypes', [all_2.ServiceLocator])
+        __metadata('design:paramtypes', [all_2.ServiceLocator, all_2.ExceptionService])
     ], CtocApp);
     return CtocApp;
 })();

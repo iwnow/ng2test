@@ -1,5 +1,8 @@
+import {Observable} from 'rxjs/Observable';
+
 export interface IResourceService {
-    getResource(): any;
+    getResourceByCulture(culture: Cultures): Observable<any>;
+    getResource(): Observable<any>;
     setResource(culture: Cultures);
     getNameByEnum(culture: Cultures):string;
     getCultureByName(name: string): Cultures;

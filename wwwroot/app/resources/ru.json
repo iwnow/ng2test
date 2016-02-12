@@ -1,3 +1,6 @@
 {
-    
+    "loginPage": {
+        "btnSend": "Войти в систему",
+        "captionForm": "Вход"
+    }
 }

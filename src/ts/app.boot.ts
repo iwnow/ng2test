@@ -1,19 +1,23 @@
 import {Component, OnInit} from 'angular2/core';
 import {bootstrap} from 'angular2/platform/browser';
 import {HTTP_PROVIDERS} from 'angular2/http';
+import 'rxjs/Rx';
 
 import {C2cWorkspace,C2cLogin} from './components/all';
-import {ServiceLocator} from './services/all';
+import {ServiceLocator, ResourceService, EventService, UserService,ExceptionService} from './services/all';
 import {IUserService, IUserInfo, 
         IEmitData,IEventService,
         Cultures, IResourceService} from './contracts/all';
 import * as Menu from './utils/menu';
+import * as Utils from './utils/all';
+
 
 @Component({
     selector: 'ctoc-app',
     templateUrl: 'app/view/ctoc.html',
     directives: [C2cWorkspace, C2cLogin],
-    providers: [ServiceLocator]
+    providers: [ResourceService, ServiceLocator,EventService,UserService,ExceptionService,
+                HTTP_PROVIDERS]
 })
 class CtocApp implements OnInit{    
     projectName: string;
@@ -25,7 +29,7 @@ class CtocApp implements OnInit{
     
     static IsExceptionRised: boolean = false;
     
-    constructor(private _srvLocator: ServiceLocator){        
+    constructor(private _srvLocator: ServiceLocator, private _exceptionService:ExceptionService){        
         this.projectName = "C2C";
         this.toggleNav = false;        
         this.addResizeEvent();
@@ -68,7 +72,7 @@ class CtocApp implements OnInit{
     get resxService(): IResourceService {
         return this._srvLocator.getService<IResourceService>('IResourceService');
     }
-    
+    /** Сервис асинхронных сообщений */
     get eventService(): IEventService {
         return this._srvLocator.getService<IEventService>('IEventService');
     }
@@ -139,7 +143,7 @@ class CtocApp implements OnInit{
         let culture = this.resxService.getCultureByName(lang);
         this.resxService.setResource(culture);
         this.eventService.emit({
-           key: 'lang:changed',
+           key: Utils.Descriptors.LanguageChange,
            data: culture
         });        
     }

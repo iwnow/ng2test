@@ -2,8 +2,8 @@ import {Component, OnInit} from 'angular2/core';
 import {NgForm}    from 'angular2/common';
 
 import {ServiceLocator} from '../services/all';
-import {IUserInfo, IUserService, IEmitData, IEventService} from '../contracts/all';
-
+import {IUserInfo, IUserService, IEmitData, IEventService, Cultures, IResourceService} from '../contracts/all';
+import {Descriptors} from '../utils/all';
 
 @Component({
   selector: 'ctoc-login',
@@ -14,11 +14,11 @@ export class C2cLogin implements OnInit {
     loginFormCaption = "Login Form";
     emailLabelText = "from class email";
     passLabelText = "from class pass";
-    resourceName = "Send";
+    
+    resource: any;
     
     constructor(private _locator: ServiceLocator){
-        this._model = this.userService.getUserInfo(); 
-        this.btnSendTxt = this.resourceName;     
+        this._model = this.userService.getUserInfo();      
         //set event on resize
         this.registerResizeListening();
         //set event on lang changed
@@ -34,13 +34,30 @@ export class C2cLogin implements OnInit {
     }
     
     private registerLangChanged(){
-        this.eventService.subscribe('lang:changed', (data) => {
-           console.log('lang changed!!!!! ' + data); 
+        this.eventService.subscribe(Descriptors.LanguageChange, (data) => {
+            this.updateResource(data);
         });
+    }
+    
+    updateCultureUI(resx: any){
+        this.btnSendTxt = resx.btnSend;
+    }
+    
+    updateResource(culture: Cultures){
+        this._locator.getService<IResourceService>('IResourceService')
+            .getResourceByCulture(culture)
+            .subscribe(data => {
+                this.updateCultureUI(data.loginPage);
+            });
     }
     
     ngOnInit(){      
         this.showSpinner(false);
+        this._locator.getService<IResourceService>('IResourceService')
+            .getResource()
+            .subscribe(data => {
+                this.updateCultureUI(data.loginPage);
+            });
     }
     
     get userService(): IUserService {
@@ -58,29 +75,23 @@ export class C2cLogin implements OnInit {
     
     private _isSending = false;
     send() {
-        
         this.eventService.emit({key: "login", data: "sended from login"});
-        
+        let tmp = this.btnSendTxt;
         if (!this._isSending) {
             this._isSending = true;
+            this.btnSendTxt = '';
             this.showSpinner();
             setTimeout(() => {
                 this.showSpinner(false);
+                this.btnSendTxt = tmp;
                 this._isSending = false;
             }, 3000);
         }
         
     }
     
-    showSpinner(show: boolean = true){
-        var spin = document.getElementById('spinBtnLogin');
-        if (!show) {
-            spin.innerHTML = '';
-            this.btnSendTxt = this.resourceName;
-        }
-        else {
-            this.btnSendTxt = '';
-            spin.innerHTML = '<i class="fa fa fa-spinner fa-spin"></i>';    
-        }            
+    showSpinner(show: boolean = true){        
+        let spin = document.getElementById('spinBtnLogin');
+        spin.innerHTML = !show ? '' : '<i class="fa fa fa-spinner fa-spin"></i>';     
     }
 }
