@@ -11,11 +11,15 @@
                                  
                     <div class="input-group">
                         <span class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span></span>
-                        <input type="text" class="form-control" [placeholder]="emailLabelText" >
+                        <input type="text" class="form-control" 
+                                [(ngModel)]="_model.email"
+                                [placeholder]="emailLabelText" required>
                     </div>                 
                     <div class="input-group">
                         <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
-                        <input type="password" class="form-control" [placeholder]="passLabelText">
+                        <input type="password" class="form-control"
+                                [(ngModel)]="_model.password" 
+                                [placeholder]="passLabelText" required>
                     </div>                  
                 
                     <button (click)="send()" type="submit"
@@ -29,6 +33,7 @@
             </div>
         </div>
         <div class="text-danger" id="validate-text-error">
+            {{_validationError}}
         </div>
     </td>
     <td style="width: auto;"></td>

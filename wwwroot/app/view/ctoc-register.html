@@ -1,4 +1,4 @@
-<table id="registerTable" style="width: 100%;">
+<table *ngIf="!_registerSuccess" id="registerTable" style="width: 100%;">
 <tr>
     <td style="width: auto;"></td>
     <td style="width: 350px;">
@@ -11,19 +11,28 @@
                                  
                     <div class="input-group">
                         <span class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span></span>
-                        <input type="text" class="form-control" [placeholder]="emailLabelText" >
+                        <input [(ngModel)]="_model.email"
+                                type="text" 
+                                class="form-control" 
+                                [placeholder]="emailLabelText" required>
                     </div>       
                     <div class="input-group">
                         <span class="input-group-addon"><span class="glyphicon glyphicon-phone"></span></span>
-                        <input type="text" class="form-control" [placeholder]="companyNameLabelText" >
+                        <input [(ngModel)]="_model.companyName" 
+                                type="text" class="form-control" 
+                                [placeholder]="companyNameLabelText" required>
                     </div>           
                     <div class="input-group">
                         <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
-                        <input type="password" class="form-control" [placeholder]="passLabelText">
+                        <input [(ngModel)]="_model.password" 
+                                type="password" class="form-control" 
+                                [placeholder]="passLabelText" required>
                     </div>
                     <div class="input-group">
                         <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
-                        <input type="password" class="form-control" [placeholder]="passConfirmLabelText">
+                        <input [(ngModel)]="_model.confirmPassword" 
+                                type="password" class="form-control" 
+                                [placeholder]="passConfirmLabelText" required>
                     </div>                    
                 
                     <button (click)="send()" type="submit"
@@ -37,9 +46,13 @@
             </div>
         </div>
         <div class="text-danger" id="validate-text-error">
+            {{_validationError}}
         </div>
     </td>
     <td style="width: auto;"></td>
 </tr>
 </table>
+<div *ngIf="_registerSuccess">
+    check you email...
+</div>
 

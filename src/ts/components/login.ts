@@ -1,24 +1,34 @@
-import {Component, OnInit} from 'angular2/core';
+import {Component, OnInit, OnDestroy} from 'angular2/core';
 import {NgForm}    from 'angular2/common';
 
 import {ServiceLocator} from '../services/all';
 import {IUserInfo, IUserService, IEmitData, IEventService, Cultures, IResourceService} from '../contracts/all';
-import {Descriptors} from '../utils/all';
+import {Descriptors, Validators} from '../utils/all';
+import {ViewLoginModel} from '../models/all';
 
 @Component({
   selector: 'ctoc-login',
   templateUrl: 'app/view/ctoc-login.html'
 })
-export class C2cLogin implements OnInit {
+export class C2cLogin implements OnInit, OnDestroy {
     btnSendTxt: string;
     loginFormCaption: string;
     emailLabelText: string;
     passLabelText: string;
     
-    resource: any;
+    private _langChangeSubscription: any;
+    private _winResizeSubscription: any;
+    
+    private _model: ViewLoginModel;
+    private _validationError: string;
+    private _resx: any;
+    
+    get model(): ViewLoginModel {
+        return this._model;
+    }
     
     constructor(private _locator: ServiceLocator){
-        this._model = this.userService.getUserInfo();      
+        this._model = new ViewLoginModel();      
         //set event on resize
         this.registerResizeListening();
         //set event on lang changed
@@ -28,13 +38,13 @@ export class C2cLogin implements OnInit {
     private registerResizeListening(){
         var t = document.getElementById('loginTable');
         t.style.height = (window.innerHeight - 70).toString() + 'px';
-        this.eventService.subscribe(Descriptors.WinResize, (data) => {
+        this._winResizeSubscription = this.eventService.subscribe(Descriptors.WinResize, (data) => {
            t.style.height = data.height > 400 ? (data.height - data.height/3).toFixed(0).toString() + 'px' : '400px';
         });
     }
     
     private registerLangChanged(){
-        this.eventService.subscribe(Descriptors.LanguageChange, (data) => {
+        this._langChangeSubscription = this.eventService.subscribe(Descriptors.LanguageChange, (data) => {
             this.updateResource(data);
         });
     }
@@ -43,7 +53,8 @@ export class C2cLogin implements OnInit {
         if (!resx) {
             this.eventService.emit({key: Descriptors.Exceptions, data: '[login.ts:updateCultureUI(resx: any)]: при обовлении UI передан пустой ресурс!'});
             return;
-        }            
+        }
+        this._resx = resx; 
         this.btnSendTxt = resx.btnSend;
         this.loginFormCaption = resx.captionForm;
         this.emailLabelText = resx.emailLabelText;
@@ -67,6 +78,11 @@ export class C2cLogin implements OnInit {
             });
     }
     
+    ngOnDestroy(){
+        this._langChangeSubscription.unsubscribe();
+        this._winResizeSubscription.unsubscribe();
+    }
+    
     get userService(): IUserService {
         return this._locator.getService<IUserService>('IUserService');
     }
@@ -74,25 +90,36 @@ export class C2cLogin implements OnInit {
         return this._locator.getService<IEventService>('IEventService');
     }
     
-    private _model: IUserInfo;
-    get model():IUserInfo { return this._model;}
-    set model(val: IUserInfo){
-        this._model = val;
+    validateModel(model: ViewLoginModel): boolean {
+        if (!model.email || !model.password)
+            return false;
+        if (!Validators.emailValidate(model.email)) {
+            this._validationError = this._resx.errors.invalidEmail;
+            return false;
+        }
+        this._validationError = '';
+        return true;
     }
     
     private _isSending = false;
     send() {
-        this.eventService.emit({key: "login", data: "sended from login"});
+        if (!this.validateModel(this.model))
+            return;
+        
         let tmp = this.btnSendTxt;
         if (!this._isSending) {
             this._isSending = true;
             this.btnSendTxt = '';
             this.showSpinner();
-            setTimeout(() => {
-                this.showSpinner(false);
-                this.btnSendTxt = tmp;
-                this._isSending = false;
-            }, 3000);
+            this.userService
+                .logIn(this.model)
+                .subscribe((res) => {
+                    if (!res.result)
+                        this._validationError = res.reason;
+                    this.showSpinner(false);
+                    this.btnSendTxt = tmp;
+                    this._isSending = false;
+                });
         }
         
     }

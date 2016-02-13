@@ -13,11 +13,12 @@ export class EventService implements IEventService {
         this.emitter.emit(data);
     }
     
-    subscribe(key: string, callback: (data: any)=>void){
-        this.emitter.subscribe((i) => {
+    subscribe(key: string, callback: (data: any)=>void): any {
+        return this.emitter.subscribe((i) => {
             var d  = <IEmitData>i;
-            if (key == d.key)
-                callback(d.data);
+            if (key != d.key)
+                return;
+            callback(d.data);
         });
     }
 }

@@ -22,6 +22,7 @@ var ResourceService = (function () {
         this._srvName = 'ResourceService';
         this._eventService = _events;
         this._cacheJson = new Map();
+        this._cultureIsProgressFromServer = new Set();
     }
     ResourceService.prototype.supportedCultures = function () {
         return [all_1.Cultures.ru, all_1.Cultures.en];
@@ -62,19 +63,36 @@ var ResourceService = (function () {
                 break;
         }
     };
+    //@Log()
     ResourceService.prototype.resxFromServer = function (culture) {
         var _this = this;
+        if (this._cultureIsProgressFromServer.has(culture)) {
+            var p = new Promise(function (resolve) {
+                var i = setInterval(function () {
+                    if (!_this._cultureIsProgressFromServer.has(culture)) {
+                        resolve(_this._cacheJson.get(culture));
+                        clearInterval(i);
+                    }
+                }, 200);
+            });
+            return Observable_1.Observable.fromPromise(p);
+        }
+        else
+            this._cultureIsProgressFromServer.add(culture);
         var resxName = this.getNameByEnum(culture).toLowerCase();
-        //console.log(`get resource from server: ${culture}`);
         return this._http
             .get("" + this._urlResx + resxName + ".json")
             .map(function (res) {
             var o = res.json();
             _this._cacheJson.set(culture, o);
+            if (_this._cultureIsProgressFromServer.has(culture))
+                _this._cultureIsProgressFromServer.delete(culture);
             return o;
         })
             .catch(function (e, s, c) {
             //emit in event bus with global exception key
+            if (_this._cultureIsProgressFromServer.has(culture))
+                _this._cultureIsProgressFromServer.delete(culture);
             _this._events.emit({
                 key: all_2.Descriptors.Exceptions,
                 data: e.text()

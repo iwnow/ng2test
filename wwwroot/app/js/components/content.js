@@ -9,10 +9,26 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require('angular2/core');
 var Menu = require('../utils/menu');
+var Services = require('../services/all');
 var C2cContent = (function () {
-    function C2cContent() {
+    function C2cContent(_locator) {
+        this._locator = _locator;
     }
     C2cContent.prototype.ngOnInit = function () { };
+    Object.defineProperty(C2cContent.prototype, "user", {
+        get: function () {
+            return this.userService.getUserInfo();
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(C2cContent.prototype, "userService", {
+        get: function () {
+            return this._locator.getService('IUserService');
+        },
+        enumerable: true,
+        configurable: true
+    });
     __decorate([
         core_1.Input(), 
         __metadata('design:type', Menu.MenuItem)
@@ -27,7 +43,7 @@ var C2cContent = (function () {
             templateUrl: 'app/view/ctoc-content.html',
             inputs: ['contentHeader', 'sidebarSelectedMenuItem']
         }), 
-        __metadata('design:paramtypes', [])
+        __metadata('design:paramtypes', [Services.ServiceLocator])
     ], C2cContent);
     return C2cContent;
 })();

@@ -4,7 +4,7 @@ import {Http, Response} from 'angular2/http';
 
 import {IResourceService, Cultures, IEventService} from '../contracts/all';
 import {EventService} from './event.service';
-import {Descriptors} from '../utils/all';
+import {Descriptors, Log} from '../utils/all';
 
 @Injectable()
 export class ResourceService implements IResourceService {
@@ -13,12 +13,14 @@ export class ResourceService implements IResourceService {
     private _srvName = 'ResourceService';
     private _eventService: IEventService;
     private _cacheJson: Map<Cultures, any>;
+    private _cultureIsProgressFromServer: Set<Cultures>;
     
     
     constructor(private _http: Http,
                 private _events: EventService){ 
         this._eventService = _events;
         this._cacheJson = new Map<Cultures, any>();
+        this._cultureIsProgressFromServer = new Set<Cultures>();
     }
     
     supportedCultures(): Cultures[] {
@@ -66,19 +68,34 @@ export class ResourceService implements IResourceService {
         }
     }
     
-    
-    private resxFromServer(culture: Cultures): Observable<any>{        
+    //@Log()
+    private resxFromServer(culture: Cultures): Observable<any>{  
+        if (this._cultureIsProgressFromServer.has(culture)) {
+            let p = new Promise((resolve) => {
+                let i = setInterval(() => {
+                    if (!this._cultureIsProgressFromServer.has(culture)){
+                        resolve(this._cacheJson.get(culture));
+                        clearInterval(i);
+                    }                        
+                }, 200);    
+            });
+            return Observable.fromPromise(p);
+        } 
+        else this._cultureIsProgressFromServer.add(culture);      
         let resxName = this.getNameByEnum(culture).toLowerCase();
-        //console.log(`get resource from server: ${culture}`);
         return this._http        
                     .get(`${this._urlResx}${resxName}.json`)
                     .map((res) => {
                         let o = res.json();
                         this._cacheJson.set(culture, o);
+                        if (this._cultureIsProgressFromServer.has(culture))
+                            this._cultureIsProgressFromServer.delete(culture);
                         return o;
                     })
                     .catch((e, s, c) => {
                         //emit in event bus with global exception key
+                        if (this._cultureIsProgressFromServer.has(culture))
+                            this._cultureIsProgressFromServer.delete(culture);
                         this._events.emit({
                             key: Descriptors.Exceptions, 
                             data:e.text()

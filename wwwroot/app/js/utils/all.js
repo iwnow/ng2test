@@ -4,4 +4,6 @@ function __export(m) {
 __export(require('./cookie'));
 __export(require('./menu'));
 __export(require('./descriptors'));
+__export(require('./decorators'));
+__export(require('./validators'));
 //# sourceMappingURL=all.js.map

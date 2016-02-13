@@ -7,7 +7,10 @@
         "btnSend": "Sign in",
         "captionForm": "Sign in",
         "emailLabelText": "Your email",
-        "passLabelText": "Your password"
+        "passLabelText": "Your password",
+        "errors": {
+            "invalidEmail": "Invalid email address"
+        }
     },
     "registerPage": {
         "btnSend": "Register",
@@ -15,6 +18,12 @@
         "emailLabelText": "Your email",
         "passLabelText": "Your password",
         "passConfirmLabelText": "Confirm your password",
-        "companyNameLabelText": "Company name"
+        "companyNameLabelText": "Company name",
+        "errors": {
+            "invalidEmail": "Invalid email address",
+            "confirmPasswordError": "Passwords are not the same",
+            "passwordTooLess": "Password must include more than 3 symbols",
+            "companyIsAlreadyExist": "Sorry, but company with the same name is already exist"
+        }
     }
 }

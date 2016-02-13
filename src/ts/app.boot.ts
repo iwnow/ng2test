@@ -50,7 +50,8 @@ class CtocApp implements OnInit{
                 data: {
                     width: this.docWidth,
                     height: window.innerHeight
-                }
+                },
+                who: 'resize app boot'
             });
         });  
     }
@@ -106,7 +107,9 @@ class CtocApp implements OnInit{
     }
     
     logOut(){
-        this.userService.logOut();
+        setTimeout(() => {
+            this.userService.logOut();
+        }, 0);        
     }
     
     /** отключение экрана загрузки */

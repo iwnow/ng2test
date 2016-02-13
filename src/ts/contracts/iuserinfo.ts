@@ -8,7 +8,18 @@ export interface IUserInfo {
     passwordConfirm?: string,
     mobilePhone?: string,
     avatar?: any
-    /** absolete - use method from userService [isAuthorized(IUserInfo)] */
-    isAuthorized?: boolean;
     roles?: string[];
+    
+    companies?: ICompany[];
+}
+
+export interface ILoginResult {
+    result: boolean;
+    reason?: string;
+}
+export interface IRegisterResult extends ILoginResult {
+}
+
+export interface ICompany {
+    name: string;
 }

@@ -45,7 +45,8 @@ var CtocApp = (function () {
                 data: {
                     width: _this.docWidth,
                     height: window.innerHeight
-                }
+                },
+                who: 'resize app boot'
             });
         });
     };
@@ -112,7 +113,10 @@ var CtocApp = (function () {
         configurable: true
     });
     CtocApp.prototype.logOut = function () {
-        this.userService.logOut();
+        var _this = this;
+        setTimeout(function () {
+            _this.userService.logOut();
+        }, 0);
     };
     /** отключение экрана загрузки */
     CtocApp.prototype.screenLoadingOff = function () {

@@ -27,11 +27,11 @@
                 </div>
             </li>
         </ul>
-        <ul *ngIf = "!currentUser.isAuthorized" class="nav navbar-nav navbar-right">
+        <ul *ngIf = "!currentUser" class="nav navbar-nav navbar-right">
             <li><a href="#" (click)="loginOrReg = true">{{loginLink}}</a></li>
             <li><a href="#" (click)="loginOrReg = false">{{registerLink}}</a></li>
         </ul>
-        <ul *ngIf = "currentUser.isAuthorized" class="nav navbar-nav navbar-right">
+        <ul *ngIf = "currentUser" class="nav navbar-nav navbar-right">
             <li>                
                 <a href="#"
                     #loginMenu 
@@ -58,9 +58,9 @@
 </nav>
 
 <div class="container-fluid">
-    <ctoc-workspace *ngIf = "currentUser.isAuthorized"
+    <ctoc-workspace *ngIf = "currentUser"
         [workspacePanName]="selectedWorkspace"
         [workspaceMenu]="selectedWorkspaceMenu"></ctoc-workspace>
-    <ctoc-login *ngIf = "!currentUser.isAuthorized && loginOrReg"></ctoc-login>
-    <ctoc-register *ngIf = "!currentUser.isAuthorized && !loginOrReg"></ctoc-register>
+    <ctoc-login *ngIf = "!currentUser && loginOrReg"></ctoc-login>
+    <ctoc-register *ngIf = "!currentUser && !loginOrReg"></ctoc-register>
 </div>

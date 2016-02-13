@@ -16,10 +16,11 @@ var EventService = (function () {
         this.emitter.emit(data);
     };
     EventService.prototype.subscribe = function (key, callback) {
-        this.emitter.subscribe(function (i) {
+        return this.emitter.subscribe(function (i) {
             var d = i;
-            if (key == d.key)
-                callback(d.data);
+            if (key != d.key)
+                return;
+            callback(d.data);
         });
     };
     EventService = __decorate([

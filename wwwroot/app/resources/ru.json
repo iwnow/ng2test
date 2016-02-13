@@ -7,7 +7,10 @@
         "btnSend": "Войти в систему",
         "captionForm": "Вход",
         "emailLabelText": "Адрес электронной почты",
-        "passLabelText": "Пароль"
+        "passLabelText": "Пароль",
+        "errors": {
+            "invalidEmail": "Не корректный email адрес"
+        }
     },
     "registerPage": {
         "btnSend": "Зарегистрироваться",
@@ -15,6 +18,12 @@
         "emailLabelText": "Адрес электронной почты",
         "passLabelText": "Пароль",
         "passConfirmLabelText": "Повторите пароль",
-        "companyNameLabelText": "Имя компании"
+        "companyNameLabelText": "Имя компании",
+        "errors": {
+            "invalidEmail": "Не корректный email адрес",
+            "confirmPasswordError": "Пароли не совпадают",
+            "passwordTooLess": "Пароль должен состоять из более чем 3-х символов",
+            "companyIsAlreadyExist": "Компания с аналогичным именем уже зарегистрирована"
+        }
     }
 }

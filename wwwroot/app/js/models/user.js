@@ -12,7 +12,34 @@ var User = (function () {
         this.isAuthorized = isAuthorized;
         this.roles = roles;
     }
+    User.getUserByRegisterModel = function (user) {
+        var u = new User(user.email, user.password);
+        u.companies = [new Company(user.companyName)];
+        return u;
+    };
+    User.getUserByLoginModel = function (user) {
+        return new User(user.email, user.password);
+    };
     return User;
 })();
 exports.User = User;
+var Company = (function () {
+    function Company(name) {
+        this.name = name;
+    }
+    return Company;
+})();
+exports.Company = Company;
+var ViewLoginModel = (function () {
+    function ViewLoginModel() {
+    }
+    return ViewLoginModel;
+})();
+exports.ViewLoginModel = ViewLoginModel;
+var ViewRegisterModel = (function () {
+    function ViewRegisterModel() {
+    }
+    return ViewRegisterModel;
+})();
+exports.ViewRegisterModel = ViewRegisterModel;
 //# sourceMappingURL=user.js.map
