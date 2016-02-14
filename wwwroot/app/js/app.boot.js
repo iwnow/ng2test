@@ -22,13 +22,15 @@ var CtocApp = (function () {
         this.loginOrReg = true;
         //fix with resources
         this.profileMenu = new Menu.SidebarMenu([
-            new Menu.MenuItem('profile', 'Profile'),
-            new Menu.MenuItem('password', 'Change Password')
+            new Menu.MenuItem('profile', ''),
+            new Menu.MenuItem('password', '')
         ]);
         this.controlMenu = new Menu.SidebarMenu([
-            new Menu.MenuItem('contacts', 'Contacts'),
-            new Menu.MenuItem('pay', 'Payment Info')
+            new Menu.MenuItem('contacts', ''),
+            new Menu.MenuItem('pay', '')
         ]);
+        this.loginMenu = { dropped: false };
+        this.langMenu = { dropped: false };
         this.projectName = "C2C";
         this.toggleNav = false;
         this.addResizeEvent();
@@ -61,15 +63,23 @@ var CtocApp = (function () {
             this.eventService.emit({ key: Utils.Descriptors.Exceptions, data: '[app.boot.ts:updateCultureUI(resx: any)]: при обовлении UI передан пустой ресурс!' });
             return;
         }
-        this.loginLink = resx.login;
-        this.registerLink = resx.register;
+        this.loginLink = resx.navBar.login;
+        this.registerLink = resx.navBar.register;
+        this.ddMenuCntrlPan = resx.navBar.dropDownNavMenu.controlPanel;
+        this.ddMenuProfilePan = resx.navBar.dropDownNavMenu.profilePanel;
+        this.ddMenuLogOutBtn = resx.navBar.dropDownNavMenu.logOutBtn;
+        //menu item in sidebar
+        this.profileMenu.Items[this.profileMenu.Items.findIndex(function (i) { return i.Id == 'profile'; })].TextItem = resx.profilePanel.sideBarMenu.profile;
+        this.profileMenu.Items[this.profileMenu.Items.findIndex(function (i) { return i.Id == 'password'; })].TextItem = resx.profilePanel.sideBarMenu.passwordManage;
+        this.controlMenu.Items[this.controlMenu.Items.findIndex(function (i) { return i.Id == 'contacts'; })].TextItem = resx.controlPanel.sideBarMenu.contacts;
+        this.controlMenu.Items[this.controlMenu.Items.findIndex(function (i) { return i.Id == 'pay'; })].TextItem = resx.controlPanel.sideBarMenu.payment;
     };
     CtocApp.prototype.updateResource = function (culture) {
         var _this = this;
         this._srvLocator.getService('IResourceService')
             .getResourceByCulture(culture)
             .subscribe(function (data) {
-            _this.updateCultureUI(data.navBar);
+            _this.updateCultureUI(data);
         });
     };
     CtocApp.prototype.addLangs = function () {
@@ -114,6 +124,7 @@ var CtocApp = (function () {
     });
     CtocApp.prototype.logOut = function () {
         var _this = this;
+        //timeout - mousedown rise before var in template changed
         setTimeout(function () {
             _this.userService.logOut();
         }, 0);
@@ -152,6 +163,7 @@ var CtocApp = (function () {
     /**Выбор текущего воркспейса */
     CtocApp.prototype.selectWorkspace = function (wrkSpace) {
         //ev.preventDefault();
+        this.loginMenu.dropped = false;
         this.selectedWorkspace = wrkSpace;
         switch (wrkSpace) {
             case 'controlPan':
@@ -165,6 +177,7 @@ var CtocApp = (function () {
         }
     };
     CtocApp.prototype.langChoose = function (lang) {
+        this.langMenu.dropped = false;
         if (this.selectedLang == lang)
             return;
         this.selectedLang = lang;

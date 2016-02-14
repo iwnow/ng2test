@@ -1,7 +1,12 @@
 {
     "navBar": {
         "login": "Войти",
-        "register": "Регистрация"
+        "register": "Регистрация",
+        "dropDownNavMenu": {
+            "controlPanel": "Панель управления",
+            "profilePanel": "Профиль",
+            "logOutBtn": "Выход"
+        }
     },
     "loginPage": {
         "btnSend": "Войти в систему",
@@ -24,6 +29,30 @@
             "confirmPasswordError": "Пароли не совпадают",
             "passwordTooLess": "Пароль должен состоять из более чем 3-х символов",
             "companyIsAlreadyExist": "Компания с аналогичным именем уже зарегистрирована"
+        }
+    },
+    "controlPanel": {
+        "sideBarMenu": {
+            "contacts": "Контакты",
+            "payment": "Платеж"
+        }
+    },
+    "profilePanel": {
+        "sideBarMenu": {
+            "profile": "Профиль",
+            "passwordManage": "Смена пароля"
+        },
+        "profileContent": {
+            "companyLabel": "Имя компании",
+            "emailLabel": "Логин",
+            "registerDateLabel": "Дата регистрации",
+            "phoneNumberLabel": "Номер телефона"
+        },
+        "passwordContent": {
+            "oldPasswordLabel": "Старый пароль",
+            "newPasswordLabel": "Новый пароль",
+            "confirmNewPasswordLabel": "Повторите новый пароль",
+            "btnSend": "Изменить пароль"
         }
     }
 }

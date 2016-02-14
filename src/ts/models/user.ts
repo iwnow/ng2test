@@ -28,9 +28,12 @@ export class User implements IUserInfo {
 }
 
 export class Company implements ICompany {
+    registerDate: Date;
     constructor(
         public name: string
-    ) {}
+    ) {
+        this.registerDate = new Date();
+    }
 }
 
 export class ViewLoginModel {
@@ -43,4 +46,10 @@ export class ViewRegisterModel {
     companyName: string;
     password: string;
     confirmPassword: string;
+}
+
+export class ViewChangePassword {
+    oldPassword:string;
+    newPassword: string;
+    confirmNewPassword: string;
 }

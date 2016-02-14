@@ -8,8 +8,10 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require('angular2/core');
-var Menu = require('../utils/menu');
+var Utils = require('../utils/all');
 var Services = require('../services/all');
+var profile_1 = require('./profile');
+var editpass_1 = require('./editpass');
 var C2cContent = (function () {
     function C2cContent(_locator) {
         this._locator = _locator;
@@ -22,6 +24,13 @@ var C2cContent = (function () {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(C2cContent.prototype, "company", {
+        get: function () {
+            return this.user.companies.length > 0 ? this.user.companies[0].name : '';
+        },
+        enumerable: true,
+        configurable: true
+    });
     Object.defineProperty(C2cContent.prototype, "userService", {
         get: function () {
             return this._locator.getService('IUserService');
@@ -29,9 +38,16 @@ var C2cContent = (function () {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(C2cContent.prototype, "menuId", {
+        get: function () {
+            return this.sidebarSelectedMenuItem ? this.sidebarSelectedMenuItem.Id : '';
+        },
+        enumerable: true,
+        configurable: true
+    });
     __decorate([
         core_1.Input(), 
-        __metadata('design:type', Menu.MenuItem)
+        __metadata('design:type', Utils.MenuItem)
     ], C2cContent.prototype, "sidebarSelectedMenuItem", void 0);
     __decorate([
         core_1.Input(), 
@@ -41,7 +57,8 @@ var C2cContent = (function () {
         core_1.Component({
             selector: 'ctoc-content',
             templateUrl: 'app/view/ctoc-content.html',
-            inputs: ['contentHeader', 'sidebarSelectedMenuItem']
+            inputs: ['contentHeader', 'sidebarSelectedMenuItem'],
+            directives: [profile_1.C2cProfile, editpass_1.C2cEditPass]
         }), 
         __metadata('design:paramtypes', [Services.ServiceLocator])
     ], C2cContent);

@@ -30,8 +30,23 @@ class CtocApp implements OnInit{
     //ui vars
     loginLink: string;
     registerLink: string;
+    ddMenuCntrlPan: string;
+    ddMenuProfilePan: string;
+    ddMenuLogOutBtn: string;
+    //fix with resources
+    profileMenu: Menu.SidebarMenu = new Menu.SidebarMenu([
+            new Menu.MenuItem('profile', ''),
+            new Menu.MenuItem('password', '')
+        ]);
+    controlMenu: Menu.SidebarMenu = new Menu.SidebarMenu([
+            new Menu.MenuItem('contacts', ''),
+            new Menu.MenuItem('pay', '')
+        ]);
     
     static IsExceptionRised: boolean = false;
+    
+    private loginMenu:{dropped:boolean} = {dropped: false};
+    private langMenu:{dropped:boolean} = {dropped: false};
     
     constructor(private _srvLocator: ServiceLocator, private _exceptionService:ExceptionService){        
         this.projectName = "C2C";
@@ -67,15 +82,23 @@ class CtocApp implements OnInit{
             this.eventService.emit({key: Utils.Descriptors.Exceptions, data: '[app.boot.ts:updateCultureUI(resx: any)]: при обовлении UI передан пустой ресурс!'});
             return;
         }
-        this.loginLink = resx.login;
-        this.registerLink = resx.register;
+        this.loginLink = resx.navBar.login;
+        this.registerLink = resx.navBar.register;
+        this.ddMenuCntrlPan = resx.navBar.dropDownNavMenu.controlPanel;
+        this.ddMenuProfilePan = resx.navBar.dropDownNavMenu.profilePanel;
+        this.ddMenuLogOutBtn = resx.navBar.dropDownNavMenu.logOutBtn;
+        //menu item in sidebar
+        this.profileMenu.Items[this.profileMenu.Items.findIndex((i) => i.Id == 'profile')].TextItem = resx.profilePanel.sideBarMenu.profile;
+        this.profileMenu.Items[this.profileMenu.Items.findIndex((i) => i.Id == 'password')].TextItem = resx.profilePanel.sideBarMenu.passwordManage;
+        this.controlMenu.Items[this.controlMenu.Items.findIndex((i) => i.Id == 'contacts')].TextItem = resx.controlPanel.sideBarMenu.contacts;
+        this.controlMenu.Items[this.controlMenu.Items.findIndex((i) => i.Id == 'pay')].TextItem = resx.controlPanel.sideBarMenu.payment;
     }
     
     updateResource(culture: Cultures){
         this._srvLocator.getService<IResourceService>('IResourceService')
             .getResourceByCulture(culture)
             .subscribe(data => {
-                this.updateCultureUI(data.navBar);
+                this.updateCultureUI(data);
             });
     }
     
@@ -107,6 +130,7 @@ class CtocApp implements OnInit{
     }
     
     logOut(){
+        //timeout - mousedown rise before var in template changed
         setTimeout(() => {
             this.userService.logOut();
         }, 0);        
@@ -143,6 +167,7 @@ class CtocApp implements OnInit{
     /**Выбор текущего воркспейса */
     selectWorkspace(wrkSpace: string) {
         //ev.preventDefault();
+        this.loginMenu.dropped = false;
         this.selectedWorkspace = wrkSpace;
         switch (wrkSpace) {
             case 'controlPan':
@@ -154,20 +179,11 @@ class CtocApp implements OnInit{
             default:
                 break;
         }
-    }
+    }   
     
-    
-    //fix with resources
-    profileMenu: Menu.SidebarMenu = new Menu.SidebarMenu([
-        new Menu.MenuItem('profile', 'Profile'),
-        new Menu.MenuItem('password', 'Change Password')
-    ]);
-    controlMenu: Menu.SidebarMenu = new Menu.SidebarMenu([
-        new Menu.MenuItem('contacts', 'Contacts'),
-        new Menu.MenuItem('pay', 'Payment Info')
-    ]);
     
     langChoose(lang: string){
+        this.langMenu.dropped = false;
         if (this.selectedLang == lang)
             return;
         this.selectedLang = lang;

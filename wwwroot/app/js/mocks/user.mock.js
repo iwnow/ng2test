@@ -3,7 +3,9 @@ var UserMock = (function () {
     function UserMock() {
     }
     UserMock.Create = function () {
-        return new user_1.User('mock@mock.com', 'q', 'mockLogin', 'mock', 'mock mock', 'q', '', null, false, ['mock']);
+        var u = new user_1.User('mock@mock.com', 'q', 'mockLogin', 'mock', 'mock mock', 'q', '89638123462', null, false, ['mock']);
+        u.companies = [new user_1.Company('Самая лучшая компания')];
+        return u;
     };
     return UserMock;
 })();

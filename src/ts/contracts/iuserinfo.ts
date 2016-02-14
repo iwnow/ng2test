@@ -22,4 +22,5 @@ export interface IRegisterResult extends ILoginResult {
 
 export interface ICompany {
     name: string;
+    registerDate: Date;
 }

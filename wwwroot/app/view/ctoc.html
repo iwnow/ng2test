@@ -14,7 +14,6 @@
         <ul class="nav navbar-nav navbar-right">
             <li>                
                 <a href="#"
-                    #langMenu
                     (click)="langMenu.dropped = !langMenu.dropped;"
                     (blur)="langMenu.dropped = false;">
                     {{selectedLang}}
@@ -34,7 +33,6 @@
         <ul *ngIf = "currentUser" class="nav navbar-nav navbar-right">
             <li>                
                 <a href="#"
-                    #loginMenu 
                     (click)="loginMenu.dropped = !loginMenu.dropped;"
                     (blur)="loginMenu.dropped = false;">
                     {{currentUser.email }}
@@ -42,10 +40,10 @@
                 </a>
                 <div [ngClass]="loginMenu.dropped ? 'dropdown open' : 'dropdown'">
                     <ul class="dropdown-menu">
-                        <li><a href="#" (mousedown)="selectWorkspace('controlPan')"><span class="glyphicon glyphicon-list-alt"></span>&nbsp;&nbsp;Control Panel</a></li>
-                        <li><a href="#" (mousedown)="selectWorkspace('profilePan')"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;Profile</a></li>
+                        <li><a href="#" (mousedown)="selectWorkspace('controlPan')"><span class="glyphicon glyphicon-list-alt"></span>&nbsp;&nbsp;{{ddMenuCntrlPan}}</a></li>
+                        <li><a href="#" (mousedown)="selectWorkspace('profilePan')"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;{{ddMenuProfilePan}}</a></li>
                         <!--<li class="divider"></li>-->
-                        <li><a href="#" (mousedown)="logOut()"><span class="glyphicon glyphicon-log-out"></span>&nbsp;&nbsp;Log out</a></li>
+                        <li><a href="#" (mousedown)="logOut()"><span class="glyphicon glyphicon-log-out"></span>&nbsp;&nbsp;{{ddMenuLogOutBtn}}</a></li>
                     </ul>
                 </div>
             </li>
@@ -64,3 +62,4 @@
     <ctoc-login *ngIf = "!currentUser && loginOrReg"></ctoc-login>
     <ctoc-register *ngIf = "!currentUser && !loginOrReg"></ctoc-register>
 </div>
+<!--<div class='notifications'>Notification message some important data for you, don't ignore this please! </div>-->

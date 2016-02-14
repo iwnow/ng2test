@@ -4,6 +4,7 @@ export interface IResourceService {
     getResourceByCulture(culture: Cultures): Observable<any>;
     getResource(): Observable<any>;
     setResource(culture: Cultures);
+    getCurrentCulture():string;
     getNameByEnum(culture: Cultures):string;
     getCultureByName(name: string): Cultures;
     supportedCultures(): Cultures[];

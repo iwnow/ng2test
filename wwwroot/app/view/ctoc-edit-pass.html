@@ -1,0 +1,28 @@
+<form>       
+                                 
+    <div class="input-group">
+        <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
+        <input type="password" class="form-control" 
+                [(ngModel)]="_model.oldPassword"
+                [placeholder]="oldPasswordLabel" required>
+    </div>                 
+    <div class="input-group">
+        <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
+        <input type="password" class="form-control"
+                [(ngModel)]="_model.newPassword" 
+                [placeholder]="newPasswordLabel" required>
+    </div>                  
+    <div class="input-group">
+        <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
+        <input type="password" class="form-control"
+                [(ngModel)]="_model.confirmNewPassword" 
+                [placeholder]="confirmNewPasswordLabel" required>
+    </div> 
+    <button (click)="send()" type="submit"
+            class="btn-primary btn form-control" 
+            style="width: 100%; max-width: 10000px;">
+            <span id="spinBtnPassChange"><i class="fa fa fa-spinner fa-spin"></i></span>
+            {{btnSendTxt}}
+    </button>
+    
+</form>

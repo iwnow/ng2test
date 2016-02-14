@@ -15,6 +15,9 @@ export class ResourceService implements IResourceService {
     private _cacheJson: Map<Cultures, any>;
     private _cultureIsProgressFromServer: Set<Cultures>;
     
+    getCurrentCulture():string {
+        return this.getNameByEnum(this._culture).toLowerCase();
+    }
     
     constructor(private _http: Http,
                 private _events: EventService){ 

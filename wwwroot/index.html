@@ -17,12 +17,14 @@
     <!-- app -->
     <ctoc-app></ctoc-app>
     <!-- scripts -->
-    <script>
+    <!--<script>
         if (window.navigator.userAgent.indexOf("MSIE ") > 0 ||
             window.navigator.userAgent.indexOf("rv:11.0") > 0) {
             document.write('<script defer src="app/lib/es6-shim.js"><\/script><script defer src="https://cdnjs.cloudflare.com/ajax/libs/systemjs/0.19.16/system-polyfills.js"><\/script>');
         }
-    </script>    
+    </script>    -->
+    <script defer src="app/lib/es6-shim.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/systemjs/0.19.16/system-polyfills.js"></script>
     <script defer src="app/lib/system.js"></script>
     <script defer src="app/lib/angular2-polyfills.js"></script>
     <script defer src="app/lib/Rx.js"></script>

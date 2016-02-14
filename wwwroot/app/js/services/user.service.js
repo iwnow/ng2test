@@ -19,6 +19,7 @@ var UserService = (function () {
         this._registered = new Map();
         var u = user_mock_1.UserMock.Create();
         this._registered.set(u.email, u);
+        this._currentUser = u;
     }
     UserService.prototype.getUserInfo = function () {
         return this._currentUser;
@@ -36,17 +37,17 @@ var UserService = (function () {
                     r = { result: false, reason: 'login failed' };
                 }
                 else {
-                    var pass = _this._registered.get(u.email).password;
-                    if (pass == u.password) {
+                    var userDb = _this._registered.get(u.email);
+                    if (userDb.password == u.password) {
                         r = { result: true };
-                        _this._currentUser = u;
-                        console.log("success loged user " + _this._currentUser.email);
+                        _this._currentUser = userDb;
+                        console.dir(_this._currentUser);
                     }
                     else
                         r = { result: false, reason: 'login failed' };
                 }
                 resolve(r);
-            }, 3000);
+            }, 1000);
         }));
     };
     UserService.prototype.register = function (user) {

@@ -17,6 +17,7 @@ export class UserService implements IUserService {
     constructor(){
         let u = UserMock.Create();
         this._registered.set(u.email, u);
+        this._currentUser = u;
     }
     
     getUserInfo():IUserInfo {
@@ -35,16 +36,16 @@ export class UserService implements IUserService {
                 if (!this._registered.has(u.email)) {                    
                     r = {result: false, reason: 'login failed'};
                 } else {
-                    let pass = this._registered.get(u.email).password;
-                    if (pass == u.password) {
+                    let userDb = this._registered.get(u.email);
+                    if (userDb.password == u.password) {
                         r = {result: true};
-                        this._currentUser = u;
-                        console.log(`success loged user ${this._currentUser.email}`);
+                        this._currentUser = userDb;
+                        console.dir(this._currentUser);
                     }
                     else r = {result: false, reason: 'login failed'}; 
                 }                 
                 resolve(r);
-            }, 3000);
+            }, 1000);
         }));
     }
     

@@ -24,6 +24,9 @@ var ResourceService = (function () {
         this._cacheJson = new Map();
         this._cultureIsProgressFromServer = new Set();
     }
+    ResourceService.prototype.getCurrentCulture = function () {
+        return this.getNameByEnum(this._culture).toLowerCase();
+    };
     ResourceService.prototype.supportedCultures = function () {
         return [all_1.Cultures.ru, all_1.Cultures.en];
     };

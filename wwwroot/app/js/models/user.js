@@ -26,6 +26,7 @@ exports.User = User;
 var Company = (function () {
     function Company(name) {
         this.name = name;
+        this.registerDate = new Date();
     }
     return Company;
 })();
@@ -42,4 +43,10 @@ var ViewRegisterModel = (function () {
     return ViewRegisterModel;
 })();
 exports.ViewRegisterModel = ViewRegisterModel;
+var ViewChangePassword = (function () {
+    function ViewChangePassword() {
+    }
+    return ViewChangePassword;
+})();
+exports.ViewChangePassword = ViewChangePassword;
 //# sourceMappingURL=user.js.map
