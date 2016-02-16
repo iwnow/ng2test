@@ -16,7 +16,7 @@ import * as Utils from './utils/all';
     selector: 'ctoc-app',
     templateUrl: 'app/view/ctoc.html',
     directives: [C2cWorkspace, C2cLogin, C2cRegister],
-    providers: [ResourceService, ServiceLocator,EventService,UserService,ExceptionService,
+    providers: [EventService,ExceptionService,ResourceService, ServiceLocator,UserService,
                 HTTP_PROVIDERS]
 })
 class CtocApp implements OnInit{    
@@ -48,7 +48,10 @@ class CtocApp implements OnInit{
     private loginMenu:{dropped:boolean} = {dropped: false};
     private langMenu:{dropped:boolean} = {dropped: false};
     
-    constructor(private _srvLocator: ServiceLocator, private _exceptionService:ExceptionService){        
+    constructor(private _eventService: EventService,
+                private _usrService: UserService,
+                private _srvLocator: ServiceLocator,
+                private _exceptionService:ExceptionService){        
         this.projectName = "C2C";
         this.toggleNav = false;        
         this.addResizeEvent();

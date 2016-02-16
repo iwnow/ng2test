@@ -11,10 +11,13 @@ var core_1 = require('angular2/core');
 var all_1 = require('../services/all');
 var all_2 = require('../utils/all');
 var all_3 = require('../models/all');
+//test
+var modal_1 = require('./modal');
 var C2cEditPass = (function () {
     function C2cEditPass(_locator) {
         this._locator = _locator;
         this._model = new all_3.ViewChangePassword();
+        this.modalShow = false;
         this._isSending = false;
         //set event on resize
         //this.registerResizeListening();
@@ -101,16 +104,24 @@ var C2cEditPass = (function () {
         var _this = this;
         if (!this.validateModel(this.model))
             return;
+        this.modalShow = true;
         var tmp = this.btnSendTxt;
         if (!this._isSending) {
             this._isSending = true;
             this.btnSendTxt = '';
             this.showSpinner();
-            setTimeout(function () {
+            var sub = this.userService
+                .changePassword(this._model)
+                .subscribe(function (res) {
                 _this.showSpinner(false);
                 _this.btnSendTxt = tmp;
                 _this._isSending = false;
-            }, 2000);
+                if (res.result)
+                    console.log('pass changed');
+                else
+                    console.log("error handle: " + res.reason);
+                sub.unsubscribe();
+            });
         }
     };
     C2cEditPass.prototype.showSpinner = function (show) {
@@ -121,7 +132,8 @@ var C2cEditPass = (function () {
     C2cEditPass = __decorate([
         core_1.Component({
             selector: 'ctoc-edit-pass',
-            templateUrl: 'app/view/ctoc-edit-pass.html'
+            templateUrl: 'app/view/ctoc-edit-pass.html',
+            directives: [modal_1.C2cModal]
         }), 
         __metadata('design:paramtypes', [all_1.ServiceLocator])
     ], C2cEditPass);

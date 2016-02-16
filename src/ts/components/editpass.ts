@@ -6,9 +6,13 @@ import {IUserInfo, IUserService, IEmitData, IEventService, Cultures, IResourceSe
 import {Descriptors, Validators} from '../utils/all';
 import {ViewChangePassword} from '../models/all';
 
+//test
+import {C2cModal} from './modal'
+
 @Component({
   selector: 'ctoc-edit-pass',
-  templateUrl: 'app/view/ctoc-edit-pass.html'
+  templateUrl: 'app/view/ctoc-edit-pass.html',
+  directives: [C2cModal]
 })
 export class C2cEditPass implements OnInit, OnDestroy {
     
@@ -26,6 +30,7 @@ export class C2cEditPass implements OnInit, OnDestroy {
     private newPasswordLabel: string;
     private confirmNewPasswordLabel: string;
     
+    modalShow: boolean = false;
     
     constructor(private _locator: ServiceLocator){
         //set event on resize
@@ -100,17 +105,23 @@ export class C2cEditPass implements OnInit, OnDestroy {
     send() {
         if (!this.validateModel(this.model))
             return;
-        
+        this.modalShow = true;
         let tmp = this.btnSendTxt;
         if (!this._isSending) {
             this._isSending = true;
             this.btnSendTxt = '';
             this.showSpinner();
-            setTimeout(() => {
-                 this.showSpinner(false);
-                 this.btnSendTxt = tmp;
-                 this._isSending = false;
-            }, 2000);
+            let sub = this.userService
+                .changePassword(this._model)
+                .subscribe((res) => {
+                    this.showSpinner(false);
+                    this.btnSendTxt = tmp;
+                    this._isSending = false;
+                    if (res.result)    
+                        console.log('pass changed'); 
+                    else console.log(`error handle: ${res.reason}`);   
+                    sub.unsubscribe();                      
+                });
         }
         
     }

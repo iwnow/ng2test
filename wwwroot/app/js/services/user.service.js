@@ -10,14 +10,17 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 //external modules
 var core_1 = require('angular2/core');
 var Observable_1 = require('rxjs/Observable');
+var event_service_1 = require('./event.service');
 var Models = require('../models/all');
 //mock objects for tests
-var user_mock_1 = require('../mocks/user.mock');
+var all_1 = require('../mocks/all');
+var all_2 = require('../utils/all');
 var UserService = (function () {
-    function UserService() {
+    function UserService(_eventsService) {
+        this._eventsService = _eventsService;
         this._currentUser = null;
         this._registered = new Map();
-        var u = user_mock_1.UserMock.Create();
+        var u = all_1.UserMock.Create();
         this._registered.set(u.email, u);
         this._currentUser = u;
     }
@@ -62,12 +65,24 @@ var UserService = (function () {
             }, 3000);
         }));
     };
+    UserService.prototype.changePassword = function (model) {
+        var _this = this;
+        return Observable_1.Observable.fromPromise(new Promise(function (resolve, reject) {
+            throw 'test exception change password';
+            var r = { result: true };
+            resolve(r);
+        }).catch(function (e) {
+            _this._eventsService.emit({ key: all_2.Descriptors.Exceptions, data: e });
+            var r = { result: false, reason: e };
+            return r;
+        }));
+    };
     UserService.prototype.loadUserInfo = function () {
-        return user_mock_1.UserMock.Create();
+        return all_1.UserMock.Create();
     };
     UserService = __decorate([
         core_1.Injectable(), 
-        __metadata('design:paramtypes', [])
+        __metadata('design:paramtypes', [event_service_1.EventService])
     ], UserService);
     return UserService;
 })();

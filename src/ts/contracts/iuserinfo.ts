@@ -13,11 +13,16 @@ export interface IUserInfo {
     companies?: ICompany[];
 }
 
-export interface ILoginResult {
+export interface IResult {
     result: boolean;
     reason?: string;
 }
-export interface IRegisterResult extends ILoginResult {
+export interface ILoginResult extends IResult {    
+}
+export interface IRegisterResult extends IResult {
+}
+export interface IChangePassResult extends IResult {
+    
 }
 
 export interface ICompany {

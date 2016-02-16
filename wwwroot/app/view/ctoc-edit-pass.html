@@ -1,28 +1,35 @@
-<form>       
-                                 
-    <div class="input-group">
-        <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
-        <input type="password" class="form-control" 
-                [(ngModel)]="_model.oldPassword"
-                [placeholder]="oldPasswordLabel" required>
-    </div>                 
-    <div class="input-group">
-        <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
-        <input type="password" class="form-control"
-                [(ngModel)]="_model.newPassword" 
-                [placeholder]="newPasswordLabel" required>
-    </div>                  
-    <div class="input-group">
-        <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
-        <input type="password" class="form-control"
-                [(ngModel)]="_model.confirmNewPassword" 
-                [placeholder]="confirmNewPasswordLabel" required>
-    </div> 
-    <button (click)="send()" type="submit"
-            class="btn-primary btn form-control" 
-            style="width: 100%; max-width: 10000px;">
-            <span id="spinBtnPassChange"><i class="fa fa fa-spinner fa-spin"></i></span>
-            {{btnSendTxt}}
-    </button>
-    
-</form>
+<div class="row">
+    <div class="col-md-6 col-lg-6 well" align="center" style="max-width:400px;"> 
+        <form>       
+                                        
+            <div class="input-group">
+                <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
+                <input type="password" class="form-control" 
+                        [(ngModel)]="_model.oldPassword"
+                        [placeholder]="oldPasswordLabel" required>
+            </div>                 
+            <div class="input-group">
+                <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
+                <input type="password" class="form-control"
+                        [(ngModel)]="_model.newPassword" 
+                        [placeholder]="newPasswordLabel" required>
+            </div>                  
+            <div class="input-group">
+                <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
+                <input type="password" class="form-control"
+                        [(ngModel)]="_model.confirmNewPassword" 
+                        [placeholder]="confirmNewPasswordLabel" required>
+            </div> 
+            <button (click)="send()" type="submit"
+                    class="btn-primary btn form-control" 
+                    style="width: 100%; max-width: 10000px;">
+                    <span id="spinBtnPassChange"><i class="fa fa fa-spinner fa-spin"></i></span>
+                    {{btnSendTxt}}
+            </button>
+            
+        </form>
+    </div>
+    <div class=" col-md-6 col-lg-6 "> 
+    </div>    
+</div>
+<ctoc-modal [show]="modalShow"></ctoc-modal>

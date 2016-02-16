@@ -15,7 +15,7 @@ export class UserMock {
             false,
             ['mock']            
         );
-        u.companies = [new Company('Самая лучшая компания')];
+        u.companies = [new Company('Github')];
         return u;
     }
 }

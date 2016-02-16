@@ -16,7 +16,9 @@ var all_2 = require('./services/all');
 var Menu = require('./utils/menu');
 var Utils = require('./utils/all');
 var CtocApp = (function () {
-    function CtocApp(_srvLocator, _exceptionService) {
+    function CtocApp(_eventService, _usrService, _srvLocator, _exceptionService) {
+        this._eventService = _eventService;
+        this._usrService = _usrService;
         this._srvLocator = _srvLocator;
         this._exceptionService = _exceptionService;
         this.loginOrReg = true;
@@ -194,10 +196,10 @@ var CtocApp = (function () {
             selector: 'ctoc-app',
             templateUrl: 'app/view/ctoc.html',
             directives: [all_1.C2cWorkspace, all_1.C2cLogin, all_1.C2cRegister],
-            providers: [all_2.ResourceService, all_2.ServiceLocator, all_2.EventService, all_2.UserService, all_2.ExceptionService,
+            providers: [all_2.EventService, all_2.ExceptionService, all_2.ResourceService, all_2.ServiceLocator, all_2.UserService,
                 http_1.HTTP_PROVIDERS]
         }), 
-        __metadata('design:paramtypes', [all_2.ServiceLocator, all_2.ExceptionService])
+        __metadata('design:paramtypes', [all_2.EventService, all_2.UserService, all_2.ServiceLocator, all_2.ExceptionService])
     ], CtocApp);
     return CtocApp;
 })();

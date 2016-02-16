@@ -1,12 +1,14 @@
 //external modules
-import {Injectable} from 'angular2/core';
+import {Injectable, Inject} from 'angular2/core';
 import {Observable} from 'rxjs/Observable';
 import {Http, Response} from 'angular2/http';
 //app modules
-import {IUserInfo, IUserService, ILoginResult, IRegisterResult} from '../contracts/all';
+import {IUserInfo, IUserService, ILoginResult, IRegisterResult, IChangePassResult} from '../contracts/all';
+import {EventService} from './event.service';
 import * as Models from '../models/all';
 //mock objects for tests
-import {UserMock} from '../mocks/user.mock';
+import {UserMock} from '../mocks/all';
+import {Descriptors} from '../utils/all';
 
 @Injectable()
 export class UserService implements IUserService {
@@ -14,7 +16,7 @@ export class UserService implements IUserService {
     
     private _registered: Map<string, IUserInfo> = new Map<string, IUserInfo>();
     
-    constructor(){
+    constructor(private _eventsService: EventService){
         let u = UserMock.Create();
         this._registered.set(u.email, u);
         this._currentUser = u;
@@ -61,7 +63,19 @@ export class UserService implements IUserService {
         }));
     }
     
-    
+    changePassword(model: Models.ViewChangePassword): Observable<IChangePassResult> {
+        return Observable.fromPromise(
+            new Promise<IChangePassResult>((resolve, reject) => {
+                throw 'test exception change password';            
+                let r: IChangePassResult = {result:true};
+                resolve(r);
+            }).catch((e) => {
+                this._eventsService.emit({key: Descriptors.Exceptions,data:e});
+                let r: IChangePassResult = {result:false,reason:e};
+                return r;
+            })
+        );
+    }
     
     private loadUserInfo(): IUserInfo {
         return UserMock.Create();
