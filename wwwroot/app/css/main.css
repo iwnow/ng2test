@@ -128,7 +128,15 @@ body {
   display: inline-block;
   border-radius: 50%;
 }
-
+.modal-header {
+    padding: 10px;
+}
+.modal-footer {
+    padding: 8px;
+}
+.modal-footer > .btn {
+    width: 100px;
+}
 .notifications {
 	bottom: 20px;
 	right: 20px;

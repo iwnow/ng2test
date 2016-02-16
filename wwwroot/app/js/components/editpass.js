@@ -18,6 +18,8 @@ var C2cEditPass = (function () {
         this._locator = _locator;
         this._model = new all_3.ViewChangePassword();
         this.modalShow = false;
+        this.modalTitle = 'Информация';
+        this.modalMsg = 'Пароль успешно изменен';
         this._isSending = false;
         //set event on resize
         //this.registerResizeListening();

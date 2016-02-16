@@ -31,6 +31,8 @@ export class C2cEditPass implements OnInit, OnDestroy {
     private confirmNewPasswordLabel: string;
     
     modalShow: boolean = false;
+    modalTitle: string = 'Информация';
+    modalMsg: string = 'Пароль успешно изменен';
     
     constructor(private _locator: ServiceLocator){
         //set event on resize

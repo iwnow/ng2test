@@ -32,4 +32,9 @@
     <div class=" col-md-6 col-lg-6 "> 
     </div>    
 </div>
-<ctoc-modal [show]="modalShow"></ctoc-modal>
+<ctoc-modal [show]="modalShow" 
+            [title]="modalTitle"
+            [msg]="modalMsg"
+            (close)="modalShow=false" 
+            (ok)="modalShow=false">
+</ctoc-modal>
