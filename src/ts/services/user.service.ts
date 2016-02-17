@@ -56,21 +56,19 @@ export class UserService implements IUserService {
         return Observable.fromPromise(new Promise<IRegisterResult>((resolve) => {
             setTimeout(() => {
                 let r: IRegisterResult = {result: true};
-                console.log(`register user`);
                 this._registered.set(u.email, u);
                 resolve(r);
-            }, 3000);
+            }, 1000);
         }));
     }
     
     changePassword(model: Models.ViewChangePassword): Observable<IChangePassResult> {
         return Observable.fromPromise(
             new Promise<IChangePassResult>((resolve, reject) => {
-                throw 'test exception change password';            
                 let r: IChangePassResult = {result:true};
                 resolve(r);
             }).catch((e) => {
-                this._eventsService.emit({key: Descriptors.Exceptions,data:e});
+                this._eventsService.emit({key: Descriptors.Exceptions,data:e, who:'UserService.changePassword'});
                 let r: IChangePassResult = {result:false,reason:e};
                 return r;
             })

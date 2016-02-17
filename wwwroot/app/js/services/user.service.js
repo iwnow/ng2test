@@ -59,20 +59,18 @@ var UserService = (function () {
         return Observable_1.Observable.fromPromise(new Promise(function (resolve) {
             setTimeout(function () {
                 var r = { result: true };
-                console.log("register user");
                 _this._registered.set(u.email, u);
                 resolve(r);
-            }, 3000);
+            }, 1000);
         }));
     };
     UserService.prototype.changePassword = function (model) {
         var _this = this;
         return Observable_1.Observable.fromPromise(new Promise(function (resolve, reject) {
-            throw 'test exception change password';
             var r = { result: true };
             resolve(r);
         }).catch(function (e) {
-            _this._eventsService.emit({ key: all_2.Descriptors.Exceptions, data: e });
+            _this._eventsService.emit({ key: all_2.Descriptors.Exceptions, data: e, who: 'UserService.changePassword' });
             var r = { result: false, reason: e };
             return r;
         }));

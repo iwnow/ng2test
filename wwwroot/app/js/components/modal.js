@@ -10,59 +10,57 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var core_1 = require('angular2/core');
 var all_1 = require('../services/all');
 var all_2 = require('../utils/all');
-var C2cModal = (function () {
-    function C2cModal(_events) {
+// [style.display]="!show ? 'none' : 'block'"
+var C2cModalInfo = (function () {
+    function C2cModalInfo(_events) {
         this._events = _events;
         this.close = new core_1.EventEmitter(true);
         this.ok = new core_1.EventEmitter(true);
         var h = window.innerHeight;
-        console.log(h);
         this.topOffsetModal = h / 4 + 'px';
     }
-    C2cModal.prototype.ngOnInit = function () {
+    C2cModalInfo.prototype.ngOnInit = function () {
         var _this = this;
+        console.log('init modal');
         this._winResizeSub = this._events.subscribe(all_2.Descriptors.WinResize, function (data) {
             _this.topOffsetModal = data.height / 4 + 'px';
         });
     };
-    C2cModal.prototype.closeModal = function () {
+    C2cModalInfo.prototype.closeModal = function () {
         this.close.emit({});
     };
-    C2cModal.prototype.okModal = function () {
+    C2cModalInfo.prototype.okModal = function () {
         this.ok.emit({});
     };
-    C2cModal.prototype.ngOnDestroy = function () {
+    C2cModalInfo.prototype.ngOnDestroy = function () {
         this._winResizeSub.unsubscribe();
     };
     __decorate([
         core_1.Input(), 
-        __metadata('design:type', Boolean)
-    ], C2cModal.prototype, "show", void 0);
+        __metadata('design:type', String)
+    ], C2cModalInfo.prototype, "title", void 0);
     __decorate([
         core_1.Input(), 
         __metadata('design:type', String)
-    ], C2cModal.prototype, "title", void 0);
-    __decorate([
-        core_1.Input(), 
-        __metadata('design:type', String)
-    ], C2cModal.prototype, "msg", void 0);
+    ], C2cModalInfo.prototype, "msg", void 0);
     __decorate([
         core_1.Output(), 
         __metadata('design:type', Object)
-    ], C2cModal.prototype, "close", void 0);
+    ], C2cModalInfo.prototype, "close", void 0);
     __decorate([
         core_1.Output(), 
         __metadata('design:type', Object)
-    ], C2cModal.prototype, "ok", void 0);
-    C2cModal = __decorate([
+    ], C2cModalInfo.prototype, "ok", void 0);
+    C2cModalInfo = __decorate([
         core_1.Component({
-            selector: 'ctoc-modal',
-            template: "<div class=\"modal in\" \n                [style.display]=\"!show ? 'none' : 'block'\"\n                [style.margin-top]=\"topOffsetModal\">\n                <div class=\"modal-dialog\">\n                <div class=\"modal-content\">\n                    <div class=\"modal-header\">\n                    <button type=\"button\" (click)=\"closeModal()\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">\u00D7</button>\n                    <h4 class=\"modal-title\">{{title}}</h4>\n                    </div>\n                    <div class=\"modal-body\">\n                    {{msg}}\n                    </div>\n                    <div class=\"modal-footer\">\n                        <a href=\"#\" (click)=\"okModal()\" class=\"btn btn-primary\">Ok</a>\n                    </div>\n                </div>\n                </div>\n            </div>",
-            inputs: ['show']
+            selector: 'ctoc-modal-info',
+            template: "<div class=\"modal in\" style=\"display:block;\"                \n                [style.margin-top]=\"topOffsetModal\">\n                <div class=\"modal-dialog\">\n                <div class=\"modal-content\">\n                    <div class=\"modal-header\">                    \n                    <button type=\"button\" (click)=\"closeModal()\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">\u00D7</button>\n                    <h4 class=\"modal-title\"><span class=\"glyphicon glyphicon-info-sign\"></span>&nbsp;{{title}}</h4>\n                    </div>\n                    <div class=\"modal-body\">\n                    {{msg}}\n                    </div>\n                    <div class=\"modal-footer\">\n                        <a href=\"#\" (click)=\"okModal()\" class=\"btn btn-primary\">OK</a>\n                    </div>\n                </div>\n                </div>\n            </div>",
+            inputs: ['title', 'msg'],
+            styles: ["\n        .modal-header {\n            color: #fff;\n            background-color: #428bca;\n        }\n    "]
         }), 
         __metadata('design:paramtypes', [all_1.EventService])
-    ], C2cModal);
-    return C2cModal;
+    ], C2cModalInfo);
+    return C2cModalInfo;
 })();
-exports.C2cModal = C2cModal;
+exports.C2cModalInfo = C2cModalInfo;
 //# sourceMappingURL=modal.js.map

@@ -7,12 +7,12 @@ import {Descriptors, Validators} from '../utils/all';
 import {ViewChangePassword} from '../models/all';
 
 //test
-import {C2cModal} from './modal'
+import {C2cModalInfo} from './modal'
 
 @Component({
   selector: 'ctoc-edit-pass',
   templateUrl: 'app/view/ctoc-edit-pass.html',
-  directives: [C2cModal]
+  directives: [C2cModalInfo]
 })
 export class C2cEditPass implements OnInit, OnDestroy {
     
@@ -31,7 +31,7 @@ export class C2cEditPass implements OnInit, OnDestroy {
     private confirmNewPasswordLabel: string;
     
     modalShow: boolean = false;
-    modalTitle: string = 'Информация';
+    modalTitle: string = 'Password change';
     modalMsg: string = 'Пароль успешно изменен';
     
     constructor(private _locator: ServiceLocator){
@@ -100,6 +100,11 @@ export class C2cEditPass implements OnInit, OnDestroy {
     }
     
     validateModel(model: ViewChangePassword): boolean {
+        if(!this.model.oldPassword ||
+            !this.model.newPassword ||
+            !this.model.confirmNewPassword)
+            return;
+        
         return true;
     }
     
@@ -107,7 +112,7 @@ export class C2cEditPass implements OnInit, OnDestroy {
     send() {
         if (!this.validateModel(this.model))
             return;
-        this.modalShow = true;
+        
         let tmp = this.btnSendTxt;
         if (!this._isSending) {
             this._isSending = true;

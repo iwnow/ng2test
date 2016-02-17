@@ -18,7 +18,7 @@ var C2cEditPass = (function () {
         this._locator = _locator;
         this._model = new all_3.ViewChangePassword();
         this.modalShow = false;
-        this.modalTitle = 'Информация';
+        this.modalTitle = 'Password change';
         this.modalMsg = 'Пароль успешно изменен';
         this._isSending = false;
         //set event on resize
@@ -100,13 +100,16 @@ var C2cEditPass = (function () {
         configurable: true
     });
     C2cEditPass.prototype.validateModel = function (model) {
+        if (!this.model.oldPassword ||
+            !this.model.newPassword ||
+            !this.model.confirmNewPassword)
+            return;
         return true;
     };
     C2cEditPass.prototype.send = function () {
         var _this = this;
         if (!this.validateModel(this.model))
             return;
-        this.modalShow = true;
         var tmp = this.btnSendTxt;
         if (!this._isSending) {
             this._isSending = true;
@@ -135,7 +138,7 @@ var C2cEditPass = (function () {
         core_1.Component({
             selector: 'ctoc-edit-pass',
             templateUrl: 'app/view/ctoc-edit-pass.html',
-            directives: [modal_1.C2cModal]
+            directives: [modal_1.C2cModalInfo]
         }), 
         __metadata('design:paramtypes', [all_1.ServiceLocator])
     ], C2cEditPass);
