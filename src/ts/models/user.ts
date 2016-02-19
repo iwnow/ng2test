@@ -11,7 +11,6 @@ export class User implements IUserInfo {
         public passwordConfirm?: string,
         public mobilePhone?: string,
         public avatar?: any,
-        public isAuthorized?: boolean,
         public roles?: string[]
     ) { }
     

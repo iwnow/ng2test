@@ -5,12 +5,13 @@ import * as Services from '../services/all';
 import * as Contracts from '../contracts/all';
 import {C2cProfile} from './profile';
 import {C2cEditPass} from './editpass';
+import {C2cContacts} from './contacts';
 
 @Component({
     selector: 'ctoc-content',
     templateUrl: 'app/view/ctoc-content.html',
     inputs: ['contentHeader', 'sidebarSelectedMenuItem'],
-    directives: [C2cProfile, C2cEditPass]
+    directives: [C2cProfile, C2cEditPass, C2cContacts]
 })
 export class C2cContent implements OnInit {
     @Input() sidebarSelectedMenuItem: Utils.MenuItem;

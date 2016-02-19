@@ -12,6 +12,7 @@ var Utils = require('../utils/all');
 var Services = require('../services/all');
 var profile_1 = require('./profile');
 var editpass_1 = require('./editpass');
+var contacts_1 = require('./contacts');
 var C2cContent = (function () {
     function C2cContent(_locator) {
         this._locator = _locator;
@@ -58,7 +59,7 @@ var C2cContent = (function () {
             selector: 'ctoc-content',
             templateUrl: 'app/view/ctoc-content.html',
             inputs: ['contentHeader', 'sidebarSelectedMenuItem'],
-            directives: [profile_1.C2cProfile, editpass_1.C2cEditPass]
+            directives: [profile_1.C2cProfile, editpass_1.C2cEditPass, contacts_1.C2cContacts]
         }), 
         __metadata('design:paramtypes', [Services.ServiceLocator])
     ], C2cContent);
