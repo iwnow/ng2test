@@ -15,6 +15,7 @@ var all_1 = require('./components/all');
 var all_2 = require('./services/all');
 var Menu = require('./utils/menu');
 var Utils = require('./utils/all');
+core_1.enableProdMode();
 var CtocApp = (function () {
     function CtocApp(_eventService, _usrService, _srvLocator, _exceptionService) {
         this._eventService = _eventService;

@@ -1,4 +1,4 @@
-import {Component, OnInit} from 'angular2/core';
+import {Component, OnInit, enableProdMode} from 'angular2/core';
 import {bootstrap} from 'angular2/platform/browser';
 import {HTTP_PROVIDERS} from 'angular2/http';
 import 'rxjs/Rx';
@@ -11,6 +11,7 @@ import {IUserService, IUserInfo,
 import * as Menu from './utils/menu';
 import * as Utils from './utils/all';
 
+enableProdMode();
 
 @Component({
     selector: 'ctoc-app',
@@ -198,6 +199,7 @@ class CtocApp implements OnInit{
         });        
     }
 }
+
 
 bootstrap(CtocApp).catch(err => {
     CtocApp.IsExceptionRised = true;

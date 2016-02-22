@@ -12,7 +12,6 @@ export class UserMock {
             'q',
             '89638123462',
             null,
-            false,
             ['mock']            
         );
         u.companies = [new Company('Github')];

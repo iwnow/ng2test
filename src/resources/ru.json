@@ -35,6 +35,20 @@
         "sideBarMenu": {
             "contacts": "Контакты",
             "payment": "Платеж"
+        },
+        "contactsPan": {
+            "table": {
+                "givenName": "Имя",
+                "middleName": "Отчество",
+                "familyName": "Фамилия",
+                "mail": "Почта",
+                "position": "Должность",
+                "subdivision": "Подразделение",
+                "mobilePhone": "Мобильный",
+                "workPhone": "Рабочий",
+                "internalPhone": "Внутренний",
+                "avatar": "Аватар"
+            }
         }
     },
     "profilePanel": {

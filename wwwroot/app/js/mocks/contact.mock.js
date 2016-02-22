@@ -7,7 +7,7 @@ var ContactMock = (function () {
         c.givenName = 'mock';
         c.familyName = 'mocker';
         c.middleName = 'test';
-        c.avatar = 'mock.png';
+        c.avatar = 'https://assets-cdn.github.com/images/modules/logos_page/GitHub-Mark.png';
         c.internalPhone = '3021';
         c.mail = 'mock@mock.com';
         c.mobilePhone = '89321732154';
@@ -18,9 +18,12 @@ var ContactMock = (function () {
     };
     ContactMock.getContacts = function (n) {
         var ca = [];
+        var mp = 89321732154, ip = 3021;
         for (var i = 0; i < n; i++) {
             var c = ContactMock.getContact();
             c.givenName += i;
+            c.internalPhone = (mp + i).toString();
+            c.mobilePhone = (ip + i * i).toString();
             ca.push(c);
         }
         return ca;

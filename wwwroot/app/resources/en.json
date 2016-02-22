@@ -35,6 +35,20 @@
         "sideBarMenu": {
             "contacts": "Contacts",
             "payment": "Payment Info"
+        },
+        "contactsPan": {
+            "table": {
+                "givenName": "First Name",
+                "middleName": "Middle Name",
+                "familyName": "Family Name",
+                "mail": "Email",
+                "position": "Position",
+                "subdivision": "Subdivision",
+                "mobilePhone": "Mobile Phone",
+                "workPhone": "Work Phone",
+                "internalPhone": "Internal Phone",
+                "avatar": "Avatar"
+            }
         }
     },
     "profilePanel": {
