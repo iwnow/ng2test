@@ -1,6 +1,6 @@
 import {Component, OnInit, 
         OnDestroy, Input, Output,
-        EventEmitter} from 'angular2/core';
+        EventEmitter, OnChanges} from 'angular2/core';
 
 import {ContactMock} from '../mocks/all';
 
@@ -26,13 +26,17 @@ import {ContactMock} from '../mocks/all';
                 </tr>
             </tbody>
         </table>
-        <ul class="pagination pull-right">
-            <li *ngFor="#pag of paginationBtn"
-                [ngClass]="pag.active ? 'active' : ''"
-                (click)="pagClick(pag)">
-                <a href="#">{{pag.num}}</a>
-            </li>
-        </ul>
+        <div>
+            <ul class="pagination ">
+                <li (click)="pagBackClick()"><a href="#"><span class="glyphicon glyphicon-backward"></span></a></li>
+                <li *ngFor="#pag of paginationBtn"
+                    [ngClass]="pag.active ? 'active' : ''"
+                    (click)="pagClick(pag)">
+                    <a href="#">{{pag.num}}</a>
+                </li>
+                <li (click)="pagForwardClick()"><a href="#"><span class="glyphicon glyphicon-forward"></span></a></li>
+            </ul>
+        </div>        
     `,
     styles: [`
         tr.ctoc-tr:hover {
@@ -43,22 +47,25 @@ import {ContactMock} from '../mocks/all';
         }
     `]
 })
-export class C2cGrid implements OnInit {
+export class C2cGrid implements OnInit, OnChanges {
     @Input() gridColScheme: C2cGridColumnsScheme;
     @Input() data: any[];
-    @Input() itemsPerPage: number;
+    @Input() itemsCountPerPage: number;
     @Output() selectedElement: EventEmitter<any> = new EventEmitter<any>(true);
     
     currentPage: number;   
-    filterData: any[]; 
+    viewTableData: any[]; 
     
     ngOnInit() {
         if (this.gridColScheme == null) 
             this.gridColScheme = new C2cGridColumnsScheme();
-        if (this.itemsPerPage == null)
-            this.itemsPerPage = 5;
-        this.currentPage = 1;
-        this.updatePagBtn();
+        if (this.itemsCountPerPage == null)
+            this.itemsCountPerPage = 5;        
+        this.updatePagBtn();        
+    }
+    
+    ngOnChanges(changes){
+        // trace changes this
     }
     
     chooseContact(contact: any) {
@@ -79,24 +86,40 @@ export class C2cGrid implements OnInit {
     get dataPerPage(): any[] {
         if (!this.data)
             return null;
-        let start = (this.currentPage-1)*this.itemsPerPage;
-        return this.data.slice(start, start + this.itemsPerPage);
+        let start = (this.currentPage-1)*this.itemsCountPerPage;
+        return this.data.slice(start, start + this.itemsCountPerPage);
     }
     
-    paginationBtn: any[]; 
+    get countPages():number {
+        return (this.data.length % this.itemsCountPerPage) == 0 ?  
+                        this.data.length / this.itemsCountPerPage : 
+                        Math.floor(this.data.length / this.itemsCountPerPage) + 1;
+    }
+    
+    _paginationBtn: any[];
+    get paginationBtn(): any[] {
+        if (this.currentPage > this.countPages) {
+            this.updatePagBtn();
+            this.pagClick(this._paginationBtn[0]);
+        }            
+        return this._paginationBtn;
+    }
+    set paginationBtn(val: any[]) {
+        this._paginationBtn = val;
+    }
+    
     updatePagBtn(){
         let pb:{active: boolean, num: number};
         if (!this.data)
             return null;
-        let countBtn = (this.data.length % this.itemsPerPage) == 0 ?  
-                        this.data.length / this.itemsPerPage : 
-                        (this.data.length / this.itemsPerPage) + 1;
+        let countBtn = this.countPages > 5 ? 5 : this.countPages;
         let btnArr = [];
         for (let i = 1; i <= countBtn; i++) {
             pb = i==1 ? {active:true,num:i} : {active:false,num:i};
             btnArr.push(pb);            
-        }
+        }        
         this.paginationBtn = btnArr;
+        this.currentPage = 1;
     }
     
     pagClick(pag: any) {
@@ -108,6 +131,44 @@ export class C2cGrid implements OnInit {
         pag.active = true;
         this.currentPage = pag.num;
         this.clearSelection();
+    }
+    
+    goToPage(num: number) {
+        if (num > this.countPages)
+            return;
+        let ind = this.paginationBtn.findIndex((i) => i.num == num);
+        if (ind) {
+            this.pagClick(this.paginationBtn[ind]);
+            return;
+        }
+        
+    }
+    
+    
+    pagForwardClick() {
+        console.log(`${this.currentPage} - ${this.countPages}`);
+        if (this.currentPage >= this.countPages)
+            return;
+        if (this.paginationBtn[this.paginationBtn.length-1].num > this.currentPage) {
+            this.pagClick(this.paginationBtn[this.currentPage-this.paginationBtn[0].num + 1]);
+            return;
+        }
+        let cp = this.currentPage;
+        this.paginationBtn = this.paginationBtn.slice(1);
+        this.paginationBtn.push({num:cp+1, active:false});
+        this.pagClick(this.paginationBtn[this.paginationBtn.length-1]);
+    }
+    
+    pagBackClick() {
+        if (this.currentPage == 1)
+            return;           
+        if (this.paginationBtn[0].num < this.currentPage) {
+            this.pagClick(this.paginationBtn[this.currentPage-this.paginationBtn[0].num-1]);  
+            return;
+        }
+        this.paginationBtn = this.paginationBtn.slice(0,this.paginationBtn.length-1);
+        this.paginationBtn.unshift({num:this.currentPage-1, active:false});
+        this.pagClick(this.paginationBtn[0]);
     }
 }
 
@@ -121,10 +182,14 @@ export class C2cGrid implements OnInit {
 //     workPhone: string;
 //     internalPhone: string;
 //     avatar: string;
+export interface IC2cGridScheme {
+    column: C2cGridColumn; 
+    order: number;
+}
 export class C2cGridColumnsScheme {
-    _sc: [{column: C2cGridColumn, order: number}];
+    _sc: IC2cGridScheme[];
     
-    get scheme(): [{column: C2cGridColumn, order: number}] {
+    get scheme(): IC2cGridScheme[] {
         return this._sc;
     }
     

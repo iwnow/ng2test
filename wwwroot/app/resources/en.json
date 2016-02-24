@@ -48,6 +48,13 @@
                 "workPhone": "Work Phone",
                 "internalPhone": "Internal Phone",
                 "avatar": "Avatar"
+            },
+            "tableMenu": {
+                "edit": "Edit selected contact",
+                "add": "Add contact",
+                "delete": "Remove selected contact",
+                "save": "Save contacts",
+                "xls": "Load contacts from Excel file"
             }
         }
     },

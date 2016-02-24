@@ -15,10 +15,12 @@ var C2cGrid = (function () {
     C2cGrid.prototype.ngOnInit = function () {
         if (this.gridColScheme == null)
             this.gridColScheme = new C2cGridColumnsScheme();
-        if (this.itemsPerPage == null)
-            this.itemsPerPage = 5;
-        this.currentPage = 1;
+        if (this.itemsCountPerPage == null)
+            this.itemsCountPerPage = 5;
         this.updatePagBtn();
+    };
+    C2cGrid.prototype.ngOnChanges = function (changes) {
+        // trace changes this
     };
     C2cGrid.prototype.chooseContact = function (contact) {
         this.data.forEach(function (c) {
@@ -37,8 +39,31 @@ var C2cGrid = (function () {
         get: function () {
             if (!this.data)
                 return null;
-            var start = (this.currentPage - 1) * this.itemsPerPage;
-            return this.data.slice(start, start + this.itemsPerPage);
+            var start = (this.currentPage - 1) * this.itemsCountPerPage;
+            return this.data.slice(start, start + this.itemsCountPerPage);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(C2cGrid.prototype, "countPages", {
+        get: function () {
+            return (this.data.length % this.itemsCountPerPage) == 0 ?
+                this.data.length / this.itemsCountPerPage :
+                Math.floor(this.data.length / this.itemsCountPerPage) + 1;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(C2cGrid.prototype, "paginationBtn", {
+        get: function () {
+            if (this.currentPage > this.countPages) {
+                this.updatePagBtn();
+                this.pagClick(this._paginationBtn[0]);
+            }
+            return this._paginationBtn;
+        },
+        set: function (val) {
+            this._paginationBtn = val;
         },
         enumerable: true,
         configurable: true
@@ -47,15 +72,14 @@ var C2cGrid = (function () {
         var pb;
         if (!this.data)
             return null;
-        var countBtn = (this.data.length % this.itemsPerPage) == 0 ?
-            this.data.length / this.itemsPerPage :
-            (this.data.length / this.itemsPerPage) + 1;
+        var countBtn = this.countPages > 5 ? 5 : this.countPages;
         var btnArr = [];
         for (var i = 1; i <= countBtn; i++) {
             pb = i == 1 ? { active: true, num: i } : { active: false, num: i };
             btnArr.push(pb);
         }
         this.paginationBtn = btnArr;
+        this.currentPage = 1;
     };
     C2cGrid.prototype.pagClick = function (pag) {
         if (pag.num == this.currentPage)
@@ -66,6 +90,39 @@ var C2cGrid = (function () {
         pag.active = true;
         this.currentPage = pag.num;
         this.clearSelection();
+    };
+    C2cGrid.prototype.goToPage = function (num) {
+        if (num > this.countPages)
+            return;
+        var ind = this.paginationBtn.findIndex(function (i) { return i.num == num; });
+        if (ind) {
+            this.pagClick(this.paginationBtn[ind]);
+            return;
+        }
+    };
+    C2cGrid.prototype.pagForwardClick = function () {
+        console.log(this.currentPage + " - " + this.countPages);
+        if (this.currentPage >= this.countPages)
+            return;
+        if (this.paginationBtn[this.paginationBtn.length - 1].num > this.currentPage) {
+            this.pagClick(this.paginationBtn[this.currentPage - this.paginationBtn[0].num + 1]);
+            return;
+        }
+        var cp = this.currentPage;
+        this.paginationBtn = this.paginationBtn.slice(1);
+        this.paginationBtn.push({ num: cp + 1, active: false });
+        this.pagClick(this.paginationBtn[this.paginationBtn.length - 1]);
+    };
+    C2cGrid.prototype.pagBackClick = function () {
+        if (this.currentPage == 1)
+            return;
+        if (this.paginationBtn[0].num < this.currentPage) {
+            this.pagClick(this.paginationBtn[this.currentPage - this.paginationBtn[0].num - 1]);
+            return;
+        }
+        this.paginationBtn = this.paginationBtn.slice(0, this.paginationBtn.length - 1);
+        this.paginationBtn.unshift({ num: this.currentPage - 1, active: false });
+        this.pagClick(this.paginationBtn[0]);
     };
     __decorate([
         core_1.Input(), 
@@ -78,7 +135,7 @@ var C2cGrid = (function () {
     __decorate([
         core_1.Input(), 
         __metadata('design:type', Number)
-    ], C2cGrid.prototype, "itemsPerPage", void 0);
+    ], C2cGrid.prototype, "itemsCountPerPage", void 0);
     __decorate([
         core_1.Output(), 
         __metadata('design:type', core_1.EventEmitter)
@@ -86,7 +143,7 @@ var C2cGrid = (function () {
     C2cGrid = __decorate([
         core_1.Component({
             selector: 'ctoc-grid',
-            template: "\n        <table class=\"col-md-12 table-bordered table-striped table-condensed cf\">\n            <thead>\n                <tr>\n                    <th *ngFor=\"#colsc of gridColScheme.scheme\">{{colsc.column.name}}</th>\n                </tr>\n            </thead>\n            <tbody style=\"height:200px;\">\n                <tr *ngFor=\"#contact of dataPerPage\" class=\"ctoc-tr\" \n                    [ngClass]=\"contact.choosed ? 'sel' : ''\"\n                    (click)=\"chooseContact(contact)\">\n                    <td *ngFor=\"#colsc of gridColScheme.scheme\">\n                        <span *ngIf=\"colsc.column.type != 2\">{{contact[colsc.column.id]}}</span>\n                        <div *ngIf=\"colsc.column.type == 2\" align=\"center\">\n                            <img  [src]=\"contact[colsc.column.id]\" class=\"img-circle\" alt=\"avatar\" width=\"60\" height=\"60\">\n                        </div>\n                    </td>\n                </tr>\n            </tbody>\n        </table>\n        <ul class=\"pagination pull-right\">\n            <li *ngFor=\"#pag of paginationBtn\"\n                [ngClass]=\"pag.active ? 'active' : ''\"\n                (click)=\"pagClick(pag)\">\n                <a href=\"#\">{{pag.num}}</a>\n            </li>\n        </ul>\n    ",
+            template: "\n        <table class=\"col-md-12 table-bordered table-striped table-condensed cf\">\n            <thead>\n                <tr>\n                    <th *ngFor=\"#colsc of gridColScheme.scheme\">{{colsc.column.name}}</th>\n                </tr>\n            </thead>\n            <tbody style=\"height:200px;\">\n                <tr *ngFor=\"#contact of dataPerPage\" class=\"ctoc-tr\" \n                    [ngClass]=\"contact.choosed ? 'sel' : ''\"\n                    (click)=\"chooseContact(contact)\">\n                    <td *ngFor=\"#colsc of gridColScheme.scheme\">\n                        <span *ngIf=\"colsc.column.type != 2\">{{contact[colsc.column.id]}}</span>\n                        <div *ngIf=\"colsc.column.type == 2\" align=\"center\">\n                            <img  [src]=\"contact[colsc.column.id]\" class=\"img-circle\" alt=\"avatar\" width=\"60\" height=\"60\">\n                        </div>\n                    </td>\n                </tr>\n            </tbody>\n        </table>\n        <div>\n            <ul class=\"pagination \">\n                <li (click)=\"pagBackClick()\"><a href=\"#\"><span class=\"glyphicon glyphicon-backward\"></span></a></li>\n                <li *ngFor=\"#pag of paginationBtn\"\n                    [ngClass]=\"pag.active ? 'active' : ''\"\n                    (click)=\"pagClick(pag)\">\n                    <a href=\"#\">{{pag.num}}</a>\n                </li>\n                <li (click)=\"pagForwardClick()\"><a href=\"#\"><span class=\"glyphicon glyphicon-forward\"></span></a></li>\n            </ul>\n        </div>        \n    ",
             styles: ["\n        tr.ctoc-tr:hover {\n            background-color: cornflowerblue;\n        }\n        tr.ctoc-tr.sel {\n            background-color: #428bca;\n        }\n    "]
         }), 
         __metadata('design:paramtypes', [])

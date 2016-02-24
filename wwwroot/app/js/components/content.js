@@ -57,9 +57,9 @@ var C2cContent = (function () {
     C2cContent = __decorate([
         core_1.Component({
             selector: 'ctoc-content',
-            templateUrl: 'app/view/ctoc-content.html',
             inputs: ['contentHeader', 'sidebarSelectedMenuItem'],
-            directives: [profile_1.C2cProfile, editpass_1.C2cEditPass, contacts_1.C2cContacts]
+            directives: [profile_1.C2cProfile, editpass_1.C2cEditPass, contacts_1.C2cContacts],
+            template: "\n        <div class=\"col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main\">\n            <h3 class=\"page-header\">{{company}}&nbsp;/&nbsp;{{contentHeader}}</h3>\n            <ctoc-profile *ngIf=\"menuId == 'profile'\"></ctoc-profile>\n            <ctoc-edit-pass *ngIf=\"menuId == 'password'\"></ctoc-edit-pass>\n            <ctoc-contacts  *ngIf=\"menuId == 'contacts'\"></ctoc-contacts>\n        </div>\n    "
         }), 
         __metadata('design:paramtypes', [Services.ServiceLocator])
     ], C2cContent);

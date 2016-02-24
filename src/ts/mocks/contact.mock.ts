@@ -1,8 +1,11 @@
 import {Contact} from '../models/all';
 
 export class ContactMock {
+    static _seq = 0;
     static getContact():Contact {
+        ContactMock._seq++;
         let c = new Contact();
+        c.id = ContactMock._seq;
         c.givenName = 'mock';
         c.familyName = 'mocker';
         c.middleName = 'test';

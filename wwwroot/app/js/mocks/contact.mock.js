@@ -3,7 +3,9 @@ var ContactMock = (function () {
     function ContactMock() {
     }
     ContactMock.getContact = function () {
+        ContactMock._seq++;
         var c = new all_1.Contact();
+        c.id = ContactMock._seq;
         c.givenName = 'mock';
         c.familyName = 'mocker';
         c.middleName = 'test';
@@ -28,6 +30,7 @@ var ContactMock = (function () {
         }
         return ca;
     };
+    ContactMock._seq = 0;
     return ContactMock;
 })();
 exports.ContactMock = ContactMock;

@@ -31,10 +31,11 @@
             <li><a href="#" (click)="loginOrReg = false">{{registerLink}}</a></li>
         </ul>
         <ul *ngIf = "currentUser" class="nav navbar-nav navbar-right">
-            <li>                
+            <li>                               
                 <a href="#"
                     (click)="loginMenu.dropped = !loginMenu.dropped;"
                     (blur)="loginMenu.dropped = false;">
+                    <span class="glyphicon glyphicon-user"></span>
                     {{currentUser.email }}
                     <span class="caret"></span>
                 </a>

@@ -9,9 +9,16 @@ import {C2cContacts} from './contacts';
 
 @Component({
     selector: 'ctoc-content',
-    templateUrl: 'app/view/ctoc-content.html',
     inputs: ['contentHeader', 'sidebarSelectedMenuItem'],
-    directives: [C2cProfile, C2cEditPass, C2cContacts]
+    directives: [C2cProfile, C2cEditPass, C2cContacts],
+    template: `
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+            <h3 class="page-header">{{company}}&nbsp;/&nbsp;{{contentHeader}}</h3>
+            <ctoc-profile *ngIf="menuId == 'profile'"></ctoc-profile>
+            <ctoc-edit-pass *ngIf="menuId == 'password'"></ctoc-edit-pass>
+            <ctoc-contacts  *ngIf="menuId == 'contacts'"></ctoc-contacts>
+        </div>
+    `
 })
 export class C2cContent implements OnInit {
     @Input() sidebarSelectedMenuItem: Utils.MenuItem;

@@ -25,7 +25,7 @@ var C2cContacts = (function () {
             _this.updateCultureUI(data.controlPanel.contactsPan);
         });
         this._schemeColumns = this.getSchemeColumns();
-        //this._contacts = this.getContacts();
+        this._contacts = this.getContacts();
     };
     C2cContacts.prototype.ngOnDestroy = function () {
         this._langChangeSubscription.unsubscribe();
@@ -67,8 +67,7 @@ var C2cContacts = (function () {
         });
     };
     C2cContacts.prototype.getContacts = function () {
-        console.log('loading contacts...');
-        return all_3.ContactMock.getContacts(10);
+        return all_3.ContactMock.getContacts(7);
     };
     C2cContacts.prototype.selectContact = function (el) {
         this.selectedElement = el;
@@ -78,6 +77,14 @@ var C2cContacts = (function () {
         sc.scheme.forEach(function (i) {
             i.column.name = _this._resx.table[i.column.id];
         });
+    };
+    C2cContacts.prototype.removeContact = function () {
+        var _this = this;
+        if (!this.selectedElement)
+            return;
+        var tmp = this._contacts;
+        var ind = tmp.findIndex(function (i) { return i.id == _this.selectedElement.id; });
+        this._contacts.splice(ind, 1);
     };
     C2cContacts.prototype.getSchemeColumns = function () {
         return new grid.C2cGridColumnsScheme([{
@@ -116,8 +123,9 @@ var C2cContacts = (function () {
     C2cContacts = __decorate([
         core_1.Component({
             selector: 'ctoc-contacts',
-            template: "\n        <div class=\"page-header\">menu items</div>\n        <ctoc-grid \n            (selectedElement)=\"selectContact($event)\"\n            [gridColScheme]=\"_schemeColumns\"\n            [data]=\"_contacts\"\n            >\n        </ctoc-grid>   \n    ",
-            directives: [grid.C2cGrid]
+            template: "\n        <div class=\"grid-menu\">\n            <div class=\"btn-group\">\n                <button [title]=\"_resx ? _resx.tableMenu.save : ''\" type=\"button\" class=\"btn btn-default\">\n                    <span class=\"glyphicon glyphicon-floppy-save\"></span>\n                </button>\n                <button [title]=\"_resx ? _resx.tableMenu.add : ''\" type=\"button\" class=\"btn btn-default\">\n                    <span class=\"glyphicon glyphicon-plus\"></span>\n                </button>\n                <button [title]=\"_resx ? _resx.tableMenu.edit : ''\" type=\"button\" class=\"btn btn-default\">\n                    <span class=\"glyphicon glyphicon-edit\"></span>\n                </button>\n                <button [title]=\"_resx ? _resx.tableMenu.delete : ''\" type=\"button\" class=\"btn btn-default\"\n                    (click)=\"removeContact()\">\n                    <span class=\"glyphicon glyphicon-remove\"></span>\n                </button>\n                <button [title]=\"_resx ? _resx.tableMenu.xls : ''\" type=\"button\" class=\"btn btn-default\">\n                    <span class=\"glyphicon glyphicon-folder-open\"></span>\n                </button>\n            </div>\n        </div>\n        <ctoc-grid \n            (selectedElement)=\"selectContact($event)\"\n            [gridColScheme]=\"_schemeColumns\"\n            [data]=\"_contacts\"\n            >\n        </ctoc-grid>   \n    ",
+            directives: [grid.C2cGrid],
+            styles: ["\n        .grid-menu {\n            margin-bottom: 15px;\n        }\n    "]
         }), 
         __metadata('design:paramtypes', [all_1.ServiceLocator])
     ], C2cContacts);

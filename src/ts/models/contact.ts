@@ -1,4 +1,5 @@
 export class Contact {
+    id: number;
     givenName: string; 
     familyName: string; 
     middleName: string;
