@@ -8,227 +8,305 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require('angular2/core');
+//define
+var __DEBUG__ = true;
+//
 var C2cGrid = (function () {
-    function C2cGrid() {
-        this.selectedElement = new core_1.EventEmitter(true);
+    function C2cGrid(elem) {
+        this.rowSelected = new core_1.EventEmitter(true);
+        this.rowDblClick = new core_1.EventEmitter(true);
+        this._rowNumberPerPage = 10;
+        this._currentViewPage = 1;
     }
-    C2cGrid.prototype.ngOnInit = function () {
-        if (this.gridColScheme == null)
-            this.gridColScheme = new C2cGridColumnsScheme();
-        if (this.itemsCountPerPage == null)
-            this.itemsCountPerPage = 5;
-        this.updatePagBtn();
-    };
-    C2cGrid.prototype.ngOnChanges = function (changes) {
-        // trace changes this
-    };
-    C2cGrid.prototype.chooseContact = function (contact) {
-        this.data.forEach(function (c) {
-            c.choosed = false;
-        });
-        contact.choosed = true;
-        this.selectedElement.emit(contact);
-    };
-    C2cGrid.prototype.clearSelection = function () {
-        this.data.forEach(function (c) {
-            c.choosed = false;
-        });
-        this.selectedElement.emit(null);
-    };
-    Object.defineProperty(C2cGrid.prototype, "dataPerPage", {
-        get: function () {
-            if (!this.data)
-                return null;
-            var start = (this.currentPage - 1) * this.itemsCountPerPage;
-            return this.data.slice(start, start + this.itemsCountPerPage);
+    Object.defineProperty(C2cGrid.prototype, "data", {
+        set: function (val) {
+            this._data = val;
         },
         enumerable: true,
         configurable: true
     });
-    Object.defineProperty(C2cGrid.prototype, "countPages", {
-        get: function () {
-            return (this.data.length % this.itemsCountPerPage) == 0 ?
-                this.data.length / this.itemsCountPerPage :
-                Math.floor(this.data.length / this.itemsCountPerPage) + 1;
+    Object.defineProperty(C2cGrid.prototype, "rowNumberPerPage", {
+        set: function (val) {
+            this._rowNumberPerPage = val;
         },
         enumerable: true,
         configurable: true
     });
-    Object.defineProperty(C2cGrid.prototype, "paginationBtn", {
+    Object.defineProperty(C2cGrid.prototype, "rowsCount", {
         get: function () {
-            if (this.currentPage > this.countPages) {
-                this.updatePagBtn();
-                this.pagClick(this._paginationBtn[0]);
-            }
-            return this._paginationBtn;
+            return this._data ? this._data.length : 0;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(C2cGrid.prototype, "pagesCount", {
+        get: function () {
+            if (!this._data || this._data.length == 0)
+                return 1;
+            return this._data.length % this._rowNumberPerPage == 0 ?
+                this._data.length / this._rowNumberPerPage :
+                Math.floor(this._data.length / this._rowNumberPerPage) + 1;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(C2cGrid.prototype, "currentPage", {
+        get: function () {
+            if (this._currentViewPage > this.pagesCount)
+                this._currentViewPage = this.pagesCount;
+            return this._currentViewPage;
         },
         set: function (val) {
-            this._paginationBtn = val;
+            var reg = /^\d+$/;
+            if (!reg.test(val.toString()) || val <= 0 || val > this.pagesCount) {
+                return;
+            }
+            this._currentViewPage = val;
         },
         enumerable: true,
         configurable: true
     });
-    C2cGrid.prototype.updatePagBtn = function () {
-        var pb;
-        if (!this.data)
-            return null;
-        var countBtn = this.countPages > 5 ? 5 : this.countPages;
-        var btnArr = [];
-        for (var i = 1; i <= countBtn; i++) {
-            pb = i == 1 ? { active: true, num: i } : { active: false, num: i };
-            btnArr.push(pb);
-        }
-        this.paginationBtn = btnArr;
-        this.currentPage = 1;
+    C2cGrid.prototype.changePage = function (val) {
+        this.currentPage = val;
     };
-    C2cGrid.prototype.pagClick = function (pag) {
-        if (pag.num == this.currentPage)
+    C2cGrid.prototype.changeCountPerPage = function (val) {
+        var reg = /^\d+$/;
+        if (!reg.test(val.toString()) || val <= 0) {
             return;
-        this.paginationBtn.forEach(function (b) {
-            b.active = false;
-        });
-        pag.active = true;
-        this.currentPage = pag.num;
+        }
+        this._rowNumberPerPage = val;
+    };
+    Object.defineProperty(C2cGrid.prototype, "columns", {
+        get: function () {
+            return this.schema ? this.schema.getSchema() : null;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(C2cGrid.prototype, "rowsView", {
+        get: function () {
+            if (this.currentPage == this.pagesCount)
+                return this._data.slice((this.currentPage - 1) * this._rowNumberPerPage, this._data.length);
+            return this._data.slice((this.currentPage - 1) * this._rowNumberPerPage, (this.currentPage - 1) * this._rowNumberPerPage + +this._rowNumberPerPage);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    C2cGrid.prototype.ngOnInit = function () {
+        this.leftScroll = 0;
+    };
+    C2cGrid.prototype.ngOnDestroy = function () {
+    };
+    C2cGrid.prototype.dataScrollLeft = function ($event) {
+        this.leftScroll = $event.target.scrollLeft;
+    };
+    C2cGrid.prototype.selectRow = function (row) {
+        if (!row || row.selected)
+            return;
         this.clearSelection();
+        row.selected = true;
+        this.rowSelected.emit(row);
     };
-    C2cGrid.prototype.goToPage = function (num) {
-        if (num > this.countPages)
-            return;
-        var ind = this.paginationBtn.findIndex(function (i) { return i.num == num; });
-        if (ind) {
-            this.pagClick(this.paginationBtn[ind]);
-            return;
-        }
+    C2cGrid.prototype.dblclickRow = function (row) {
+        this.rowDblClick.emit(row);
     };
-    C2cGrid.prototype.pagForwardClick = function () {
-        console.log(this.currentPage + " - " + this.countPages);
-        if (this.currentPage >= this.countPages)
-            return;
-        if (this.paginationBtn[this.paginationBtn.length - 1].num > this.currentPage) {
-            this.pagClick(this.paginationBtn[this.currentPage - this.paginationBtn[0].num + 1]);
-            return;
-        }
-        var cp = this.currentPage;
-        this.paginationBtn = this.paginationBtn.slice(1);
-        this.paginationBtn.push({ num: cp + 1, active: false });
-        this.pagClick(this.paginationBtn[this.paginationBtn.length - 1]);
+    C2cGrid.prototype.clearSelection = function () {
+        this._data.forEach(function (i) {
+            i.selected = false;
+        });
     };
-    C2cGrid.prototype.pagBackClick = function () {
-        if (this.currentPage == 1)
-            return;
-        if (this.paginationBtn[0].num < this.currentPage) {
-            this.pagClick(this.paginationBtn[this.currentPage - this.paginationBtn[0].num - 1]);
-            return;
-        }
-        this.paginationBtn = this.paginationBtn.slice(0, this.paginationBtn.length - 1);
-        this.paginationBtn.unshift({ num: this.currentPage - 1, active: false });
-        this.pagClick(this.paginationBtn[0]);
+    C2cGrid.prototype.log = function (m) {
+        logger.info(m);
     };
-    __decorate([
-        core_1.Input(), 
-        __metadata('design:type', C2cGridColumnsScheme)
-    ], C2cGrid.prototype, "gridColScheme", void 0);
-    __decorate([
-        core_1.Input(), 
-        __metadata('design:type', Array)
-    ], C2cGrid.prototype, "data", void 0);
-    __decorate([
-        core_1.Input(), 
-        __metadata('design:type', Number)
-    ], C2cGrid.prototype, "itemsCountPerPage", void 0);
     __decorate([
         core_1.Output(), 
         __metadata('design:type', core_1.EventEmitter)
-    ], C2cGrid.prototype, "selectedElement", void 0);
+    ], C2cGrid.prototype, "rowSelected", void 0);
+    __decorate([
+        core_1.Output(), 
+        __metadata('design:type', core_1.EventEmitter)
+    ], C2cGrid.prototype, "rowDblClick", void 0);
+    __decorate([
+        core_1.Input(), 
+        __metadata('design:type', C2cGridSchema)
+    ], C2cGrid.prototype, "schema", void 0);
+    __decorate([
+        core_1.Input(), 
+        __metadata('design:type', Array), 
+        __metadata('design:paramtypes', [Array])
+    ], C2cGrid.prototype, "data", null);
+    __decorate([
+        core_1.Input(), 
+        __metadata('design:type', Number), 
+        __metadata('design:paramtypes', [Number])
+    ], C2cGrid.prototype, "rowNumberPerPage", null);
     C2cGrid = __decorate([
         core_1.Component({
             selector: 'ctoc-grid',
-            template: "\n        <table class=\"col-md-12 table-bordered table-striped table-condensed cf\">\n            <thead>\n                <tr>\n                    <th *ngFor=\"#colsc of gridColScheme.scheme\">{{colsc.column.name}}</th>\n                </tr>\n            </thead>\n            <tbody style=\"height:200px;\">\n                <tr *ngFor=\"#contact of dataPerPage\" class=\"ctoc-tr\" \n                    [ngClass]=\"contact.choosed ? 'sel' : ''\"\n                    (click)=\"chooseContact(contact)\">\n                    <td *ngFor=\"#colsc of gridColScheme.scheme\">\n                        <span *ngIf=\"colsc.column.type != 2\">{{contact[colsc.column.id]}}</span>\n                        <div *ngIf=\"colsc.column.type == 2\" align=\"center\">\n                            <img  [src]=\"contact[colsc.column.id]\" class=\"img-circle\" alt=\"avatar\" width=\"60\" height=\"60\">\n                        </div>\n                    </td>\n                </tr>\n            </tbody>\n        </table>\n        <div>\n            <ul class=\"pagination \">\n                <li (click)=\"pagBackClick()\"><a href=\"#\"><span class=\"glyphicon glyphicon-backward\"></span></a></li>\n                <li *ngFor=\"#pag of paginationBtn\"\n                    [ngClass]=\"pag.active ? 'active' : ''\"\n                    (click)=\"pagClick(pag)\">\n                    <a href=\"#\">{{pag.num}}</a>\n                </li>\n                <li (click)=\"pagForwardClick()\"><a href=\"#\"><span class=\"glyphicon glyphicon-forward\"></span></a></li>\n            </ul>\n        </div>        \n    ",
-            styles: ["\n        tr.ctoc-tr:hover {\n            background-color: cornflowerblue;\n        }\n        tr.ctoc-tr.sel {\n            background-color: #428bca;\n        }\n    "]
+            template: "\n    <div class=\"ctoc-grid-head\" \n        [scrollLeft]=\"leftScroll\"\n    >\n        <table class=\"col-md-12 table-bordered table-striped table-condensed cf\">\n            <thead>\n                <tr>\n                    <th *ngFor=\"#col of columns\">\n                        <div [style.width.px]=\"col.width\">{{col.name}}</div>\n                    </th>\n                    <th><div style=\"width:999999px\"></div></th>\n                </tr>\n            </thead>\n        </table>\n    </div>\n    <div class=\"ctoc-grid-data\"\n        (scroll)=\"dataScrollLeft($event)\"\n    >\n        <table class=\"col-md-12 table-bordered table-striped table-condensed cf\">\n            <tbody>\n                <tr *ngFor=\"#row of rowsView; #i = index\"\n                    [attr.data-selected]=\"row.selected\"\n                    [attr.data-rowid]=\"row.rowId\"\n                    (click)=\"selectRow(row)\"\n                    (dblclick)=\"dblclickRow(row)\"\n                >\n                    <td *ngFor=\"#col of columns\">\n                        <div *ngIf=\"col.type == -1\" \n                            [style.width.px]=\"col.width\" align=\"center\">\n                            {{(currentPage-1)*_rowNumberPerPage + (i+1)}}\n                        </div>\n                        <div *ngIf=\"col.type == 0\" \n                            [style.width.px]=\"col.width\">\n                            {{row.getCellValueByColumnId(col.id)}}\n                        </div>\n                        <div *ngIf=\"col.type == 2\" \n                            [style.width.px]=\"col.width\" align=\"center\">\n                            <img alt=\"User logo\" [src]=\"row.getCellValueByColumnId(col.id)\" \n                                class=\"img-circle img-responsive\" > \n                        </div>\n                    </td>\n                </tr>\n            </tbody>\n        </table>\n    </div>   \n    <div>        \n        <span>\u0421\u0442\u0440\u0430\u043D\u0438\u0446\u0430&nbsp;\n        <input type='text' #box\n                (keyup.enter)=\"changePage(box.value); box.value=currentPage\"\n                (blur)=\"changePage(box.value); box.value=currentPage\"\n                [style.width.px]=\"35\"\n                [value]=\"currentPage\">\n        </span>\n        <span>&nbsp;\u0438\u0437&nbsp;{{pagesCount}}&nbsp;</span> |\n        <span>\u041A\u043E\u043B-\u0432\u043E \u043D\u0430 \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0435:&nbsp;\n        <input type='text' #box2\n                (keyup.enter)=\"changeCountPerPage(box2.value); box2.value=_rowNumberPerPage\"\n                (blur)=\"changeCountPerPage(box2.value); box2.value=_rowNumberPerPage\"\n                [style.width.px]=\"35\"\n                [value]=\"_rowNumberPerPage\">\n        </span> | \n        <span>&nbsp;\u0412\u0441\u0435\u0433\u043E:&nbsp;{{rowsCount}}</span>\n        \n    </div>\n    ",
+            styles: ["        \n        .ctoc-grid-data {\n            height: calc(100% - 60px);\n            overflow: auto;\n        }\n        .ctoc-grid-head {\n            overflow: hidden;\n        }\n        .ctoc-grid-data tr:hover {\n            background-color: #42abca;\n        }\n        .ctoc-grid-data tr[data-selected='true'] {\n            background-color: cornflowerblue;\n        }\n    "]
         }), 
-        __metadata('design:paramtypes', [])
+        __metadata('design:paramtypes', [core_1.ElementRef])
     ], C2cGrid);
     return C2cGrid;
 })();
 exports.C2cGrid = C2cGrid;
-//      givenName: string; 
-//     familyName: string; 
-//     middleName: string;
-//     mail: string;         
-//     position: string;        
-//     subdivision: string;
-//     mobilePhone: string; 
-//     workPhone: string;
-//     internalPhone: string;
-//     avatar: string;
-var C2cGridColumnsScheme = (function () {
-    function C2cGridColumnsScheme(_sc) {
-        if (_sc === void 0) { _sc = null; }
-        if (_sc == null)
-            this.getDefaultScheme();
-        else {
-            this._sc = _sc;
-            var keys = [];
-            this._sc.forEach(function (i) {
-                var k = i.column.id;
-                if (keys.indexOf(k) > -1)
-                    throw "[C2cGridColumnsScheme] \u0412 \u0441\u0445\u0435\u043C\u0435 \u0433\u0440\u0438\u0434\u0430 \u0443\u0436\u0435 \u0434\u043E\u0431\u0430\u0432\u0435\u043D \u043A\u043B\u044E\u0447 [" + k + "]";
-                keys.push(k);
-            });
-        }
+var C2cGridRow = (function () {
+    function C2cGridRow(_dataCells) {
+        this._dataCells = _dataCells;
+        this.selected = false;
+        this.rowId = C2cGridRow.newRowId;
     }
-    Object.defineProperty(C2cGridColumnsScheme.prototype, "scheme", {
+    C2cGridRow.prototype.getCellByColumnId = function (id) {
+        if (!this._dataCells)
+            return undefined;
+        return this._dataCells.find(function (i) { return i.columnRef.id == id; });
+    };
+    C2cGridRow.prototype.getCellValueByColumnId = function (id) {
+        var cell = this.getCellByColumnId(id);
+        return cell ? cell.val : '';
+    };
+    Object.defineProperty(C2cGridRow, "newRowId", {
         get: function () {
-            return this._sc;
+            return ++C2cGridRow._rowid;
         },
         enumerable: true,
         configurable: true
     });
-    C2cGridColumnsScheme.prototype.getDefaultScheme = function () {
-        this._sc = [{
-                order: 0,
-                column: new C2cGridColumn('avatar', 'Picture', C2cGridColumnType.pic)
-            }, {
-                order: 1,
-                column: new C2cGridColumn('familyName', 'Family Name')
-            }, {
-                order: 2,
-                column: new C2cGridColumn('givenName', 'Given Name')
-            }, {
-                order: 3,
-                column: new C2cGridColumn('middleName', 'Middle Name')
-            }, {
-                order: 4,
-                column: new C2cGridColumn('mail', 'Email')
-            }, {
-                order: 5,
-                column: new C2cGridColumn('mobilePhone', 'Mobile Phone')
-            }, {
-                order: 6,
-                column: new C2cGridColumn('workPhone', 'Work Phone')
-            }, {
-                order: 7,
-                column: new C2cGridColumn('internalPhone', 'Internal Phone')
-            }
-        ];
-    };
-    return C2cGridColumnsScheme;
+    C2cGridRow._rowid = 0;
+    return C2cGridRow;
 })();
-exports.C2cGridColumnsScheme = C2cGridColumnsScheme;
-var C2cGridColumn = (function () {
-    function C2cGridColumn(id, name, type) {
-        if (type === void 0) { type = C2cGridColumnType.txt; }
-        this.id = id;
-        this.name = name;
-        this.type = type;
+exports.C2cGridRow = C2cGridRow;
+var C2cGridDataCell = (function () {
+    function C2cGridDataCell(columnRef, _data) {
+        this.columnRef = columnRef;
+        this._data = _data;
     }
+    Object.defineProperty(C2cGridDataCell.prototype, "val", {
+        get: function () {
+            return this._data;
+        },
+        set: function (data) {
+            this._data = data;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    return C2cGridDataCell;
+})();
+exports.C2cGridDataCell = C2cGridDataCell;
+var C2cGridSchema = (function () {
+    function C2cGridSchema() {
+        this._sc = [];
+    }
+    C2cGridSchema.prototype.getSchema = function () {
+        return this._sc.sort(function (a, b) {
+            return a.order < b.order ? -1 : a.order > b.order ? 1 : 0;
+        });
+    };
+    C2cGridSchema.prototype.addColumn = function (col) {
+        if (!col)
+            return;
+        if (this.hasColumnId(col.id))
+            this._throwColumnAlreadyExist(col);
+        this._sc.push(col);
+        return this;
+    };
+    C2cGridSchema.prototype.addRange = function (cols) {
+        var _this = this;
+        if (!cols)
+            return;
+        var buf = this._sc;
+        cols.forEach(function (i) {
+            if (!_this.hasColumnId(i.id)) {
+                _this._sc.push(i);
+            }
+            else {
+                _this._sc = buf;
+                _this._throwColumnAlreadyExist(i);
+            }
+        });
+        return this;
+    };
+    C2cGridSchema.prototype._throwColumnAlreadyExist = function (col) {
+        throw "\u0421\u0442\u043E\u043B\u0431\u0435\u0446 \u0441 [id:" + col.id + "] \u0443\u0436\u0435 \u0441\u0443\u0449\u0435\u0441\u0442\u0432\u0443\u0435\u0442 \u0432 \u0442\u0435\u043A\u0443\u0449\u0435\u0439 \u0441\u0445\u0435\u043C\u0435 \u0433\u0440\u0438\u0434\u0430!";
+    };
+    C2cGridSchema.prototype.removeColumn = function (col) {
+        if (!col || !this.hasColumnId(col.id))
+            return;
+        this._sc.splice(this._sc.findIndex(function (i) { return i.id == col.id; }), 1);
+        return this;
+    };
+    C2cGridSchema.prototype.hasColumnId = function (id) {
+        return !!this._sc.find(function (i) { return i.id == id; });
+    };
+    C2cGridSchema.prototype.addCounter = function () {
+        this.addColumn(new C2cGridColumn('__counter__', '№', -9999, C2cGridColumnType.counter).setWidth(30));
+        return this;
+    };
+    C2cGridSchema.prototype.info = function () {
+        return this.getSchema().map(function (i) { return i.id; }).join(',');
+    };
+    return C2cGridSchema;
+})();
+exports.C2cGridSchema = C2cGridSchema;
+var C2cGridColumn = (function () {
+    function C2cGridColumn(_id, _name, order, _type) {
+        if (order === void 0) { order = 0; }
+        if (_type === void 0) { _type = C2cGridColumnType.txt; }
+        this._id = _id;
+        this._name = _name;
+        this.order = order;
+        this._type = _type;
+        this.width = 200;
+        this.height = 30;
+    }
+    Object.defineProperty(C2cGridColumn.prototype, "id", {
+        get: function () {
+            return this._id;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(C2cGridColumn.prototype, "name", {
+        get: function () {
+            return this._name;
+        },
+        set: function (val) {
+            this._name = val;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(C2cGridColumn.prototype, "type", {
+        get: function () {
+            return this._type;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    C2cGridColumn.prototype.setWidth = function (val) {
+        this.width = val;
+        return this;
+    };
     return C2cGridColumn;
 })();
 exports.C2cGridColumn = C2cGridColumn;
 (function (C2cGridColumnType) {
+    C2cGridColumnType[C2cGridColumnType["counter"] = -1] = "counter";
     C2cGridColumnType[C2cGridColumnType["txt"] = 0] = "txt";
     C2cGridColumnType[C2cGridColumnType["num"] = 1] = "num";
     C2cGridColumnType[C2cGridColumnType["pic"] = 2] = "pic";
 })(exports.C2cGridColumnType || (exports.C2cGridColumnType = {}));
 var C2cGridColumnType = exports.C2cGridColumnType;
+var logger = {
+    info: function (m) {
+        if (__DEBUG__)
+            console.dir(m);
+    },
+    error: function (e) {
+        if (__DEBUG__)
+            console.error(e);
+    }
+};
 //# sourceMappingURL=grid.js.map

@@ -2,6 +2,14 @@ body {
   padding-top: 50px;
 }
 
+html, body, .container-fluid, .row, .main {
+    height: 100%;
+}
+
+kk {
+    background-color: #42abca;
+}
+
 .startBody {
     min-height: 100%;
     height: 100%;    
@@ -89,21 +97,19 @@ body {
   background-color: #428bca;
 }
 
-fff {
-    margin-bottom: 5px;
-}
+
 
 /*
  * Main content
  */
 
 .main {
-  padding: 20px;
+  padding-top: 20px;
   min-width: 300px;
 }
 @media (min-width: 768px) {
   .main {
-    padding-right: 40px;
+    padding-right: 5px;
     padding-left: 40px;
     min-width: 300px;
   }

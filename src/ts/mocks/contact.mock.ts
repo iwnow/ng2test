@@ -9,7 +9,7 @@ export class ContactMock {
         c.givenName = 'mock';
         c.familyName = 'mocker';
         c.middleName = 'test';
-        c.avatar = 'https://assets-cdn.github.com/images/modules/logos_page/GitHub-Mark.png';
+        c.avatar = 'app/img/user-pic-tmp.png';
         c.internalPhone = '3021';
         c.mail = 'mock@mock.com';
         c.mobilePhone = '89321732154';
