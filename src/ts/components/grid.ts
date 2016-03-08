@@ -45,8 +45,11 @@ let __DEBUG__ = true;
                         </div>
                         <div *ngIf="col.type == 2" 
                             [style.width.px]="col.width" align="center">
-                            <img alt="User logo" [src]="row.getCellValueByColumnId(col.id)" 
-                                class="img-circle img-responsive" > 
+                            <img  alt="User logo" [src]="row.getCellValueByColumnId(col.id)" 
+                                class="img-circle img-responsive" 
+                                [style.width.px]="50"
+                                [style.height.px]="50"
+                                > 
                         </div>
                     </td>
                 </tr>

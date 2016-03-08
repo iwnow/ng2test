@@ -30,11 +30,11 @@ export class C2cSidebar implements OnInit {
     }
     
     choose(Id: string){
-        if (this.menu.outerDataChanged) {
-            //modal dialo for save data before change menu item
-            if (!confirm('Не сохраненные данные будут потеряны. Продолжить?'))
-                return;
-        }
+        // if (this.menu.outerDataChanged) {
+        //     //modal dialo for save data before change menu item
+        //     if (!confirm('Не сохраненные данные будут потеряны. Продолжить?'))
+        //         return;
+        // }
         this.menu.Items.forEach((i) => {
            if (i.Id == Id) {
                i.IsActive = true;

@@ -15,10 +15,14 @@ import {Descriptors, Validators} from '../utils/all';
             <div class="col-md-4 col-sm-6 col-xs-12">
                 <div class="text-center">
                     <img [style.height.px]="200" [style.width.px]="200"
-                        src="http://img3.goodfon.ru/original/1024x1024/1/a7/candice-neil-krasivaya-devushka.jpg" 
+                        [src]="model.avatar" 
                         class="avatar img-circle img-thumbnail" alt="avatar">
                     <h6>{{_uploadPhoto}}</h6>
-                    <input type="file" class="text-center center-block well well-sm" style="width:100%">
+                    <input id="photoloader" type="file" 
+                        class="text-center center-block well well-sm" 
+                        style="width:100%"
+                        (change)="changeFile($event)"
+                        >
                 </div>
             </div>
             <!-- edit form column -->
@@ -50,39 +54,39 @@ import {Descriptors, Validators} from '../utils/all';
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-md-3 control-label">{{_position}}:</label>
-                    <div class="col-md-8">
+                    <label class="col-lg-3 control-label">{{_position}}:</label>
+                    <div class="col-lg-8">
                         <input class="form-control" [(ngModel)]="model.position" [placeholder]="_position" type="text">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-md-3 control-label">{{_subdivision}}:</label>
-                    <div class="col-md-8">
+                    <label class="col-lg-3 control-label">{{_subdivision}}:</label>
+                    <div class="col-lg-8">
                         <input class="form-control" [(ngModel)]="model.subdivision" [placeholder]="_subdivision" type="text">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-md-3 control-label">{{_mobilePhone}}:</label>
-                    <div class="col-md-8">
+                    <label class="col-lg-3 control-label">{{_mobilePhone}}:</label>
+                    <div class="col-lg-8">
                         <input class="form-control" [(ngModel)]="model.mobilePhone" [placeholder]="_mobilePhone" type="text">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-md-3 control-label">{{_workPhone}}:</label>
-                    <div class="col-md-8">
+                    <label class="col-lg-3 control-label">{{_workPhone}}:</label>
+                    <div class="col-lg-8">
                         <input class="form-control" [(ngModel)]="model.workPhone" [placeholder]="_workPhone" type="text">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-md-3 control-label">{{_internalPhone}}:</label>
-                    <div class="col-md-8">
+                    <label class="col-lg-3 control-label">{{_internalPhone}}:</label>
+                    <div class="col-lg-8">
                         <input class="form-control" [(ngModel)]="model.internalPhone" [placeholder]="_internalPhone" type="text">
                     </div>
                 </div>
                 
                 <div class="form-group">
-                <label class="col-md-3 control-label"></label>
-                <div class="col-md-8">
+                <label class="col-lg-3 control-label"></label>
+                <div class="col-lg-8">
                     <input class="btn btn-primary" [value]="_saveBtn" type="button" (click)="saveClick()">
                     <span></span>
                     <input class="btn btn-default" [value]="_cancelBtn" type="button" (click)="cancelClick()">
@@ -172,6 +176,9 @@ export class C2cContactEdit implements OnInit, OnDestroy {
             .subscribe(data => {
                 this.updateCultureUI(data.controlPanel.contactsPan);
             });
+        //photoloader
+        let infile = <HTMLInputElement>document.getElementById('photoloader');
+        infile.value = '';
     }
     
     ngOnDestroy() {
@@ -184,5 +191,26 @@ export class C2cContactEdit implements OnInit, OnDestroy {
     
     cancelClick() {
         this.cancel.emit(null);
+    }
+    
+    changeFile($event) {
+        try {
+            let data = $event && $event.target && $event.target.files && $event.target.files[0];
+            if (!data)
+                return;
+            if ((<File>data).type.indexOf('image') < 0)
+                return;
+            let file = <File>data;
+            let fr = new FileReader();
+            fr.onload = (ev) => {
+                this.model.avatar = (<any>ev.target).result;
+            };
+            fr.readAsDataURL(file);
+        } catch (e) {
+            this._locator.getService<IEventService>('IEventService').emit({
+                data: e,
+                key: Descriptors.Exceptions
+            });
+        }        
     }
 }

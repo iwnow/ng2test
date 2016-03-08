@@ -246,12 +246,13 @@ export class C2cContacts implements OnInit, OnDestroy {
         if (!this._currentSelectedRow)
             return;
         let c = <Contact>this._currentSelectedRow.getTag();
-        this._contacts.splice(
-            this._contacts.findIndex(i => i.id == c.id),
-            1
-        );
+        let ind = this._contacts.findIndex(i => i.id == c.id);
+        if (!ind || ind < 0)
+            return;
+        this._contacts.splice(ind, 1);
         this._dataGrid = this.toDataGrid(this._contacts);
         this.dataChanged.emit(true);
+        this._currentSelectedRow = null;
     }
     
 }
