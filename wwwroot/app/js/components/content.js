@@ -16,8 +16,14 @@ var contacts_1 = require('./contacts');
 var C2cContent = (function () {
     function C2cContent(_locator) {
         this._locator = _locator;
+        this.dataChanged = new core_1.EventEmitter();
+        this._childWinDataChanged = false;
     }
     C2cContent.prototype.ngOnInit = function () { };
+    C2cContent.prototype.childWindowDataChanged = function (changed) {
+        this._childWinDataChanged = changed;
+        this.dataChanged.emit(changed);
+    };
     Object.defineProperty(C2cContent.prototype, "user", {
         get: function () {
             return this.userService.getUserInfo();
@@ -47,6 +53,10 @@ var C2cContent = (function () {
         configurable: true
     });
     __decorate([
+        core_1.Output(), 
+        __metadata('design:type', Object)
+    ], C2cContent.prototype, "dataChanged", void 0);
+    __decorate([
         core_1.Input(), 
         __metadata('design:type', Utils.MenuItem)
     ], C2cContent.prototype, "sidebarSelectedMenuItem", void 0);
@@ -59,7 +69,7 @@ var C2cContent = (function () {
             selector: 'ctoc-content',
             inputs: ['contentHeader', 'sidebarSelectedMenuItem'],
             directives: [profile_1.C2cProfile, editpass_1.C2cEditPass, contacts_1.C2cContacts],
-            template: "\n        <div class=\"col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main\">\n            <h3 class=\"page-header\">{{company}}&nbsp;/&nbsp;{{contentHeader}}</h3>\n            <ctoc-profile *ngIf=\"menuId == 'profile'\"></ctoc-profile>\n            <ctoc-edit-pass *ngIf=\"menuId == 'password'\"></ctoc-edit-pass>\n            <ctoc-contacts  *ngIf=\"menuId == 'contacts'\"></ctoc-contacts>\n        </div>\n    "
+            template: "\n        <div class=\"col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main\">\n            <h3 class=\"page-header\">{{company}}&nbsp;/&nbsp;{{contentHeader}}</h3>\n            <ctoc-profile *ngIf=\"menuId == 'profile'\"></ctoc-profile>\n            <ctoc-edit-pass *ngIf=\"menuId == 'password'\"></ctoc-edit-pass>\n            <ctoc-contacts  *ngIf=\"menuId == 'contacts'\"\n                (dataChanged)=\"childWindowDataChanged($event)\"\n            ></ctoc-contacts>\n        </div>\n    "
         }), 
         __metadata('design:paramtypes', [Services.ServiceLocator])
     ], C2cContent);

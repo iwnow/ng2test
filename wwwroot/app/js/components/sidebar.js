@@ -24,6 +24,11 @@ var C2cSidebar = (function () {
     };
     C2cSidebar.prototype.choose = function (Id) {
         var _this = this;
+        if (this.menu.outerDataChanged) {
+            //modal dialo for save data before change menu item
+            if (!confirm('Не сохраненные данные будут потеряны. Продолжить?'))
+                return;
+        }
         this.menu.Items.forEach(function (i) {
             if (i.Id == Id) {
                 i.IsActive = true;
@@ -44,9 +49,9 @@ var C2cSidebar = (function () {
     C2cSidebar = __decorate([
         core_1.Component({
             selector: 'ctoc-sidebar',
-            templateUrl: 'app/view/ctoc-sidebar.html',
             inputs: ['menu'],
-            outputs: ['selectedPage']
+            outputs: ['selectedPage'],
+            template: "\n    <div class=\"col-sm-3 col-md-2 sidebar\">\n        <ul class=\"nav nav-sidebar\">\n            <li *ngFor=\"#mitem of menu.Items\" [ngClass]=\"mitem.IsActive ? 'active' : ''\">\n                <a href=\"#\" (mousedown)=\"choose(mitem.Id)\">{{mitem.TextItem}}</a>\n            </li>\n        </ul>         \n    </div>\n    "
         }), 
         __metadata('design:paramtypes', [])
     ], C2cSidebar);

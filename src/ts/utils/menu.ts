@@ -3,6 +3,8 @@ export class SidebarMenu {
     constructor(
         public Items:MenuItem[]
     ){}
+    
+    outerDataChanged: boolean = false;
 }
 
 export class MenuItem {

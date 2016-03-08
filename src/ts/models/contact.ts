@@ -9,5 +9,12 @@ export class Contact {
     mobilePhone: string; 
     workPhone: string;
     internalPhone: string;
-    avatar: string;
+    
+    private _avatar: string;
+    get avatar(): string {
+        return this._avatar || 'app/img/user-pic-tmp.png';
+    }
+    set avatar(val: string) {
+        this._avatar = val;
+    }
 }

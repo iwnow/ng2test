@@ -6,8 +6,9 @@ html, body, .container-fluid, .row, .main {
     height: 100%;
 }
 
-kk {
-    background-color: #42abca;
+.row {
+    margin-left: 0px;
+    margin-right: 0px;
 }
 
 .startBody {

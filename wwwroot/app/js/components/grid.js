@@ -12,7 +12,7 @@ var core_1 = require('angular2/core');
 var __DEBUG__ = true;
 //
 var C2cGrid = (function () {
-    function C2cGrid(elem) {
+    function C2cGrid() {
         this.rowSelected = new core_1.EventEmitter(true);
         this.rowDblClick = new core_1.EventEmitter(true);
         this._rowNumberPerPage = 10;
@@ -61,6 +61,7 @@ var C2cGrid = (function () {
             if (!reg.test(val.toString()) || val <= 0 || val > this.pagesCount) {
                 return;
             }
+            this.clearSelection();
             this._currentViewPage = val;
         },
         enumerable: true,
@@ -75,6 +76,7 @@ var C2cGrid = (function () {
             return;
         }
         this._rowNumberPerPage = val;
+        C2cGrid._rowsPerPageCount = this._rowNumberPerPage;
     };
     Object.defineProperty(C2cGrid.prototype, "columns", {
         get: function () {
@@ -94,6 +96,9 @@ var C2cGrid = (function () {
     });
     C2cGrid.prototype.ngOnInit = function () {
         this.leftScroll = 0;
+        if (C2cGrid._rowsPerPageCount > -1)
+            this._rowNumberPerPage = C2cGrid._rowsPerPageCount;
+        this.clearSelection();
     };
     C2cGrid.prototype.ngOnDestroy = function () {
     };
@@ -114,10 +119,12 @@ var C2cGrid = (function () {
         this._data.forEach(function (i) {
             i.selected = false;
         });
+        this.rowSelected.emit(null);
     };
     C2cGrid.prototype.log = function (m) {
         logger.info(m);
     };
+    C2cGrid._rowsPerPageCount = -1;
     __decorate([
         core_1.Output(), 
         __metadata('design:type', core_1.EventEmitter)
@@ -143,10 +150,10 @@ var C2cGrid = (function () {
     C2cGrid = __decorate([
         core_1.Component({
             selector: 'ctoc-grid',
-            template: "\n    <div class=\"ctoc-grid-head\" \n        [scrollLeft]=\"leftScroll\"\n    >\n        <table class=\"col-md-12 table-bordered table-striped table-condensed cf\">\n            <thead>\n                <tr>\n                    <th *ngFor=\"#col of columns\">\n                        <div [style.width.px]=\"col.width\">{{col.name}}</div>\n                    </th>\n                    <th><div style=\"width:999999px\"></div></th>\n                </tr>\n            </thead>\n        </table>\n    </div>\n    <div class=\"ctoc-grid-data\"\n        (scroll)=\"dataScrollLeft($event)\"\n    >\n        <table class=\"col-md-12 table-bordered table-striped table-condensed cf\">\n            <tbody>\n                <tr *ngFor=\"#row of rowsView; #i = index\"\n                    [attr.data-selected]=\"row.selected\"\n                    [attr.data-rowid]=\"row.rowId\"\n                    (click)=\"selectRow(row)\"\n                    (dblclick)=\"dblclickRow(row)\"\n                >\n                    <td *ngFor=\"#col of columns\">\n                        <div *ngIf=\"col.type == -1\" \n                            [style.width.px]=\"col.width\" align=\"center\">\n                            {{(currentPage-1)*_rowNumberPerPage + (i+1)}}\n                        </div>\n                        <div *ngIf=\"col.type == 0\" \n                            [style.width.px]=\"col.width\">\n                            {{row.getCellValueByColumnId(col.id)}}\n                        </div>\n                        <div *ngIf=\"col.type == 2\" \n                            [style.width.px]=\"col.width\" align=\"center\">\n                            <img alt=\"User logo\" [src]=\"row.getCellValueByColumnId(col.id)\" \n                                class=\"img-circle img-responsive\" > \n                        </div>\n                    </td>\n                </tr>\n            </tbody>\n        </table>\n    </div>   \n    <div>        \n        <span>\u0421\u0442\u0440\u0430\u043D\u0438\u0446\u0430&nbsp;\n        <input type='text' #box\n                (keyup.enter)=\"changePage(box.value); box.value=currentPage\"\n                (blur)=\"changePage(box.value); box.value=currentPage\"\n                [style.width.px]=\"35\"\n                [value]=\"currentPage\">\n        </span>\n        <span>&nbsp;\u0438\u0437&nbsp;{{pagesCount}}&nbsp;</span> |\n        <span>\u041A\u043E\u043B-\u0432\u043E \u043D\u0430 \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0435:&nbsp;\n        <input type='text' #box2\n                (keyup.enter)=\"changeCountPerPage(box2.value); box2.value=_rowNumberPerPage\"\n                (blur)=\"changeCountPerPage(box2.value); box2.value=_rowNumberPerPage\"\n                [style.width.px]=\"35\"\n                [value]=\"_rowNumberPerPage\">\n        </span> | \n        <span>&nbsp;\u0412\u0441\u0435\u0433\u043E:&nbsp;{{rowsCount}}</span>\n        \n    </div>\n    ",
+            template: "\n    <div class=\"ctoc-grid-head\" \n        [scrollLeft]=\"leftScroll\"\n    >\n        <table class=\"col-md-12 table-bordered table-striped table-condensed cf\">\n            <thead>\n                <tr>\n                    <th *ngFor=\"#col of columns\">\n                        <div [style.width.px]=\"col.width\">{{col.name}}</div>\n                    </th>\n                    <th><div style=\"width:999999px\"></div></th>\n                </tr>\n            </thead>\n        </table>\n    </div>\n    <div class=\"ctoc-grid-data\"\n        (scroll)=\"dataScrollLeft($event)\"\n    >\n        <table class=\"col-md-12 table-bordered table-striped table-condensed cf\">\n            <tbody>\n                <tr *ngFor=\"#row of rowsView; #i = index\"\n                    [attr.data-selected]=\"row.selected\"\n                    [attr.data-rowid]=\"row.rowId\"\n                    (click)=\"selectRow(row)\"\n                    (dblclick)=\"dblclickRow(row)\"\n                >\n                    <td *ngFor=\"#col of columns\">\n                        <div *ngIf=\"col.type == -1\" \n                            [style.width.px]=\"col.width\" align=\"center\">\n                            {{(currentPage-1)*_rowNumberPerPage + (i+1)}}\n                        </div>\n                        <div *ngIf=\"col.type == 0\" \n                            [style.width.px]=\"col.width\">\n                            {{row.getCellValueByColumnId(col.id)}}\n                        </div>\n                        <div *ngIf=\"col.type == 2\" \n                            [style.width.px]=\"col.width\" align=\"center\">\n                            <img alt=\"User logo\" [src]=\"row.getCellValueByColumnId(col.id)\" \n                                class=\"img-circle img-responsive\" > \n                        </div>\n                    </td>\n                </tr>\n            </tbody>\n        </table>\n    </div>   \n    <div style=\"padding-top:1px;\">        \n        <span>\u0421\u0442\u0440\u0430\u043D\u0438\u0446\u0430&nbsp;\n        <input type='text' #box\n                (keyup.enter)=\"changePage(box.value); box.value=currentPage\"\n                (blur)=\"changePage(box.value); box.value=currentPage\"\n                [style.width.px]=\"35\"\n                [value]=\"currentPage\">\n        </span>\n        <span>&nbsp;\u0438\u0437&nbsp;{{pagesCount}}&nbsp;</span> |\n        <span>\u041A\u043E\u043B-\u0432\u043E \u043D\u0430 \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0435:&nbsp;\n        <input type='text' #box2\n                (keyup.enter)=\"changeCountPerPage(box2.value); box2.value=_rowNumberPerPage\"\n                (blur)=\"changeCountPerPage(box2.value); box2.value=_rowNumberPerPage\"\n                [style.width.px]=\"35\"\n                [value]=\"_rowNumberPerPage\">\n        </span> | \n        <span>&nbsp;\u0412\u0441\u0435\u0433\u043E:&nbsp;{{rowsCount}}</span>\n        \n    </div>\n    ",
             styles: ["        \n        .ctoc-grid-data {\n            height: calc(100% - 60px);\n            overflow: auto;\n        }\n        .ctoc-grid-head {\n            overflow: hidden;\n        }\n        .ctoc-grid-data tr:hover {\n            background-color: #42abca;\n        }\n        .ctoc-grid-data tr[data-selected='true'] {\n            background-color: cornflowerblue;\n        }\n    "]
         }), 
-        __metadata('design:paramtypes', [core_1.ElementRef])
+        __metadata('design:paramtypes', [])
     ], C2cGrid);
     return C2cGrid;
 })();
@@ -155,8 +162,22 @@ var C2cGridRow = (function () {
     function C2cGridRow(_dataCells) {
         this._dataCells = _dataCells;
         this.selected = false;
-        this.rowId = C2cGridRow.newRowId;
+        this._rowId = C2cGridRow.newRowId;
     }
+    Object.defineProperty(C2cGridRow.prototype, "rowId", {
+        get: function () {
+            return this._rowId;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    C2cGridRow.prototype.setTag = function (t) {
+        this._tag = t;
+        return this;
+    };
+    C2cGridRow.prototype.getTag = function () {
+        return this._tag;
+    };
     C2cGridRow.prototype.getCellByColumnId = function (id) {
         if (!this._dataCells)
             return undefined;

@@ -1,4 +1,4 @@
-import {Component, OnInit, OnDestroy} from 'angular2/core';
+import {Component, OnInit, OnDestroy, Output, EventEmitter} from 'angular2/core';
 
 import {ServiceLocator} from '../services/all';
 import {IUserInfo, IUserService, IEmitData, IEventService, Cultures, IResourceService} from '../contracts/all';
@@ -6,22 +6,29 @@ import {Descriptors, Validators} from '../utils/all';
 import {Contact} from '../models/all';
 import {ContactMock} from '../mocks/all';
 import * as grid from './grid';
+import {C2cContactEdit} from './contact-edit';
 
 let __DEBUG__ = true;
 
 @Component({
     selector: 'ctoc-contacts',
     template: `
-    <div class="contacts-panel">
+    <div *ngIf="!_viewIsEditing" class="contacts-panel">
         <div class="grid-menu">
             <div class="btn-group">
-                <button [title]="_resx ? _resx.tableMenu.save : ''" type="button" class="btn btn-default">
+                <button [title]="_resx ? _resx.tableMenu.save : ''" type="button" class="btn btn-default"
+                    (click)="saveContacts()"
+                    >
                     <span class="glyphicon glyphicon-floppy-save"></span>
                 </button>
-                <button [title]="_resx ? _resx.tableMenu.add : ''" type="button" class="btn btn-default">
+                <button [title]="_resx ? _resx.tableMenu.add : ''" type="button" class="btn btn-default"
+                    (click)="addContact()"
+                    >
                     <span class="glyphicon glyphicon-plus"></span>
                 </button>
-                <button [title]="_resx ? _resx.tableMenu.edit : ''" type="button" class="btn btn-default">
+                <button [title]="_resx ? _resx.tableMenu.edit : ''" type="button" class="btn btn-default"
+                    (click)="editContact()"
+                    >
                     <span class="glyphicon glyphicon-edit"></span>
                 </button>
                 <button [title]="_resx ? _resx.tableMenu.delete : ''" type="button" class="btn btn-default"
@@ -40,12 +47,22 @@ let __DEBUG__ = true;
                 [data]="_dataGrid"
                 [rowNumberPerPage]="_rowPerPage"
                 (rowDblClick)="gridRowDblClick($event)"
+                (rowSelected)="gridRowSelected($event)"
             >
             </ctoc-grid>
         </div>
     </div>
+    <div *ngIf="_viewIsEditing" class="contacts-panel">
+        <ctoc-contact-edit 
+            (ok)="fromEdit($event)"
+            (cancel)="cancelEdit()"
+            [addOrEdit]="_addOrEdit"
+            [model]="_modelToEdit"
+        ></ctoc-contact-edit>
+    </div>
+    
     `,
-    directives: [grid.C2cGrid],
+    directives: [grid.C2cGrid, C2cContactEdit],
     styles: [`
         .grid-menu {
             margin-bottom: 15px;
@@ -56,6 +73,7 @@ let __DEBUG__ = true;
     `]
 })
 export class C2cContacts implements OnInit, OnDestroy {
+    @Output() dataChanged = new EventEmitter<boolean>();
     
     private _contacts: Contact[];
     private _gridSchema: grid.C2cGridSchema;
@@ -63,9 +81,13 @@ export class C2cContacts implements OnInit, OnDestroy {
     private _langChangeSubscription: any;
     private _dataGrid: grid.C2cGridRow[];
     
-    private _rowPerPage = 10;
+    private _rowPerPage = 10;    
+    private _viewIsEditing = false;
+    private _addOrEdit = false;
+    private _modelToEdit: Contact;
+    private _currentSelectedRow: grid.C2cGridRow;
     
-    selectedElement: Contact;
+    
     
     constructor(private _locator: ServiceLocator){}
     
@@ -85,10 +107,10 @@ export class C2cContacts implements OnInit, OnDestroy {
         this._langChangeSubscription.unsubscribe();
     }
     
-    get userService(): IUserService {
+    private get userService(): IUserService {
         return this._locator.getService<IUserService>('IUserService');
     }
-    get eventService(): IEventService {
+    private get eventService(): IEventService {
         return this._locator.getService<IEventService>('IEventService');
     }
     
@@ -98,7 +120,7 @@ export class C2cContacts implements OnInit, OnDestroy {
         });
     }
     
-    updateCultureUI(resx: any){
+    private updateCultureUI(resx: any){
         if (!resx) {
             this.eventService.emit({key: Descriptors.Exceptions, data: '[contact.ts:updateCultureUI(resx: any)]: при обовлении UI передан пустой ресурс!'});
             return;
@@ -107,23 +129,14 @@ export class C2cContacts implements OnInit, OnDestroy {
         this._gridSchema = this.updateGridResxByRef(this._gridSchema);
     }
     
-    updateResource(culture: Cultures){
+    private updateResource(culture: Cultures){
         this._locator.getService<IResourceService>('IResourceService')
             .getResourceByCulture(culture)
             .subscribe(data => {
                 this.updateCultureUI(data.controlPanel.contactsPan);
             });
     }
-    
-    getContacts():Contact[] {
-        return ContactMock.getContacts(13);
-    }
-    
-    gridRowDblClick(row: grid.C2cGridRow) {
-        
-    }
-    
-    updateGridResxByRef(sc:grid.C2cGridSchema):grid.C2cGridSchema {  
+    private updateGridResxByRef(sc:grid.C2cGridSchema):grid.C2cGridSchema {  
         if (!sc) return;      
         let buf = sc.getSchema();
         buf.forEach((i) => {
@@ -134,17 +147,59 @@ export class C2cContacts implements OnInit, OnDestroy {
         return nb;
     }
     
-//     givenName: string; 
-//     familyName: string; 
-//     middleName: string;
-//     mail: string;         
-//     position: string;        
-//     subdivision: string;
-//     mobilePhone: string; 
-//     workPhone: string;
-//     internalPhone: string;
-//     avatar: string;
-    getSchemeColumns(): grid.C2cGridSchema {
+    private getContacts():Contact[] {
+        return ContactMock.getContacts(13);
+    }
+    
+    private gridRowDblClick(row: grid.C2cGridRow) {
+        this.showEditPanel(false, row.getTag());
+    }
+    
+    private gridRowSelected(row: grid.C2cGridRow) {
+        this._currentSelectedRow = row;
+    }
+    
+    private editContact() {
+        if (!this._currentSelectedRow)
+            return;
+        this.showEditPanel(false, this._currentSelectedRow.getTag());
+    }
+    
+    private fromEdit(c:Contact) {
+        if (this._addOrEdit) {
+            this._contacts.push(c);               
+        } else {
+            let ind = this._contacts.findIndex(i => i.id == c.id);
+            this._contacts[ind] = c;
+        }
+        this._dataGrid = this.toDataGrid(this._contacts);
+        this.dataChanged.emit(true);
+        this.hideEditPanel();
+    }
+    
+    private cancelEdit() {
+        this.hideEditPanel();
+    }
+    
+    private addContact() {
+        this.showEditPanel(true);
+    }
+    
+    private showEditPanel(addOrEdit: boolean, model: Contact = null) {
+        this._addOrEdit = addOrEdit;
+        this._viewIsEditing = true;
+        this._modelToEdit = model;
+    }
+    
+    private hideEditPanel() {
+        this._viewIsEditing = false;
+    }
+    
+    private saveContacts() {
+        this.dataChanged.emit(false);
+    }
+    
+    private getSchemeColumns(): grid.C2cGridSchema {
         let s = new grid.C2cGridSchema();
         let ava = new grid.C2cGridColumn('avatar', 'avatar', 0, grid.C2cGridColumnType.pic);
         ava.width = 50;
@@ -163,7 +218,7 @@ export class C2cContacts implements OnInit, OnDestroy {
         return s;
     }
     
-    toDataGrid(cs: Contact[]): grid.C2cGridRow[] {
+    private toDataGrid(cs: Contact[]): grid.C2cGridRow[] {
         let cols = this._gridSchema.getSchema();
         return cs.map(c => {
             return new grid.C2cGridRow([
@@ -177,18 +232,26 @@ export class C2cContacts implements OnInit, OnDestroy {
                 new grid.C2cGridDataCell(cols.find(i => i.id == 'workPhone'), c.workPhone),
                 new grid.C2cGridDataCell(cols.find(i => i.id == 'internalPhone'), c.internalPhone),
                 new grid.C2cGridDataCell(cols.find(i => i.id == 'avatar'), c.avatar)
-            ]);
+            ]).setTag(c);
         });
     }
     
-    log(m:any) {
+    private log(m:any) {
         if (__DEBUG__) {
             console.log(m);
         }        
     }
     
-    removeContact() {
-        
+    private removeContact() {
+        if (!this._currentSelectedRow)
+            return;
+        let c = <Contact>this._currentSelectedRow.getTag();
+        this._contacts.splice(
+            this._contacts.findIndex(i => i.id == c.id),
+            1
+        );
+        this._dataGrid = this.toDataGrid(this._contacts);
+        this.dataChanged.emit(true);
     }
     
 }

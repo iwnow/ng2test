@@ -55,6 +55,13 @@
                 "delete": "Remove selected contact",
                 "save": "Save contacts",
                 "xls": "Load contacts from Excel file"
+            },
+            "contactEdit": {
+                "editTitle": "Edit contact",
+                "addTitle": "Create contact",
+                "save": "Save Changes",
+                "cancel": "Cancel",
+                "uploadPhoto": "Upload a different photo..."
             }
         }
     },

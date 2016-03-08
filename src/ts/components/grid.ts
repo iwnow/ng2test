@@ -53,7 +53,7 @@ let __DEBUG__ = true;
             </tbody>
         </table>
     </div>   
-    <div>        
+    <div style="padding-top:1px;">        
         <span>Страница&nbsp;
         <input type='text' #box
                 (keyup.enter)="changePage(box.value); box.value=currentPage"
@@ -128,7 +128,7 @@ export class C2cGrid implements OnInit, OnDestroy {
         if (!reg.test(val.toString()) || val <= 0 || val > this.pagesCount) {
             return;   
         }
-            
+        this.clearSelection();
         this._currentViewPage = val;
     }
     
@@ -140,9 +140,9 @@ export class C2cGrid implements OnInit, OnDestroy {
         let reg = /^\d+$/;
         if (!reg.test(val.toString()) || val <= 0 ) {
             return;   
-        }
-            
+        }            
         this._rowNumberPerPage = val;
+        C2cGrid._rowsPerPageCount = this._rowNumberPerPage;
     }
     
     private leftScroll: number;
@@ -164,12 +164,13 @@ export class C2cGrid implements OnInit, OnDestroy {
         );
     }
     
-    constructor(elem: ElementRef) {
-        
-    }
+    constructor() {}
     
     ngOnInit() {
         this.leftScroll = 0;
+        if (C2cGrid._rowsPerPageCount > -1)
+            this._rowNumberPerPage = C2cGrid._rowsPerPageCount;
+        this.clearSelection();
     }
     
     ngOnDestroy() {
@@ -196,19 +197,38 @@ export class C2cGrid implements OnInit, OnDestroy {
         this._data.forEach(i => {
            i.selected = false; 
         });
+        this.rowSelected.emit(null);
     }
     
     log(m: any) {
         logger.info(m);
     }
+    
+    private static _rowsPerPageCount: number = -1; 
 }
 
 export class C2cGridRow {
-    rowId: number;
+    /**unique row id */
+    private _rowId: number;
+    /** any data */
+    private _tag: any;
+    
+    get rowId(): number {
+        return this._rowId;
+    }    
+    
     selected = false;
+        
+    setTag(t: any): C2cGridRow {
+        this._tag = t;
+        return this;
+    }    
+    getTag(): any {
+        return this._tag;
+    }
     
     constructor(private _dataCells: C2cGridDataCell[]) {
-        this.rowId = C2cGridRow.newRowId;
+        this._rowId = C2cGridRow.newRowId;
     }
     
     getCellByColumnId(id: string): C2cGridDataCell {

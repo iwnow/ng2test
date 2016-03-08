@@ -12,11 +12,15 @@ var all_1 = require('../services/all');
 var all_2 = require('../utils/all');
 var all_3 = require('../mocks/all');
 var grid = require('./grid');
+var contact_edit_1 = require('./contact-edit');
 var __DEBUG__ = true;
 var C2cContacts = (function () {
     function C2cContacts(_locator) {
         this._locator = _locator;
+        this.dataChanged = new core_1.EventEmitter();
         this._rowPerPage = 10;
+        this._viewIsEditing = false;
+        this._addOrEdit = false;
     }
     C2cContacts.prototype.ngOnInit = function () {
         var _this = this;
@@ -69,11 +73,6 @@ var C2cContacts = (function () {
             _this.updateCultureUI(data.controlPanel.contactsPan);
         });
     };
-    C2cContacts.prototype.getContacts = function () {
-        return all_3.ContactMock.getContacts(13);
-    };
-    C2cContacts.prototype.gridRowDblClick = function (row) {
-    };
     C2cContacts.prototype.updateGridResxByRef = function (sc) {
         var _this = this;
         if (!sc)
@@ -86,16 +85,50 @@ var C2cContacts = (function () {
         nb.addRange(buf);
         return nb;
     };
-    //     givenName: string; 
-    //     familyName: string; 
-    //     middleName: string;
-    //     mail: string;         
-    //     position: string;        
-    //     subdivision: string;
-    //     mobilePhone: string; 
-    //     workPhone: string;
-    //     internalPhone: string;
-    //     avatar: string;
+    C2cContacts.prototype.getContacts = function () {
+        return all_3.ContactMock.getContacts(13);
+    };
+    C2cContacts.prototype.gridRowDblClick = function (row) {
+        this.showEditPanel(false, row.getTag());
+    };
+    C2cContacts.prototype.gridRowSelected = function (row) {
+        this._currentSelectedRow = row;
+    };
+    C2cContacts.prototype.editContact = function () {
+        if (!this._currentSelectedRow)
+            return;
+        this.showEditPanel(false, this._currentSelectedRow.getTag());
+    };
+    C2cContacts.prototype.fromEdit = function (c) {
+        if (this._addOrEdit) {
+            this._contacts.push(c);
+        }
+        else {
+            var ind = this._contacts.findIndex(function (i) { return i.id == c.id; });
+            this._contacts[ind] = c;
+        }
+        this._dataGrid = this.toDataGrid(this._contacts);
+        this.dataChanged.emit(true);
+        this.hideEditPanel();
+    };
+    C2cContacts.prototype.cancelEdit = function () {
+        this.hideEditPanel();
+    };
+    C2cContacts.prototype.addContact = function () {
+        this.showEditPanel(true);
+    };
+    C2cContacts.prototype.showEditPanel = function (addOrEdit, model) {
+        if (model === void 0) { model = null; }
+        this._addOrEdit = addOrEdit;
+        this._viewIsEditing = true;
+        this._modelToEdit = model;
+    };
+    C2cContacts.prototype.hideEditPanel = function () {
+        this._viewIsEditing = false;
+    };
+    C2cContacts.prototype.saveContacts = function () {
+        this.dataChanged.emit(false);
+    };
     C2cContacts.prototype.getSchemeColumns = function () {
         var s = new grid.C2cGridSchema();
         var ava = new grid.C2cGridColumn('avatar', 'avatar', 0, grid.C2cGridColumnType.pic);
@@ -128,7 +161,7 @@ var C2cContacts = (function () {
                 new grid.C2cGridDataCell(cols.find(function (i) { return i.id == 'workPhone'; }), c.workPhone),
                 new grid.C2cGridDataCell(cols.find(function (i) { return i.id == 'internalPhone'; }), c.internalPhone),
                 new grid.C2cGridDataCell(cols.find(function (i) { return i.id == 'avatar'; }), c.avatar)
-            ]);
+            ]).setTag(c);
         });
     };
     C2cContacts.prototype.log = function (m) {
@@ -137,12 +170,22 @@ var C2cContacts = (function () {
         }
     };
     C2cContacts.prototype.removeContact = function () {
+        if (!this._currentSelectedRow)
+            return;
+        var c = this._currentSelectedRow.getTag();
+        this._contacts.splice(this._contacts.findIndex(function (i) { return i.id == c.id; }), 1);
+        this._dataGrid = this.toDataGrid(this._contacts);
+        this.dataChanged.emit(true);
     };
+    __decorate([
+        core_1.Output(), 
+        __metadata('design:type', Object)
+    ], C2cContacts.prototype, "dataChanged", void 0);
     C2cContacts = __decorate([
         core_1.Component({
             selector: 'ctoc-contacts',
-            template: "\n    <div class=\"contacts-panel\">\n        <div class=\"grid-menu\">\n            <div class=\"btn-group\">\n                <button [title]=\"_resx ? _resx.tableMenu.save : ''\" type=\"button\" class=\"btn btn-default\">\n                    <span class=\"glyphicon glyphicon-floppy-save\"></span>\n                </button>\n                <button [title]=\"_resx ? _resx.tableMenu.add : ''\" type=\"button\" class=\"btn btn-default\">\n                    <span class=\"glyphicon glyphicon-plus\"></span>\n                </button>\n                <button [title]=\"_resx ? _resx.tableMenu.edit : ''\" type=\"button\" class=\"btn btn-default\">\n                    <span class=\"glyphicon glyphicon-edit\"></span>\n                </button>\n                <button [title]=\"_resx ? _resx.tableMenu.delete : ''\" type=\"button\" class=\"btn btn-default\"\n                    (click)=\"removeContact()\">\n                    <span class=\"glyphicon glyphicon-remove\"></span>\n                </button>\n                <button [title]=\"_resx ? _resx.tableMenu.xls : ''\" type=\"button\" class=\"btn btn-default\">\n                    <span class=\"glyphicon glyphicon-folder-open\"></span>\n                </button>\n            </div>\n        </div>\n    \n        <div style=\"height:calc(100% - 49px)\">\n            <ctoc-grid\n                [schema]=\"_gridSchema\"\n                [data]=\"_dataGrid\"\n                [rowNumberPerPage]=\"_rowPerPage\"\n                (rowDblClick)=\"gridRowDblClick($event)\"\n            >\n            </ctoc-grid>\n        </div>\n    </div>\n    ",
-            directives: [grid.C2cGrid],
+            template: "\n    <div *ngIf=\"!_viewIsEditing\" class=\"contacts-panel\">\n        <div class=\"grid-menu\">\n            <div class=\"btn-group\">\n                <button [title]=\"_resx ? _resx.tableMenu.save : ''\" type=\"button\" class=\"btn btn-default\"\n                    (click)=\"saveContacts()\"\n                    >\n                    <span class=\"glyphicon glyphicon-floppy-save\"></span>\n                </button>\n                <button [title]=\"_resx ? _resx.tableMenu.add : ''\" type=\"button\" class=\"btn btn-default\"\n                    (click)=\"addContact()\"\n                    >\n                    <span class=\"glyphicon glyphicon-plus\"></span>\n                </button>\n                <button [title]=\"_resx ? _resx.tableMenu.edit : ''\" type=\"button\" class=\"btn btn-default\"\n                    (click)=\"editContact()\"\n                    >\n                    <span class=\"glyphicon glyphicon-edit\"></span>\n                </button>\n                <button [title]=\"_resx ? _resx.tableMenu.delete : ''\" type=\"button\" class=\"btn btn-default\"\n                    (click)=\"removeContact()\">\n                    <span class=\"glyphicon glyphicon-remove\"></span>\n                </button>\n                <button [title]=\"_resx ? _resx.tableMenu.xls : ''\" type=\"button\" class=\"btn btn-default\">\n                    <span class=\"glyphicon glyphicon-folder-open\"></span>\n                </button>\n            </div>\n        </div>\n    \n        <div style=\"height:calc(100% - 49px)\">\n            <ctoc-grid\n                [schema]=\"_gridSchema\"\n                [data]=\"_dataGrid\"\n                [rowNumberPerPage]=\"_rowPerPage\"\n                (rowDblClick)=\"gridRowDblClick($event)\"\n                (rowSelected)=\"gridRowSelected($event)\"\n            >\n            </ctoc-grid>\n        </div>\n    </div>\n    <div *ngIf=\"_viewIsEditing\" class=\"contacts-panel\">\n        <ctoc-contact-edit \n            (ok)=\"fromEdit($event)\"\n            (cancel)=\"cancelEdit()\"\n            [addOrEdit]=\"_addOrEdit\"\n            [model]=\"_modelToEdit\"\n        ></ctoc-contact-edit>\n    </div>\n    \n    ",
+            directives: [grid.C2cGrid, contact_edit_1.C2cContactEdit],
             styles: ["\n        .grid-menu {\n            margin-bottom: 15px;\n        }\n        .contacts-panel {\n            height: calc(100% - 60px);\n        }\n    "]
         }), 
         __metadata('design:paramtypes', [all_1.ServiceLocator])

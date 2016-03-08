@@ -16,8 +16,15 @@ var content_1 = require('./content');
 var C2cWorkspace = (function () {
     function C2cWorkspace(_srvLocator) {
         this._srvLocator = _srvLocator;
+        this.dataChanged = new core_1.EventEmitter();
+        this._childWinDataChanged = false;
         this.currentUser = _srvLocator.getService('IUserService').getUserInfo();
     }
+    C2cWorkspace.prototype.childWindowDataChanged = function (changed) {
+        this._childWinDataChanged = changed;
+        this.dataChanged.emit(changed);
+        this.workspaceMenu.outerDataChanged = changed;
+    };
     C2cWorkspace.prototype.ngOnInit = function () {
         if (!this.sidebarSelectedMenuItem)
             this.selectMenuItem(this.workspaceMenu.Items[0]);
@@ -34,12 +41,16 @@ var C2cWorkspace = (function () {
             return;
         this.sidebarSelectedMenuItem = selMenuItem;
     };
+    __decorate([
+        core_1.Output(), 
+        __metadata('design:type', Object)
+    ], C2cWorkspace.prototype, "dataChanged", void 0);
     C2cWorkspace = __decorate([
         core_1.Component({
             selector: 'ctoc-workspace',
-            templateUrl: 'app/view/ctoc-workspace.html',
             inputs: ['workspacePanName', 'workspaceMenu'],
-            directives: [sidebar_1.C2cSidebar, content_1.C2cContent]
+            directives: [sidebar_1.C2cSidebar, content_1.C2cContent],
+            template: "\n    <div *ngIf=\"isActiveWorkspacePan('controlPan')\" class=\"row\">\n        <ctoc-sidebar [menu]=\"workspaceMenu\" (selectedPage)=\"selectMenuItem($event)\"></ctoc-sidebar>\n        <ctoc-content\n            [sidebarSelectedMenuItem]=\"sidebarSelectedMenuItem\"\n            [contentHeader]=\"sidebarSelectedMenuItem.TextItem\"\n            (dataChanged)=\"childWindowDataChanged($event)\"\n            >\n        </ctoc-content>\n    </div>\n    <div *ngIf=\"isActiveWorkspacePan('profilePan')\" class=\"row\">\n            <ctoc-sidebar [menu]=\"workspaceMenu\" (selectedPage)=\"selectMenuItem($event)\"></ctoc-sidebar>\n            <ctoc-content \n                [sidebarSelectedMenuItem]=\"sidebarSelectedMenuItem\"\n                [contentHeader]=\"sidebarSelectedMenuItem.TextItem\">\n            </ctoc-content>\n    </div>\n    "
         }), 
         __metadata('design:paramtypes', [locator_service_1.ServiceLocator])
     ], C2cWorkspace);
