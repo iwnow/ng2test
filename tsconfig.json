@@ -9,6 +9,10 @@
     },
     "exclude": [
         "node_modules",
-        ".vscode"
+        ".vscode",
+        "typings/browser",
+        "typings/main",
+        "typings/browser.d.ts",
+        "typings/main.d.ts"      
     ]
 }

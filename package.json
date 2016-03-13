@@ -1,6 +1,6 @@
 {
   "name": "dnx-angular2",
-  "version": "0.1.0",
+  "version": "0.0.5.0",
   "description": "dnx-angular2-iwnow",
   "main": "index.js",
   "scripts": {
