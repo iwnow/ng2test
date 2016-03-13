@@ -5,8 +5,8 @@ var ts = require('gulp-typescript');
 
 // build browser
 gulp.task('browser-clean', function () {
-	// return gulp.src('app/build/browser', {read: false})
-	// 	.pipe(clean());
+	return gulp.src('app/build/browser', {read: false})
+		.pipe(clean());
 });
 
 gulp.task('browser-copy-html', function() {
