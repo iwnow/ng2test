@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "lite": "cd app/build/browser && lite-server",
-    "start": "concurrent \"npm run tsc:w\" \"npm run lite\" "
+    "start": "concurrent \"npm run tsc:w\" \"npm run lite\" ",
+    "server": "node app/build/server/index.js"
   },
   "author": "iwnow",
   "license": "ISC",
@@ -24,6 +25,7 @@
     "bootstrap": "3.3.6",
     "es6-promise": "3.0.2",
     "es6-shim": "0.33.3",
+    "express": "^4.13.4",
     "font-awesome": "4.5.0",
     "reflect-metadata": "0.1.2",
     "rxjs": "5.0.0-beta.0",

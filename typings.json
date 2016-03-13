@@ -1,8 +1,0 @@
-{
-  "name": "dnx-angular2",
-  "version": false,
-  "dependencies": {},
-  "ambientDependencies": {
-    "node": "registry:dt/node#4.0.0+20160311162451"
-  }
-}
