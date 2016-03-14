@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "lite": "cd app/build/browser && lite-server",
-    "start": "node app/build/server/index.js"
+    "start": "node app/build/server/index.js",
+    "postinstall": "gulp default"
   },
   "author": "iwnow",
   "license": "ISC",
