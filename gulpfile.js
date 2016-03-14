@@ -4,22 +4,21 @@ var runSequence = require('run-sequence');
 var ts = require('gulp-typescript');
 
 var pathsBrowser = {
-    tsSource: './app/source/browser/ts/**/*.ts',
+    tsSource: 'app/source/browser/ts/**/*.ts',
     tsOutput: 'app/build/browser/js',
-    tsDef: "./typings"
+    tsDef: 'typings/**/*.d.ts'
 };
 var pathsServer = {
-    tsSource: './app/source/server/**/*.ts',
+    tsSource: 'app/source/server/**/*.ts',
     tsOutput: 'app/build/server',
-    tsDef: "./typings"
+    tsDef: 'typings/**/*.d.ts'
 };
  
 var tsCompilerConfig = ts.createProject('tsconfig.json');
 
-// build browser
+//------------------------------------------ build browser
 gulp.task('browser-clean', function () {
-	return gulp.src('app/build/browser', {read: false})
-		.pipe(clean());
+	return gulp.src('app/build/browser', {read: false}).pipe(clean());
 });
 
 gulp.task('browser-copy-html', function() {
@@ -75,26 +74,26 @@ gulp.task('build-browser', function(callback) {
     callback); /** tell the task to end **/
 });
 
-//server
+//--------------------------server
+
 gulp.task('server-tsc', function () {
     var tsProject = ts.createProject('tsconfig.json', { noExternalResolve: true });
-    var tsResult = gulp.src([pathsServer.tsSource, 'typings/**/*.d.ts'])
+    var tsResult = gulp.src([pathsServer.tsSource, pathsServer.tsDef])
         .pipe(ts(tsProject));
     return tsResult.js.pipe(gulp.dest(pathsServer.tsOutput));
 });
+
 gulp.task('server-clean', function () {
-	return gulp.src('app/build/server', {read: false})
-		.pipe(clean());
+	return gulp.src('app/build/server', {read: false}).pipe(clean());
 });
+
 gulp.task('build-server', function(callback) {
-  runSequence('server-clean', /** the first task in sequence **/
-    ['server-tsc'], /** those are run in parallel **/
-    callback); /** tell the task to end **/
+    runSequence('server-clean', 'server-tsc', callback);
 });
 
 
 // default build
 gulp.task('default', function(callback) {
-        runSequence('build-server', 'build-browser', callback); /** tell the task to end **/}
-    );
+    runSequence('build-server', 'build-browser', callback); /** tell the task to end **/
+});
 
