@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "lite": "cd app/build/browser && lite-server",
-    "start": "concurrent \"npm run tsc:w\" \"npm run lite\" ",
-    "server": "node app/build/server/index.js"
+    "start": "node app/build/server/index.js"
   },
   "author": "iwnow",
   "license": "ISC",
