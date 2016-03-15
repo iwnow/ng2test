@@ -1,9 +1,4 @@
-require('reflect-metadata');
-require('mocha');
-
-import chai =  require('chai');
-let expect = chai.expect;
-
+import {expect} from '../../tconfig';
 import {EventService} from '../../../source/browser/ts/services/all';
 
 describe('Browser event service test:', () => {

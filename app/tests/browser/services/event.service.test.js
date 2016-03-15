@@ -1,8 +1,5 @@
 "use strict";
-require('reflect-metadata');
-require('mocha');
-var chai = require('chai');
-var expect = chai.expect;
+var tconfig_1 = require('../../tconfig');
 var all_1 = require('../../../source/browser/ts/services/all');
 describe('Browser event service test:', function () {
     var _service = new all_1.EventService();
@@ -19,8 +16,8 @@ describe('Browser event service test:', function () {
             };
             _service.subscribe(key, function (data) {
                 getData = data;
-                expect(getData.a).to.equals(pushData.a);
-                expect(getData.b).to.equals(pushData.b);
+                tconfig_1.expect(getData.a).to.equals(pushData.a);
+                tconfig_1.expect(getData.b).to.equals(pushData.b);
                 done();
             });
             _service.emit({
