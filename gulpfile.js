@@ -5,7 +5,9 @@ var ts = require('gulp-typescript');
 
 var pathsBrowser = {
     tsSource: 'app/source/browser/ts/**/*.ts',
-    tsOutput: 'app/build/browser/js',
+    tsOutput: 'app/source/browser/ts',
+    jsSource: 'app/source/browser/ts/**/*.js',
+    tsOutputBuild: 'app/build/browser/js',
     tsDef: 'typings/**/*.d.ts'
 };
 var pathsServer = {
@@ -13,6 +15,15 @@ var pathsServer = {
     tsOutput: 'app/build/server',
     tsDef: 'typings/**/*.d.ts'
 };
+
+var pathsTests = {
+    tsSource: 'app/tests/**/*.ts',
+    tsInternalModule: 'app/source/**/*.ts',
+    tsOutput: 'app/tests',
+    tsDef: 'typings/**/*.d.ts'
+};
+
+var definitions = 'app/source/typings';
  
 var tsCompilerConfig = ts.createProject('tsconfig.json');
 
@@ -45,10 +56,18 @@ gulp.task('browser-copy-img', function() {
    ]).pipe(gulp.dest('app/build/browser/img'));
 });
  
-gulp.task('browser-tsc', function () {
-    var tsResult = gulp.src(pathsBrowser.tsSource)
-        .pipe(ts(tsCompilerConfig));
-    return tsResult.js.pipe(gulp.dest(pathsBrowser.tsOutput));
+gulp.task('browser-tsc', ['browser-tsc2'], function () {
+    gulp.src([
+    pathsBrowser.jsSource
+   ]).pipe(gulp.dest(pathsBrowser.tsOutputBuild));
+});
+
+gulp.task('browser-tsc2', function () {
+    console.log('browser-tsc2');
+    var tsResult = gulp.src(pathsBrowser.tsSource).pipe(ts(tsCompilerConfig));
+    tsResult.js.pipe(gulp.dest(pathsBrowser.tsOutput));
+    
+    return tsResult.dts.pipe(gulp.dest(definitions));
 });
 
 // gulp.task('copy-lib', function() {
@@ -97,3 +116,11 @@ gulp.task('default', function(callback) {
     runSequence('build-server', 'build-browser', callback); /** tell the task to end **/
 });
 
+//-------------------- build tests
+
+gulp.task('tests-tsc', function () {
+    var tsProject = ts.createProject('tsconfig.json', { noExternalResolve: true });
+    var tsResult = gulp.src([pathsTests.tsSource, pathsTests.tsDef])
+        .pipe(ts(tsProject));
+    return tsResult.js.pipe(gulp.dest(pathsTests.tsOutput));
+});
