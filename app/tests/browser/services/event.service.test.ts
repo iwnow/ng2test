@@ -1,4 +1,4 @@
-import {expect} from '../../tconfig';
+import {expect} from '../../settings';
 import {EventService} from '../../../source/browser/ts/services/all';
 
 describe('Browser event service test:', () => {

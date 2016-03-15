@@ -118,7 +118,7 @@ gulp.task('default', function(callback) {
 
 //-------------------- build tests
 
-gulp.task('tests-tsc', function () {
+gulp.task('build-test', function () {
     var tsProject = ts.createProject('tsconfig.json', { noExternalResolve: true });
     var tsResult = gulp.src([pathsTests.tsSource, pathsTests.tsDef])
         .pipe(ts(tsProject));
