@@ -1,18 +1,15 @@
 language: node_js
 node_js:
-  - "5.5"
+- '5.5'
 before_script:
-  - npm i -g gulp 
-  - npm i -g mocha
-  - npm i
-  - gulp build-test
-  
+- npm i -g gulp
+- npm i -g mocha
+- npm i
+- gulp build-test
 deploy:
   app: heroku-ctoc
   provider: heroku
   api_key:
-    secure:35fc1e9e-a098-4f5b-b140-b308d7c28da0
-  
+    secure: YwLxzy6eUjoh8tUzFIdRWlJN9R7mmBm4QHJVT2ImNNG/t0yS9bUtOgkFO66DnVKPxjqaH6DjisE4+SzLkLs6JWwviUVc9Cs93POYohEQVAmSsuCKh51IRQUZW7jerPL+lzoddlVwjIoO9d9SAcp8iWA/dUflA1iEIoqJpP1pe2dnhQAvE2ExstUSoGHgurDd+xa0rhM72B61VcR7cOLPIpP2idJMYZZtviCKwipnJII6AKZGEs9TRJ6Xx0FnqMrqGKWY8B0rNUk1v5VD2hepK/LTsXRZmboD3sKOdgzodH/HU8gqmtD9nty5FZWAdjr8w9AvnBxqOBGuFomdSJA82Ts/zDf4CFdF2l9oQuP4WTt6qav3uqU2Z/x1kOQGElh+vISiWjl37AcaFqHYNMWWup0LJiYvufJhPkvH+vzDmJ3FOIaeu7WATphumawD96jOyrCR42WbKRdxnnr6Ees6TD+7U6Z6fFiShOiBXK7DCvF5DVm2QTcSpXoL9sd+tw2JzfzqlSru7l28uttI8NfFpA3LyPoyT3z4E9HMFMwAoP0JPTiL2fRz7lG2Cu07RCdIbu5eTGuPGJH56Dz+ZcCrenhhv5BktOARj4qfzvuxIpYwCk27mXeFmxfqQXQEXvnB325XNRuQ9m1PrM1NBmD22VmNMAxLemfUxeuCB8j9PGI=
 notifications:
   slack: calltocollegs:ipVs1kuSs6FwyXGJgUrFEq5k
-  
