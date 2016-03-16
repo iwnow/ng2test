@@ -2,8 +2,11 @@ language: node_js
 node_js:
   - "5.5"
 before_script:
-  - npm install -g gulp 
-  - npm install -g mocha
+  - npm i -g gulp 
+  - npm i -g mocha
   - npm i
   - gulp build-test
+  
+notifications:
+  slack: calltocollegs:ipVs1kuSs6FwyXGJgUrFEq5k
   
