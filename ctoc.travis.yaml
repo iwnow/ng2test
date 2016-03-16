@@ -5,3 +5,5 @@ before_script:
   - npm install -g gulp 
   - npm install -g mocha
   - npm i
+  - gulp build-test
+  
