@@ -6,7 +6,7 @@
   "scripts": {
     "lite": "cd app/build/browser && lite-server",
     "start": "node app/build/server/index.js",
-    "postinstall": "tsd install && gulp default",
+    "postinstall": "tsd install && gulp default && gulp build-test",
     "test": "mocha app/tests/**/*.js"
   },
   "author": "iwnow",
