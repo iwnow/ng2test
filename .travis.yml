@@ -7,6 +7,12 @@ before_script:
   - npm i
   - gulp build-test
   
+deploy:
+  app: heroku-ctoc
+  provider: heroku
+  api_key:
+    secure:35fc1e9e-a098-4f5b-b140-b308d7c28da0
+  
 notifications:
   slack: calltocollegs:ipVs1kuSs6FwyXGJgUrFEq5k
   
