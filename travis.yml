@@ -1,6 +1,7 @@
 language: node_js
 node_js:
-  - "5.5"
+  - "5.0"
 before_script:
-  - npm i -g gulp mocha
+  - npm install -g gulp 
+  - npm install -g mocha
   - npm i
