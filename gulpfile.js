@@ -114,8 +114,14 @@ gulp.task('server-json', function () {
    ]).pipe(gulp.dest(pathsServer.tsOutput));
 });
 
+gulp.task('server-main', function () {
+	return gulp.src([
+    'app/source/server/main.js'
+   ]).pipe(gulp.dest(pathsServer.tsOutput));
+});
+
 gulp.task('build-server', function(callback) {
-    runSequence('server-clean', ['server-tsc','server-json'], callback);
+    runSequence('server-clean', ['server-tsc','server-json', 'server-main'], callback);
 });
 
 

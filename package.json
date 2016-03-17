@@ -4,11 +4,11 @@
   "description": "dnx-angular2-iwnow",
   "main": "index.js",
   "scripts": {
+    "preinstall": "npm i -g pm2",
     "lite": "cd app/build/browser && lite-server",
-    "start": "node app/build/server/index.js",
+    "start": "node app/build/server/main.js",
     "postinstall": "tsd install && gulp default",
-    "test": "mocha app/tests/**/*.js",
-    "fw": "forever --watch --watchDirectory ./app/build/server --watchIgnore *.log ./app/build/server/index.js"
+    "test": "mocha app/tests/**/*.js"
   },
   "author": "iwnow",
   "license": "ISC",
@@ -36,6 +36,7 @@
     "gulp-typescript": "2.12.1",
     "lite-server": "1.3.1",
     "mocha": "2.4.5",
+    "pm2": "^1.0.2",
     "reflect-metadata": "0.1.2",
     "run-sequence": "1.1.5",
     "rxjs": "5.0.0-beta.0",
