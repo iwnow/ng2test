@@ -4,8 +4,6 @@ node_js:
 before_script:
 - npm i -g gulp
 - npm i -g mocha
-- npm i
-- gulp build-test
 deploy:
   app: heroku-ctoc
   provider: heroku

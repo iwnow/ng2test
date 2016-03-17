@@ -114,7 +114,7 @@ gulp.task('build-server', function(callback) {
 
 // default build
 gulp.task('default', function(callback) {
-    runSequence('build-server', 'build-browser', callback); /** tell the task to end **/
+    runSequence('build-server', 'build-browser', 'build-test', callback); /** tell the task to end **/
 });
 
 //-------------------- build tests
