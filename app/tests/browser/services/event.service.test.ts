@@ -1,16 +1,16 @@
 import {expect} from '../../settings';
 import {EventService} from '../../../source/browser/ts/services/all';
 
-describe('Browser event service test:', () => {
+describe('Сервис сообщений между компонентами внутри браузера:', () => {
     let _service: EventService = new EventService();
     
     before(() => {
         _service = new EventService();
     });
     
-    describe('Data push to event service by any object -> subscriber handle the data by key', () => {
+    describe('Источник отправляет данные в сервис сообщений с заданным ключом -> подписчик по данному ключу получает данные через callback', () => {
         
-        it(`push obj {a:4, b:'test'} with key 'test', subscriber subs the event with key 'test' and get obj {a:4, b:'test'}`, (done) => {
+        it(`Отправлем объект {a:4, b:'test'} с ключом 'test', подписчик подписывается в сервисе на сообщения с ключом 'test' и получает объект {a:4, b:'test'}`, (done) => {
             
             let key = 'test';
             let getData;
