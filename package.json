@@ -6,7 +6,7 @@
   "scripts": {
     "preinstall": "npm i -g pm2",
     "lite": "cd app/build/browser && lite-server",
-    "start": "node app/build/server/main.js",
+    "start": "node app/build/server/index.js",
     "postinstall": "tsd install && gulp default",
     "test": "mocha app/tests/**/*.js"
   },
