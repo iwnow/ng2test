@@ -24,6 +24,7 @@ var pathsTests = {
 };
 
 var definitions = 'app/source/typings';
+var defInternalMask = 'app/source/typings/**/*.d.ts';
  
 var tsCompilerConfig = ts.createProject('tsconfig.json');
 

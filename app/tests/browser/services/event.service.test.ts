@@ -11,7 +11,7 @@ describe('Browser event service test:', () => {
     describe('Data push to event service by any object -> subscriber handle the data by key', () => {
         
         it(`push obj {a:4, b:'test'} with key 'test', subscriber subs the event with key 'test' and get obj {a:4, b:'test'}`, (done) => {
-                
+            
             let key = 'test';
             let getData;
             let pushData = {
