@@ -1,0 +1,8 @@
+{
+    // Comments are supported
+    "uid": "ctocapp",
+    "append": true,
+    "watch": true,
+    "script": "index.js",
+    "sourceDir": "./app/build/server"
+}

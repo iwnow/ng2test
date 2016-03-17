@@ -13,7 +13,8 @@ var pathsBrowser = {
 var pathsServer = {
     tsSource: 'app/source/server/**/*.ts',
     tsOutput: 'app/build/server',
-    tsDef: 'typings/**/*.d.ts'
+    tsDef: 'typings/**/*.d.ts',
+    json: 'app/source/server/**/*.json'
 };
 
 var pathsTests = {
@@ -107,8 +108,14 @@ gulp.task('server-clean', function () {
 	return gulp.src('app/build/server', {read: false}).pipe(clean());
 });
 
+gulp.task('server-json', function () {
+	return gulp.src([
+    pathsServer.json
+   ]).pipe(gulp.dest(pathsServer.tsOutput));
+});
+
 gulp.task('build-server', function(callback) {
-    runSequence('server-clean', 'server-tsc', callback);
+    runSequence('server-clean', ['server-tsc','server-json'], callback);
 });
 
 
