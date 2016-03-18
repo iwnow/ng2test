@@ -27,7 +27,7 @@ var pathsTests = {
 var definitions = 'app/source/typings';
 var defInternalMask = 'app/source/typings/**/*.d.ts';
  
-var tsCompilerConfig = ts.createProject('tsconfig.json');
+var tsCompilerConfig = ts.createProject('./app/source/browser/tsconfig.json');
 
 //------------------------------------------ build browser
 gulp.task('browser-clean', function () {
@@ -98,7 +98,7 @@ gulp.task('build-browser', function(callback) {
 //--------------------------server
 
 gulp.task('server-tsc', function () {
-    var tsProject = ts.createProject('tsconfig.json', { noExternalResolve: true });
+    var tsProject = ts.createProject('./app/source/server/tsconfig.json', { noExternalResolve: true });
     var tsResult = gulp.src([pathsServer.tsSource, pathsServer.tsDef])
         .pipe(ts(tsProject));
     return tsResult.js.pipe(gulp.dest(pathsServer.tsOutput));
@@ -120,16 +120,18 @@ gulp.task('build-server', function(callback) {
 });
 
 
-// default build
-gulp.task('default', function(callback) {
-    runSequence('build-server', 'build-browser', 'build-test', callback); /** tell the task to end **/
-});
-
 //-------------------- build tests
 
+var testConfigTs = ts.createProject('./app/tests/tsconfig.json', { noExternalResolve: true });
+
 gulp.task('build-test', function () {
-    var tsProject = ts.createProject('tsconfig.json', { noExternalResolve: true });
     var tsResult = gulp.src([pathsTests.tsSource, pathsTests.tsDef])
-        .pipe(ts(tsProject));
+        .pipe(ts(testConfigTs));
     return tsResult.js.pipe(gulp.dest(pathsTests.tsOutput));
+});
+
+
+// ---------------------- default build
+gulp.task('default', function(callback) {
+    runSequence('build-server', 'build-browser', 'build-test', callback); /** tell the task to end **/
 });

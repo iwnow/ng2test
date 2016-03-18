@@ -1,3 +1,6 @@
+/// <reference path="../../typings/tsd.d.ts" />
+
+
 require('reflect-metadata');
 require('mocha');
 
