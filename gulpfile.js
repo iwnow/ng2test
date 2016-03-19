@@ -2,6 +2,7 @@ var gulp = require('gulp');
 var clean = require('gulp-clean');
 var runSequence = require('run-sequence');
 var ts = require('gulp-typescript');
+var sourcemaps = require('gulp-sourcemaps');
 
 var pathsBrowser = {
     tsSource: 'app/source/browser/ts/**/*.ts',
@@ -100,8 +101,11 @@ gulp.task('build-browser', function(callback) {
 gulp.task('server-tsc', function () {
     var tsProject = ts.createProject('./app/source/server/tsconfig.json', { noExternalResolve: true });
     var tsResult = gulp.src([pathsServer.tsSource, pathsServer.tsDef])
+        .pipe(sourcemaps.init()) 
         .pipe(ts(tsProject));
-    return tsResult.js.pipe(gulp.dest(pathsServer.tsOutput));
+    return tsResult.js
+        .pipe(sourcemaps.write())
+        .pipe(gulp.dest(pathsServer.tsOutput));
 });
 
 gulp.task('server-clean', function () {
