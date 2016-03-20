@@ -1,27 +1,40 @@
 /// <reference path="../../../typings/tsd.d.ts" />
 
 import express = require('express');
-import fs = require('fs');
 import events = require('events');
 import _url = require('url');
+import eh = require('errorhandler');
 
-var app = express();
+import {configProvider} from './config/config';
+import {loggerFabric} from './logger/log';
 
-app.set('port', (process.env.PORT || 4444));
+let logger = loggerFabric(module);
+let _port = process.env.PORT || configProvider.get('appServer:port');
 
-app.use(async (req, res, next) => {
-    next();
-});
+logger.info(`app port: ${_port}`);
+
+let app = express();
 
 app.use(express.static(__dirname + '/../browser'));
 
-app.listen(app.get('port'), function() {
-    console.log('server | port listening:', app.get('port'));
+if (app.get('env') == 'development') {
+    app.use(eh());    
+} else {
+    app.use(function (err, req, res, next) {
+        logger.error('unhandled error', err)
+        res.status(500).send('server error');
+    })
+}
+
+
+app.listen(_port, function() {
+    console.log('server | port listening:', _port);
 });
 
 
-async function delay(ms:number) {
-   return await new Promise((res) => {
-       setTimeout(res, ms);
-   });
-}
+// 
+
+// app.use((err, req, res) => {
+//     console.log(err);
+// });
+

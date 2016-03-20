@@ -6,16 +6,16 @@
   "bundle": "typings/tsd.d.ts",
   "installed": {
     "mime/mime.d.ts": {
-      "commit": "d22516f9f089de107d7e7d5938566377370631f6"
+      "commit": "6766ed1d0faf02ede9e2edf2e66bbb2388c825ec"
     },
     "serve-static/serve-static.d.ts": {
-      "commit": "d22516f9f089de107d7e7d5938566377370631f6"
+      "commit": "6766ed1d0faf02ede9e2edf2e66bbb2388c825ec"
     },
     "express/express.d.ts": {
-      "commit": "d22516f9f089de107d7e7d5938566377370631f6"
+      "commit": "6766ed1d0faf02ede9e2edf2e66bbb2388c825ec"
     },
     "node/node.d.ts": {
-      "commit": "441b647ef77afa221d898fa2a9de47d9501b44e3"
+      "commit": "6766ed1d0faf02ede9e2edf2e66bbb2388c825ec"
     },
     "mocha/mocha.d.ts": {
       "commit": "81ebfb3d08cd608a7c801668a6d5f7b2ea9ecc38"
@@ -25,6 +25,21 @@
     },
     "chai/chai.d.ts": {
       "commit": "81ebfb3d08cd608a7c801668a6d5f7b2ea9ecc38"
+    },
+    "bluebird/bluebird.d.ts": {
+      "commit": "6766ed1d0faf02ede9e2edf2e66bbb2388c825ec"
+    },
+    "nconf/nconf.d.ts": {
+      "commit": "6766ed1d0faf02ede9e2edf2e66bbb2388c825ec"
+    },
+    "winston/winston.d.ts": {
+      "commit": "6766ed1d0faf02ede9e2edf2e66bbb2388c825ec"
+    },
+    "errorhandler/errorhandler.d.ts": {
+      "commit": "6766ed1d0faf02ede9e2edf2e66bbb2388c825ec"
+    },
+    "express-serve-static-core/express-serve-static-core.d.ts": {
+      "commit": "6766ed1d0faf02ede9e2edf2e66bbb2388c825ec"
     }
   }
 }
