@@ -1,5 +1,11 @@
 {
     "appServer" : {
         "port": 5000
+    },
+    "db": {
+        "link": "test",
+        "connectionStrings": {
+            "test": "mongodb://127.0.0.1:27017/test"
+        }
     }
 }

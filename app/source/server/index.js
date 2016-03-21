@@ -10,6 +10,8 @@ let bodyParser = require('body-parser');
 let configProvider = require('./config/config');
 let logger = require('./logger/log')(module);
 
+let db = require('./db/createDb');
+
 let _port = process.env.PORT || configProvider.get('appServer:port');
 
 logger.info(`app port: ${_port}`);
