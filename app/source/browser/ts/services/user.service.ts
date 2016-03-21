@@ -19,7 +19,7 @@ export class UserService implements IUserService {
     constructor(private _eventsService: EventService){
         let u = UserMock.Create();
         this._registered.set(u.email, u);
-        this._currentUser = u;
+        //this._currentUser = u;
     }
     
     getUserInfo():IUserInfo {
@@ -76,7 +76,7 @@ export class UserService implements IUserService {
     }
     
     private loadUserInfo(): IUserInfo {
-        return UserMock.Create();
+        return null; //UserMock.Create();
     }
 }
 

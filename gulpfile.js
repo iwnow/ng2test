@@ -13,6 +13,7 @@ var pathsBrowser = {
 };
 var pathsServer = {
     tsSource: 'app/source/server/**/*.ts',
+    jsSource: 'app/source/server/**/*.js',
     tsOutput: 'app/build/server',
     tsDef: 'typings/**/*.d.ts',
     json: 'app/source/server/**/*.json'
@@ -99,8 +100,8 @@ gulp.task('build-browser', function(callback) {
 //--------------------------server
 
 gulp.task('server-tsc', function () {
-    var tsProject = ts.createProject('./app/source/server/tsconfig.json', { noExternalResolve: true });
-    var tsResult = gulp.src([pathsServer.tsSource, pathsServer.tsDef])
+    var tsProject = ts.createProject('./app/source/server/tsconfig.json', { noExternalResolve: true, allowJs: true });
+    var tsResult = gulp.src([pathsServer.tsSource, pathsServer.jsSource, pathsServer.tsDef])
         .pipe(sourcemaps.init()) 
         .pipe(ts(tsProject));
     return tsResult.js

@@ -23,7 +23,7 @@ var UserService = (function () {
         this._registered = new Map();
         var u = all_1.UserMock.Create();
         this._registered.set(u.email, u);
-        this._currentUser = u;
+        //this._currentUser = u;
     }
     UserService.prototype.getUserInfo = function () {
         return this._currentUser;
@@ -77,7 +77,7 @@ var UserService = (function () {
         }));
     };
     UserService.prototype.loadUserInfo = function () {
-        return all_1.UserMock.Create();
+        return null; //UserMock.Create();
     };
     UserService = __decorate([
         core_1.Injectable(), 

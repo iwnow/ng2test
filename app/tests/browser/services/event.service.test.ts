@@ -1,5 +1,5 @@
 import {expect} from '../../settings';
-import {EventService} from '../../../source/browser/ts/services/all';
+import {EventService} from '../../../source/browser/ts/services/event.service';
 
 describe('Сервис сообщений между компонентами внутри браузера:', () => {
     let _service: EventService = new EventService();

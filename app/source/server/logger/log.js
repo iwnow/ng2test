@@ -1,10 +1,14 @@
 /// <reference path="../../../../typings/tsd.d.ts" />
+'use strict';
 
-import winston = require('winston');
+let winston = require('winston');
 
-let env =process.env.NODE_ENV;
+let env = process.env.NODE_ENV;
 
-export function loggerFabric(module: NodeModule) {
+/**Создание логгера:
+ * module - передаем текущий модуль, который использует логгер
+ */
+module.exports = function loggerFabric(module) {
     
     let separator = process.platform.indexOf('win') > -1 ? '\\' : '/';
     let path = module.filename.split(separator).slice(-2).join(separator);
