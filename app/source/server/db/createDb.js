@@ -5,8 +5,8 @@ let mongoClient = require('mongodb').MongoClient;
 
 let config = require('../config/config');
 let link = config.get('db:link');
-logger.info(`database link: ${link}`);
 let connectionString = config.get(`db:connectionStrings:${link}`);
+
 logger.info(`database link: ${link} (${connectionString})`);
 
 mongoClient.connect(connectionString)

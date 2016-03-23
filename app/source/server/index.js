@@ -21,6 +21,10 @@ let app = express();
 app.use(morgan('dev'));
 app.use(bodyParser.json());
 
+app.use((req, res, next) => {
+   logger.info(req.body);
+   next(); 
+});
 
 app.use(express.static(__dirname + '/../browser'));
 
