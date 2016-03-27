@@ -140,3 +140,14 @@ gulp.task('build-test', function () {
 gulp.task('default', function(callback) {
     runSequence('build-server', 'build-browser', 'build-test', callback); /** tell the task to end **/
 });
+
+//babel
+var babel = require('gulp-babel');
+gulp.task('babel', function (cb) {
+    return gulp.src('app/source/server/**/*.js')
+        .pipe(babel({
+            presets: ['es2015'],
+            plugins: ['transform-runtime']
+        }))
+        .pipe(gulp.dest('app/build/server'));
+});

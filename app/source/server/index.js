@@ -10,8 +10,6 @@ let bodyParser = require('body-parser');
 let configProvider = require('./config/config');
 let logger = require('./logger/log')(module);
 
-let db = require('./db/createDb');
-
 let _port = process.env.PORT || configProvider.get('appServer:port');
 
 logger.info(`app port: ${_port}`);
@@ -21,14 +19,14 @@ let app = express();
 app.use(morgan('dev'));
 app.use(bodyParser.json());
 
-app.use((req, res, next) => {
+app.use(function(req, res, next) {
    logger.info(req.body);
    next(); 
 });
 
 app.use(express.static(__dirname + '/../browser'));
 
-app.use((err, req, res, next) => {
+app.use(function(err, req, res, next) {
     logger.error(err);
     res.status(500).send('error server :( ');
 });
@@ -36,7 +34,7 @@ app.use((err, req, res, next) => {
 if (app.get('env') == 'development') {
     app.use(errorhandler());    
 } else {
-    app.use((err, req, res, next) => {
+    app.use(function(err, req, res, next) {
         logger.error('unhandled error', err)
         res.status(500).send('server error');
     });
@@ -45,4 +43,11 @@ if (app.get('env') == 'development') {
 
 app.listen(_port, function() {
     console.log('server | port listening:', _port);
+});
+
+let User = require('./db/models/user');
+
+let u = new User({
+   email: 'ggg@ff.com',
+   password: 'ddddd' 
 });
