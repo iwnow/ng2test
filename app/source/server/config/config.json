@@ -1,6 +1,9 @@
 {
     "appServer" : {
-        "port": 5000
+        "port": 5000        
+    },
+    "session": {
+        "secret": "ctoc-secret-key"
     },
     "db": {
         "link": "test",
