@@ -18,18 +18,28 @@ let app = express();
 
 app.use(morgan('dev'));
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: false}));
 
-app.use(function(req, res, next) {
-   logger.info(req.body);
-   next(); 
+
+app.post('/api/login', function (req, res, next) {
+    logger.info(req.body);
+    res.status(200).send({
+        result: 'ok',
+        action: 'login'
+    });
+    next();
 });
+
+app.post('/api/register', function (req, res, next) {
+    logger.info(req.body);
+    res.status(200).send({
+        result: 'ok',
+        action: 'register'
+    });
+    next();
+})
 
 app.use(express.static(__dirname + '/../browser'));
-
-app.use(function(err, req, res, next) {
-    logger.error(err);
-    res.status(500).send('error server :( ');
-});
 
 if (app.get('env') == 'development') {
     app.use(errorhandler());    
@@ -46,8 +56,7 @@ app.listen(_port, function() {
 });
 
 let User = require('./db/models/user');
-
-let u = new User({
-   email: 'ggg@ff.com',
-   password: 'ddddd' 
+User.find({}, function(err, res) {
+    console.log(res[0].getId());
 });
+

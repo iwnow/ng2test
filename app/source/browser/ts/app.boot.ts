@@ -4,7 +4,7 @@ import {HTTP_PROVIDERS} from 'angular2/http';
 import 'rxjs/Rx';
 
 import {C2cWorkspace,C2cLogin, C2cRegister} from './components/all';
-import {ServiceLocator, ResourceService, EventService, UserService,ExceptionService} from './services/all';
+import {ServiceLocator, ResourceService, EventService, UserService,ExceptionService, LoggerService} from './services/all';
 import {IUserService, IUserInfo, 
         IEmitData,IEventService,
         Cultures, IResourceService} from './contracts/all';
@@ -16,7 +16,7 @@ enableProdMode();
 @Component({
     selector: 'ctoc-app',
     directives: [C2cWorkspace, C2cLogin, C2cRegister],
-    providers: [EventService,ExceptionService,ResourceService, ServiceLocator,UserService,
+    providers: [EventService,ExceptionService, LoggerService, ResourceService, ServiceLocator,UserService,
                 HTTP_PROVIDERS],
     template: `
     <nav  class="navbar navbar-inverse navbar-fixed-top">
@@ -119,7 +119,8 @@ class CtocApp implements OnInit{
     constructor(private _eventService: EventService,
                 private _usrService: UserService,
                 private _srvLocator: ServiceLocator,
-                private _exceptionService:ExceptionService){        
+                private _exceptionService:ExceptionService,
+                private _loggerService: LoggerService){        
         this.projectName = "C2C";
         this.toggleNav = false;        
         this.addResizeEvent();

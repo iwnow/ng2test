@@ -10,7 +10,8 @@ let connectionString = config.get(`db:connectionStrings:${link}`);
 logger.info(`database link: ${link} (${connectionString})`);
 
 mongoose.connect(connectionString, null, function(err) {
-    logger.error(err);
+    if (err)
+        logger.error(err);
 });
 
 module.exports = mongoose;

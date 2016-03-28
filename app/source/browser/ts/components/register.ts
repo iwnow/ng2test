@@ -208,20 +208,34 @@ export class C2cRegister implements OnInit, OnDestroy, AfterViewInit {
             return;        
         
         let tmp = this.btnSendTxt;
+        let finishRegister = () => {
+            this.showSpinner(false);
+            this.btnSendTxt = tmp;
+            this._isSending = false;
+        };
+        
         if (!this._isSending) {
             this._isSending = true;
             this.btnSendTxt = '';
             this.showSpinner();
-            this.userService.register(this.model).subscribe((res) => {
-                this.showSpinner(false);
-                this.btnSendTxt = tmp;
-                this._isSending = false;
-                if (!res.result)
-                    this._validationError = res.reason;
-                else {
-                    this._registerSuccess = true;
-                }
-            });
+            this.userService
+                .register(this.model)
+                .subscribe(
+                    (res) => {
+                        finishRegister();
+                        if (!res.result)
+                            this._validationError = res.reason;
+                        else 
+                            this._registerSuccess = true;
+                    }, 
+                    err => {
+                        finishRegister();
+                        this.eventService.emit({
+                            key: Descriptors.Exceptions,
+                            data: err
+                        });
+                    }
+                );
         }
         
     }

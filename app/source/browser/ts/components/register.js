@@ -140,19 +140,29 @@ var C2cRegister = (function () {
         if (!this.modelValid(this.model))
             return;
         var tmp = this.btnSendTxt;
+        var finishRegister = function () {
+            _this.showSpinner(false);
+            _this.btnSendTxt = tmp;
+            _this._isSending = false;
+        };
         if (!this._isSending) {
             this._isSending = true;
             this.btnSendTxt = '';
             this.showSpinner();
-            this.userService.register(this.model).subscribe(function (res) {
-                _this.showSpinner(false);
-                _this.btnSendTxt = tmp;
-                _this._isSending = false;
+            this.userService
+                .register(this.model)
+                .subscribe(function (res) {
+                finishRegister();
                 if (!res.result)
                     _this._validationError = res.reason;
-                else {
+                else
                     _this._registerSuccess = true;
-                }
+            }, function (err) {
+                finishRegister();
+                _this.eventService.emit({
+                    key: all_2.Descriptors.Exceptions,
+                    data: err
+                });
             });
         }
     };

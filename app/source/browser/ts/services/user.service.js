@@ -11,14 +11,16 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 //external modules
 var core_1 = require('angular2/core');
 var Observable_1 = require('rxjs/Observable');
+var http_1 = require('angular2/http');
 var event_service_1 = require('./event.service');
 var Models = require('../models/all');
 //mock objects for tests
 var all_1 = require('../mocks/all');
 var all_2 = require('../utils/all');
 var UserService = (function () {
-    function UserService(_eventsService) {
+    function UserService(_eventsService, _http) {
         this._eventsService = _eventsService;
+        this._http = _http;
         this._currentUser = null;
         this._registered = new Map();
         var u = all_1.UserMock.Create();
@@ -34,36 +36,70 @@ var UserService = (function () {
     UserService.prototype.logIn = function (user) {
         var _this = this;
         var u = Models.User.getUserByLoginModel(user);
-        return Observable_1.Observable.fromPromise(new Promise(function (resolve) {
-            setTimeout(function () {
-                var r;
-                if (!_this._registered.has(u.email)) {
-                    r = { result: false, reason: 'login failed' };
-                }
-                else {
-                    var userDb = _this._registered.get(u.email);
+        var userJson = JSON.stringify(u);
+        return Observable_1.Observable.fromPromise(new Promise(function (resolve, reject) {
+            var r = { result: false, reason: 'fail' };
+            //for application/x-www-form-urlencoded
+            var rbody = "email=" + u.email + "&password=" + u.password;
+            var header = new http_1.Headers();
+            //header.append('Content-Type', 'application/x-www-form-urlencoded');
+            header.append('Content-Type', 'application/json');
+            _this._http.post('/api/login', userJson, { headers: header })
+                .map(function (res) { return res.json(); })
+                .subscribe(function (data) {
+                resolve(r);
+            }, function (error) {
+                reject(error);
+            });
+        }));
+        /*
+        return Observable.fromPromise(new Promise<ILoginResult>((resolve) => {
+            setTimeout(() => {
+                let r: ILoginResult;
+                if (!this._registered.has(u.email)) {
+                    r = {result: false, reason: 'login failed'};
+                } else {
+                    let userDb = this._registered.get(u.email);
                     if (userDb.password == u.password) {
-                        r = { result: true };
-                        _this._currentUser = userDb;
-                        console.dir(_this._currentUser);
+                        r = {result: true};
+                        this._currentUser = userDb;
+                        console.dir(this._currentUser);
                     }
-                    else
-                        r = { result: false, reason: 'login failed' };
+                    else r = {result: false, reason: 'login failed'};
                 }
                 resolve(r);
             }, 1000);
         }));
+        */
     };
     UserService.prototype.register = function (user) {
         var _this = this;
         var u = Models.User.getUserByRegisterModel(user);
-        return Observable_1.Observable.fromPromise(new Promise(function (resolve) {
-            setTimeout(function () {
-                var r = { result: true };
-                _this._registered.set(u.email, u);
+        var userJson = JSON.stringify(u);
+        return Observable_1.Observable.fromPromise(new Promise(function (resolve, reject) {
+            var r = { result: false, reason: 'fail' };
+            //for application/x-www-form-urlencoded
+            //let rbody = `email=${u.email}&password=${u.password}`;
+            var header = new http_1.Headers();
+            //header.append('Content-Type', 'application/x-www-form-urlencoded');
+            header.append('Content-Type', 'application/json');
+            _this._http.post('/api/register', userJson, { headers: header })
+                .map(function (res) { return res.json(); })
+                .subscribe(function (data) {
+                resolve(r);
+            }, function (error) {
+                reject(error);
+            });
+        }));
+        /*let u = Models.User.getUserByRegisterModel(user);
+        return Observable.fromPromise(new Promise<IRegisterResult>((resolve) => {
+            setTimeout(() => {
+                let r: IRegisterResult = {result: true};
+                this._registered.set(u.email, u);
                 resolve(r);
             }, 1000);
         }));
+        */
     };
     UserService.prototype.changePassword = function (model) {
         var _this = this;
@@ -79,9 +115,15 @@ var UserService = (function () {
     UserService.prototype.loadUserInfo = function () {
         return null; //UserMock.Create();
     };
+    UserService.prototype.log = function (msg) {
+        this._eventsService.emit({
+            data: msg,
+            key: all_2.Descriptors.Logger
+        });
+    };
     UserService = __decorate([
         core_1.Injectable(), 
-        __metadata('design:paramtypes', [event_service_1.EventService])
+        __metadata('design:paramtypes', [event_service_1.EventService, http_1.Http])
     ], UserService);
     return UserService;
 }());

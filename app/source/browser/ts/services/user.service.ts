@@ -1,7 +1,7 @@
 //external modules
 import {Injectable, Inject} from 'angular2/core';
 import {Observable} from 'rxjs/Observable';
-import {Http, Response} from 'angular2/http';
+import {Http, Response, Headers} from 'angular2/http';
 //app modules
 import {IUserInfo, IUserService, ILoginResult, IRegisterResult, IChangePassResult} from '../contracts/all';
 import {EventService} from './event.service';
@@ -16,7 +16,7 @@ export class UserService implements IUserService {
     
     private _registered: Map<string, IUserInfo> = new Map<string, IUserInfo>();
     
-    constructor(private _eventsService: EventService){
+    constructor(private _eventsService: EventService, private _http: Http){
         let u = UserMock.Create();
         this._registered.set(u.email, u);
         //this._currentUser = u;
@@ -31,7 +31,28 @@ export class UserService implements IUserService {
     }
     
     logIn(user: Models.ViewLoginModel): Observable<ILoginResult> {
-        let u = Models.User.getUserByLoginModel(user);        
+        let u = Models.User.getUserByLoginModel(user);     
+        let userJson = JSON.stringify(u);   
+        return Observable.fromPromise(new Promise<ILoginResult>((resolve, reject) => {
+            let r: ILoginResult = {result: false, reason: 'fail'};
+            //for application/x-www-form-urlencoded
+            let rbody = `email=${u.email}&password=${u.password}`;
+            
+            let header = new Headers();
+            //header.append('Content-Type', 'application/x-www-form-urlencoded');
+            header.append('Content-Type', 'application/json');
+            this._http.post('/api/login', userJson, {headers: header})
+                .map(res => res.json())
+                .subscribe(
+                    data => {
+                        resolve(r);
+                    },
+                    error => {
+                        reject(error);
+                    }
+                );
+        }));
+        /*
         return Observable.fromPromise(new Promise<ILoginResult>((resolve) => {
             setTimeout(() => {
                 let r: ILoginResult;
@@ -49,10 +70,32 @@ export class UserService implements IUserService {
                 resolve(r);
             }, 1000);
         }));
+        */
     }
     
     register(user: Models.ViewRegisterModel): Observable<IRegisterResult> {
-        let u = Models.User.getUserByRegisterModel(user);        
+        let u = Models.User.getUserByRegisterModel(user);     
+        let userJson = JSON.stringify(u);   
+        return Observable.fromPromise(new Promise<IRegisterResult>((resolve, reject) => {
+            let r: IRegisterResult = {result: false, reason: 'fail'};
+            //for application/x-www-form-urlencoded
+            //let rbody = `email=${u.email}&password=${u.password}`;
+            
+            let header = new Headers();
+            //header.append('Content-Type', 'application/x-www-form-urlencoded');
+            header.append('Content-Type', 'application/json');
+            this._http.post('/api/register', userJson, {headers: header})
+                .map(res => res.json())
+                .subscribe(
+                    data => {
+                        resolve(r);
+                    },
+                    error => {
+                        reject(error);
+                    }
+                );
+        }));
+        /*let u = Models.User.getUserByRegisterModel(user);        
         return Observable.fromPromise(new Promise<IRegisterResult>((resolve) => {
             setTimeout(() => {
                 let r: IRegisterResult = {result: true};
@@ -60,6 +103,7 @@ export class UserService implements IUserService {
                 resolve(r);
             }, 1000);
         }));
+        */
     }
     
     changePassword(model: Models.ViewChangePassword): Observable<IChangePassResult> {
@@ -77,6 +121,13 @@ export class UserService implements IUserService {
     
     private loadUserInfo(): IUserInfo {
         return null; //UserMock.Create();
+    }
+    
+    private log(msg: string) {
+        this._eventsService.emit({
+           data: msg,
+           key: Descriptors.Logger 
+        });
     }
 }
 

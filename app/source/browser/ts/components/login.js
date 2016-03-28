@@ -102,6 +102,11 @@ var C2cLogin = (function () {
         var _this = this;
         if (!this.validateModel(this.model))
             return;
+        var finishLogin = function () {
+            _this.showSpinner(false);
+            _this.btnSendTxt = tmp;
+            _this._isSending = false;
+        };
         var tmp = this.btnSendTxt;
         if (!this._isSending) {
             this._isSending = true;
@@ -112,9 +117,17 @@ var C2cLogin = (function () {
                 .subscribe(function (res) {
                 if (!res.result)
                     _this._validationError = res.reason;
-                _this.showSpinner(false);
-                _this.btnSendTxt = tmp;
-                _this._isSending = false;
+                _this.eventService.emit({
+                    data: res,
+                    key: all_2.Descriptors.Logger
+                });
+                finishLogin();
+            }, function (err) {
+                _this.eventService.emit({
+                    data: err,
+                    key: all_2.Descriptors.Exceptions
+                });
+                finishLogin();
             });
         }
     };

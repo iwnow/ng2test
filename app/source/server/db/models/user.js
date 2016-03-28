@@ -30,6 +30,10 @@ userSchema.methods.cryptPassword = function (pass) {
     return crypto.createHmac(sha1, this.salt).update(pass).digest('hex');
 };
 
+userSchema.methods.getId = function () {
+    return this._id;
+}
+
 let setPassword = function(pass) {
     this._plainPass = pass;
     this.salt = Math.random() + '';

@@ -149,6 +149,12 @@ export class C2cLogin implements OnInit, OnDestroy {
         if (!this.validateModel(this.model))
             return;
         
+        let finishLogin = () => {
+            this.showSpinner(false);
+            this.btnSendTxt = tmp;
+            this._isSending = false;
+        };
+        
         let tmp = this.btnSendTxt;
         if (!this._isSending) {
             this._isSending = true;
@@ -159,9 +165,17 @@ export class C2cLogin implements OnInit, OnDestroy {
                 .subscribe((res) => {
                     if (!res.result)
                         this._validationError = res.reason;
-                    this.showSpinner(false);
-                    this.btnSendTxt = tmp;
-                    this._isSending = false;
+                    this.eventService.emit({
+                        data: res,
+                        key: Descriptors.Logger
+                    });
+                    finishLogin();
+                }, err => {
+                    this.eventService.emit({
+                       data: err,
+                       key: Descriptors.Exceptions 
+                    });
+                    finishLogin();
                 });
         }
         

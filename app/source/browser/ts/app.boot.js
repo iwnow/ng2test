@@ -18,11 +18,12 @@ var Menu = require('./utils/menu');
 var Utils = require('./utils/all');
 core_1.enableProdMode();
 var CtocApp = (function () {
-    function CtocApp(_eventService, _usrService, _srvLocator, _exceptionService) {
+    function CtocApp(_eventService, _usrService, _srvLocator, _exceptionService, _loggerService) {
         this._eventService = _eventService;
         this._usrService = _usrService;
         this._srvLocator = _srvLocator;
         this._exceptionService = _exceptionService;
+        this._loggerService = _loggerService;
         this.loginOrReg = true;
         //fix with resources
         this.profileMenu = new Menu.SidebarMenu([
@@ -197,11 +198,11 @@ var CtocApp = (function () {
         core_1.Component({
             selector: 'ctoc-app',
             directives: [all_1.C2cWorkspace, all_1.C2cLogin, all_1.C2cRegister],
-            providers: [all_2.EventService, all_2.ExceptionService, all_2.ResourceService, all_2.ServiceLocator, all_2.UserService,
+            providers: [all_2.EventService, all_2.ExceptionService, all_2.LoggerService, all_2.ResourceService, all_2.ServiceLocator, all_2.UserService,
                 http_1.HTTP_PROVIDERS],
             template: "\n    <nav  class=\"navbar navbar-inverse navbar-fixed-top\">\n    <div class=\"container-fluid\">\n        <div class=\"navbar-header\">\n            <button type=\"button\" class=\"navbar-toggle\" (click)=\"navToggle()\">\n                <span class=\"sr-only\"></span>\n                <span class=\"icon-bar\"></span>\n                <span class=\"icon-bar\"></span>\n                <span class=\"icon-bar\"></span>\n            </button>\n            <a class=\"navbar-brand\" href=\"#\">{{projectName}}</a>\n        </div>\n            \n        <div [ngClass]=\"navClass\"> \n        <ul class=\"nav navbar-nav navbar-right\">\n            <li>                \n                <a href=\"#\"\n                    (click)=\"langMenu.dropped = !langMenu.dropped;\"\n                    (blur)=\"langMenu.dropped = false;\">\n                    {{selectedLang}}\n                    <span class=\"caret\"></span>\n                </a>\n                <div [ngClass]=\"langMenu.dropped ? 'dropdown open' : 'dropdown'\">\n                    <ul class=\"dropdown-menu\" style=\"min-width:20px;\">\n                        <li *ngFor=\"#lang of languages\"><a href=\"#\" (mousedown)=\"langChoose(lang)\">{{lang}}</a></li>\n                    </ul>\n                </div>\n            </li>\n        </ul>\n        <ul *ngIf = \"!currentUser\" class=\"nav navbar-nav navbar-right\">\n            <li><a href=\"#\" (click)=\"loginOrReg = true\">{{loginLink}}</a></li>\n            <li><a href=\"#\" (click)=\"loginOrReg = false\">{{registerLink}}</a></li>\n        </ul>\n        <ul *ngIf = \"currentUser\" class=\"nav navbar-nav navbar-right\">\n            <li>                               \n                <a href=\"#\"\n                    (click)=\"loginMenu.dropped = !loginMenu.dropped;\"\n                    (blur)=\"loginMenu.dropped = false;\">\n                    <span class=\"glyphicon glyphicon-user\"></span>\n                    {{currentUser.email }}\n                    <span class=\"caret\"></span>\n                </a>\n                <div [ngClass]=\"loginMenu.dropped ? 'dropdown open' : 'dropdown'\">\n                    <ul class=\"dropdown-menu\">\n                        <li><a href=\"#\" (mousedown)=\"selectWorkspace('controlPan')\"><span class=\"glyphicon glyphicon-list-alt\"></span>&nbsp;&nbsp;{{ddMenuCntrlPan}}</a></li>\n                        <li><a href=\"#\" (mousedown)=\"selectWorkspace('profilePan')\"><span class=\"glyphicon glyphicon-user\"></span>&nbsp;&nbsp;{{ddMenuProfilePan}}</a></li>\n                        <!--<li class=\"divider\"></li>-->\n                        <li><a href=\"#\" (mousedown)=\"logOut()\"><span class=\"glyphicon glyphicon-log-out\"></span>&nbsp;&nbsp;{{ddMenuLogOutBtn}}</a></li>\n                    </ul>\n                </div>\n            </li>\n        </ul>        \n        <!--<form class=\"navbar-form navbar-right\">\n            <input type=\"text\" class=\"form-control\" placeholder=\"Search...\">\n        </form>-->          \n        </div>\n    </div>\n</nav>\n\n<div class=\"container-fluid\">\n    <ctoc-workspace *ngIf = \"currentUser\"\n        [workspacePanName]=\"selectedWorkspace\"\n        [workspaceMenu]=\"selectedWorkspaceMenu\"></ctoc-workspace>\n    <ctoc-login *ngIf = \"!currentUser && loginOrReg\"></ctoc-login>\n    <ctoc-register *ngIf = \"!currentUser && !loginOrReg\"></ctoc-register>\n</div>\n<!--<div class='notifications'>Notification message some important data for you, don't ignore this please! </div>-->\n    "
         }), 
-        __metadata('design:paramtypes', [all_2.EventService, all_2.UserService, all_2.ServiceLocator, all_2.ExceptionService])
+        __metadata('design:paramtypes', [all_2.EventService, all_2.UserService, all_2.ServiceLocator, all_2.ExceptionService, all_2.LoggerService])
     ], CtocApp);
     return CtocApp;
 }());

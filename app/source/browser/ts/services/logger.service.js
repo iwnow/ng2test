@@ -11,21 +11,20 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var core_1 = require('angular2/core');
 var event_service_1 = require('./event.service');
 var all_1 = require('../utils/all');
-var ExceptionService = (function () {
-    function ExceptionService(_events) {
+var LoggerService = (function () {
+    function LoggerService(_events) {
         this._events = _events;
         this.register();
     }
-    ExceptionService.prototype.register = function () {
-        //console.log('ExceptionService registered');
-        this._events.subscribe(all_1.Descriptors.Exceptions, function (data) {
-            console.error((all_1.Descriptors.Exceptions + ":") + JSON.stringify(data));
+    LoggerService.prototype.register = function () {
+        this._events.subscribe(all_1.Descriptors.Logger, function (data) {
+            console.log((all_1.Descriptors.Logger + ":") + JSON.stringify(data));
         });
     };
-    ExceptionService = __decorate([
+    LoggerService = __decorate([
         core_1.Injectable(), 
         __metadata('design:paramtypes', [event_service_1.EventService])
-    ], ExceptionService);
-    return ExceptionService;
+    ], LoggerService);
+    return LoggerService;
 }());
-exports.ExceptionService = ExceptionService;
+exports.LoggerService = LoggerService;
