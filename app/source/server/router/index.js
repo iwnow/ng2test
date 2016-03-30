@@ -1,6 +1,6 @@
 
 let httpError = require('../error/httpError');
-
+let logger = require('../logger/log')(module);
 let User = require('../db/models/user');
 
 module.exports = (app) => {
