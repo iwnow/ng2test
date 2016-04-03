@@ -124,7 +124,7 @@ var C2cLogin = (function () {
                 finishLogin();
             }, function (err) {
                 _this.eventService.emit({
-                    data: err,
+                    data: err.status,
                     key: all_2.Descriptors.Exceptions
                 });
                 finishLogin();

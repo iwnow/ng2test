@@ -25,7 +25,10 @@ app.use(cookieParser());
 app.use(session({
     secret: configProvider.get('session:secret')
 }));
-//require('./router')(app);
+
+//app.use(require('./pipe/loadUser'));
+
+require('./router')(app);
 app.use(express.static(__dirname + '/../browser'));
 
 

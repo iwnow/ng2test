@@ -14,24 +14,35 @@ var Observable_1 = require('rxjs/Observable');
 var http_1 = require('angular2/http');
 var event_service_1 = require('./event.service');
 var Models = require('../models/all');
-//mock objects for tests
-var all_1 = require('../mocks/all');
-var all_2 = require('../utils/all');
+var all_1 = require('../utils/all');
 var UserService = (function () {
     function UserService(_eventsService, _http) {
         this._eventsService = _eventsService;
         this._http = _http;
         this._currentUser = null;
         this._registered = new Map();
-        var u = all_1.UserMock.Create();
-        this._registered.set(u.email, u);
+        //let u = UserMock.Create();
+        //this._registered.set(u.email, u);
         //this._currentUser = u;
     }
     UserService.prototype.getUserInfo = function () {
         return this._currentUser;
     };
     UserService.prototype.logOut = function () {
-        this._currentUser = null;
+        var _this = this;
+        var self = this;
+        var _out = function () {
+            self._currentUser = null;
+        };
+        this._http.post('/api/logout', '').subscribe(function (res) {
+            _out();
+        }, function (e) {
+            _this._eventsService.emit({
+                key: all_1.Descriptors.Exceptions,
+                data: e
+            });
+            _out();
+        });
     };
     UserService.prototype.logIn = function (user) {
         var _this = this;
@@ -47,6 +58,16 @@ var UserService = (function () {
             _this._http.post('/api/login', userJson, { headers: header })
                 .map(function (res) { return res.json(); })
                 .subscribe(function (data) {
+                if (data.email != undefined) {
+                    r.result = true;
+                    r.reason = '';
+                    var _user = new Models.User(data.email);
+                    var _company = new Models.Company(data.companies[0]);
+                    _company.registerDate = new Date(Date.parse(data.created));
+                    _user.companies = [_company];
+                    _this._currentUser = _user;
+                    return resolve(r);
+                }
                 resolve(r);
             }, function (error) {
                 reject(error);
@@ -86,6 +107,15 @@ var UserService = (function () {
             _this._http.post('/api/register', userJson, { headers: header })
                 .map(function (res) { return res.json(); })
                 .subscribe(function (data) {
+                if (data.ecode != undefined) {
+                    r.reason = data.ecode;
+                    return resolve(r);
+                }
+                if (data.email != undefined) {
+                    r.result = true;
+                    r.reason = 'register success';
+                    return resolve(r);
+                }
                 resolve(r);
             }, function (error) {
                 reject(error);
@@ -107,7 +137,7 @@ var UserService = (function () {
             var r = { result: true };
             resolve(r);
         }).catch(function (e) {
-            _this._eventsService.emit({ key: all_2.Descriptors.Exceptions, data: e, who: 'UserService.changePassword' });
+            _this._eventsService.emit({ key: all_1.Descriptors.Exceptions, data: e, who: 'UserService.changePassword' });
             var r = { result: false, reason: e };
             return r;
         }));
@@ -118,7 +148,7 @@ var UserService = (function () {
     UserService.prototype.log = function (msg) {
         this._eventsService.emit({
             data: msg,
-            key: all_2.Descriptors.Logger
+            key: all_1.Descriptors.Logger
         });
     };
     UserService = __decorate([

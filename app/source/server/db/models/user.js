@@ -3,11 +3,16 @@ let logger = require('../../logger/log')(module);
 let crypto = require('crypto');
 let mongoose = require('../link');
 let Schema = mongoose.Schema;
+let async = require('async');
 
 let userSchema = new Schema({
     email: {
         type: String,
         unique: true,
+        required: true
+    },
+    company: {
+        type: String,
         required: true
     },
     hashPass: {
@@ -49,5 +54,25 @@ userSchema.methods.checkPassword = function(pass) {
     return this.cryptPassword(pass) == this.hashPass;
 };
 
+userSchema.statics.authorize = function (email, password, callback) {
+    let User = this;
+    
+    async.waterfall([
+        (cb) => User.findOne({email: email}, cb),
+        (user, cb) => {
+            if (user && user.checkPassword(password))
+                cb(null, user);
+            else 
+                cb(new AuthError('Нет доступа'));
+        }    
+    ], callback);
+}
+
+class AuthError extends Error {
+    constructor(message) {
+        super(message);
+        this.name = 'AuthError';
+    }
+}
 
 module.exports = mongoose.model('User', userSchema);

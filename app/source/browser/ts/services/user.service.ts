@@ -17,8 +17,8 @@ export class UserService implements IUserService {
     private _registered: Map<string, IUserInfo> = new Map<string, IUserInfo>();
     
     constructor(private _eventsService: EventService, private _http: Http){
-        let u = UserMock.Create();
-        this._registered.set(u.email, u);
+        //let u = UserMock.Create();
+        //this._registered.set(u.email, u);
         //this._currentUser = u;
     }
     
@@ -27,7 +27,20 @@ export class UserService implements IUserService {
     }
     
     logOut() {
-        this._currentUser = null;
+        let self = this;
+        let _out = () => {
+            self._currentUser = null;
+        };
+        
+        this._http.post('/api/logout', '').subscribe(res => {
+            _out();
+        }, e => {
+            this._eventsService.emit({
+                key: Descriptors.Exceptions,
+                data: e
+            });
+            _out();
+        });
     }
     
     logIn(user: Models.ViewLoginModel): Observable<ILoginResult> {
@@ -45,6 +58,17 @@ export class UserService implements IUserService {
                 .map(res => res.json())
                 .subscribe(
                     data => {
+                        if (data.email != undefined) {
+                            r.result = true;
+                            r.reason = '';
+                            let _user = new Models.User(data.email);
+                            let _company = new Models.Company(data.companies[0]);
+                            _company.registerDate = new Date(Date.parse(data.created)); 
+                            _user.companies = [_company];
+                            
+                            this._currentUser = _user;
+                            return resolve(r);
+                        }
                         resolve(r);
                     },
                     error => {
@@ -88,6 +112,15 @@ export class UserService implements IUserService {
                 .map(res => res.json())
                 .subscribe(
                     data => {
+                        if (data.ecode != undefined) {
+                            r.reason = data.ecode;
+                            return resolve(r);
+                        }
+                        if (data.email != undefined) {
+                            r.result = true;
+                            r.reason = 'register success';
+                            return resolve(r);
+                        }
                         resolve(r);
                     },
                     error => {

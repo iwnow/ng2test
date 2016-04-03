@@ -4,7 +4,7 @@ import {IUserInfo, ICompany} from '../contracts/iuserinfo'
 export class User implements IUserInfo {
     constructor(
         public email: string,
-        public password: string,               
+        public password?: string,               
         public login?: string,
         public name?: string, 
         public secondName?: string, 

@@ -121,7 +121,7 @@ gulp.task('server-json', function () {
 
 
 gulp.task('build-server', function(callback) {
-    runSequence('server-clean', ['server-tsc','server-json'], callback);
+    runSequence('server-clean', ['babel','server-json'], callback);
 });
 
 

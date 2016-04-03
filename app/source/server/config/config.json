@@ -6,9 +6,10 @@
         "secret": "ctoc-secret-key"
     },
     "db": {
-        "link": "test",
+        "link": "stage",
         "connectionStrings": {
-            "test": "mongodb://127.0.0.1:27017/ctoc"
+            "test": "mongodb://127.0.0.1:27017/ctoc",
+            "stage": "mongodb://ctoc:pPanicjJank12@ds013290.mlab.com:13290/ctoc"
         }
     }
 }

@@ -172,7 +172,7 @@ export class C2cLogin implements OnInit, OnDestroy {
                     finishLogin();
                 }, err => {
                     this.eventService.emit({
-                       data: err,
+                       data: (<any>err).status,
                        key: Descriptors.Exceptions 
                     });
                     finishLogin();
